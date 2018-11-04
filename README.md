@@ -61,6 +61,9 @@ the instructions
   ModiaMedia.standardPlot(medium)
 ```
 
+The last command results in the following plot:
+
+![standardPlot](https://ModiaSim.github.io/ModiaMedia.jl/resources/images/N2.png)
 
 ## Currently available media
 
