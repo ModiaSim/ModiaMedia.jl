@@ -1,8 +1,7 @@
-# ModiaMedia
+# ModiaMedia.jl Documentation
 
-[![Latest](https://img.shields.io/badge/docs-latest-blue.svg)](https://modiasim.github.io/ModiaMedia.jl/latest/)
-
-This package shall provide Media models for use with [Modia](https://github.com/ModiaSim/Modia.jl)
+[ModiaMedia](https://github.com/ModiaSim/ModiaMedia.jl) shall provide Media models 
+for use with [Modia](https://github.com/ModiaSim/Modia.jl)
 and other Julia packages. The initial goal is to achieve a similar functionality as
 [Modelica.Media](https://doc.modelica.org/Modelica%203.2.3/Resources/helpDymola/Modelica_Media.html#Modelica.Media),
 the standard media library for Modelica models, but with improvements based on Julia features
@@ -61,8 +60,13 @@ the instructions
   ModiaMedia.standardPlot(medium)
 ```
 
+This example generates the following plot:
 
-## Currently available media
+![standardPlot](../resources/images/N2.png)
+
+
+
+### Currently available media
 
 - SimpleLiquidWater
 
@@ -74,7 +78,7 @@ the instructions
   He, NH3, NO, NO2, N2, N2O, Ne, O2, SO2, SO3 
 
 
-## Structure of package
+### Structure of package
 
 A medium is a struct of the following type:
 
@@ -100,7 +104,13 @@ Function `ModiaMedia.Medium(name)` returns the `MediumXXX` instance stored
 in the medium dictionary with key `name`.
 
 
-## Status
+### Status
 
 The ModiaMedia package development has just started and a lot has to be improved.
 
+
+## Release Notes
+
+### Version 0.1.0-dev
+
+A version is not yet released.
