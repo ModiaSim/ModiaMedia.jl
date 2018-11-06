@@ -50,7 +50,7 @@ module Air
             )
             eta = 1e-6*Polynomials_Temp.evaluateWithRange([9.7391102886305869E-15,-3.1353724870333906E-11,4.3004876595642225E-08,-3.8228016291758240E-05,5.0427874367180762E-02,1.7239260139242528E+01], Cv.to_degC(123.15), Cv.to_degC(1273.15), Cv.to_degC(state.T))
             
-            return eta, 
+            return eta
         end
 
         "Return thermal conductivity of dry air (simple polynomial, moisture influence small, valid from 123.15 K to 1273.15 K, outside of this range linear extrapolation is used)"
@@ -64,7 +64,7 @@ module Air
             )
             lambda = 1e-3*Polynomials_Temp.evaluateWithRange([6.5691470817717812E-15,-3.4025961923050509E-11,5.3279284846303157E-08,-4.5340839289219472E-05,7.6129675309037664E-02,2.4169481088097051E+01], Cv.to_degC(123.15), Cv.to_degC(1273.15), Cv.to_degC(state.T))
             
-            return lambda, , 
+            return lambda
         end
     end
 
@@ -82,8 +82,8 @@ module Air
             criticalTemperature=132.5306, 
             criticalPressure=3.786e6, 
             criticalMolarVolume=0.02896546/342.68, 
-            triplePointTemperature=63.05"From N2", 
-            triplePointPressure=0.1253e5"From N2", 
+            triplePointTemperature=63.05, 
+            triplePointPressure=0.1253e5, 
             normalBoilingPoint=78.903, 
             meltingPoint=0, 
             acentricFactor=0.0335, 
@@ -5749,8 +5749,7 @@ module Air
                 beta::Array{Float64, 1},      
                 Tr::Float64,                  
                 tau::Float64,                 
-                if 
-                    ((T<273.15) || 
+                if                     ((T<273.15) || 
                     (T>Modelica.Media.Air.ReferenceMoistAir.Utilities.Water95_Utilities.Tsat(p)))
                     beta_H = 0
                 else
@@ -5820,8 +5819,7 @@ module Air
                 end
 =#
                 xmax::Float64,                
-                if 
-                    ((useEnhancementFactor==false) || 
+                if                     ((useEnhancementFactor==false) || 
                     (T>=Modelica.Media.Air.ReferenceMoistAir.Utilities.Water95_Utilities.Tsat(p)))
                     f = 1
                 else
