@@ -69,7 +69,7 @@ The last command results in the following plot:
 
 - SimpleLiquidWater
 
-- The following 37 ideal gases (from NASA Glenn coefficients): 
+- The following 37 ideal gases (from NASA Glenn coefficients):\
   Ar, CH4, CH3OH, CO, CO2, C2H2_vinylidene, C2H4, C2H5OH, C2H6, C3H6_propylene, C3H8, C3H8O_1propanol, C4H8_1_butene, C4H10_n_butane, C5H10_1_pentene, C5H12_n_pentane, C6H6, C6H12_1_hexene, C6H14_n_hexane, C7H14_1_heptene, C7H16_n_heptane, C8H10_ethylbenz, C8H18_n_octane, CL2, F2, H2, H2O, He, NH3, NO, NO2, N2, N2O, Ne, O2, SO2, SO3 
 
 
