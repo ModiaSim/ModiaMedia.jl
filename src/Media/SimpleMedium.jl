@@ -28,18 +28,18 @@ end
 
 
 """
-    medium = SimpleMedium(;infos=nothing, constants=nothing, limits=FluidLimits(), data=nothing)
+    medium = SimpleMedium(;infos=nothing, fluidConstants=nothing, fluidLimits=FluidLimits(), data=nothing)
 
 Generate a `SimpleMedium <: PureSubstance` medium object.
 """
 struct SimpleMedium <: PureSubstance
     infos::FluidInfos
-    constants::SVector{1,BasicFluidConstants}
-    limits::FluidLimits
+    fluidConstants::SVector{1,BasicFluidConstants}
+    fluidLimits::FluidLimits
     data::SimpleMediumData
 
-    SimpleMedium(;infos=nothing, constants=nothing, limits=FluidLimits(), data=nothing) =
-        new(infos, fill(constants,1), limits, data)
+    SimpleMedium(;infos=nothing, fluidConstants=nothing, fluidLimits=FluidLimits(), data=nothing) =
+        new(infos, fill(fluidConstants,1), fluidLimits, data)
 end
 
 
@@ -58,7 +58,7 @@ specificHeatCapacityCp(m::SimpleMedium, state::ThermodynamicState_pT)::Float64 =
 
 function standardCharacteristics(m::SimpleMedium)::Dict{AbstractString,Any}
     p = m.infos.reference_p
-    T = collect( range(m.limits.TMIN, stop=m.limits.TMAX, length=101) )
+    T = collect( range(m.fluidLimits.TMIN, stop=m.fluidLimits.TMAX, length=101) )
     h = zeros(length(T))
 
     for i in 1:length(T)

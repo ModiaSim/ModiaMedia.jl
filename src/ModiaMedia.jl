@@ -14,10 +14,14 @@ This package is currently under development.
 module ModiaMedia
 
 const path    = dirname(dirname(@__FILE__))          # Absolute path of package directory
-const Version = "0.1.0-dev from 2018-11-04 18:34"
+const Version = "0.1.0-dev from 2018-11-11 22:00"
 
 println(" \nImporting ModiaMedia version ", Version)
 
+
+export getMedium
+export density, pressure, specificEnthalpy, specificInternalEnergy, temperature
+export setState_pT, setState_ph, setState_ps, setState_dT
 
 
 ### Abstract types -------------------------------------------------------------------------------
@@ -29,7 +33,7 @@ abstract type AbstractMedium end
 
 "`abstract type PureSubstance <: AbstractMedium` - Abstract type of all media consisting of a pure substance"
 abstract type PureSubstance <: AbstractMedium end
-
+ 
 "`abstract type ThermodynamicState` - Abstract type of all media states"
 abstract type ThermodynamicState end
 
@@ -61,15 +65,22 @@ include("Media/SingleGasNasa.jl")
 
 ### Load medium dictionary from file
 const file = "$path/src/Media/media.julia_serializer"
-println("... Read media dictionary from file:\n",
-        "    ", file)
 
-f = open(file)  
-const mediumDict = Serialization.deserialize(f)
-close(f)
+if isfile(file)
+    println("... Read media dictionary from file:\n",
+            "    ", file)
+
+    f = open(file)  
+    const mediumDict = Serialization.deserialize(f)
+    close(f)
+else
+    println("... File ", file, " does not exist.\n",
+            "    No medium can be used.")
+    const mediumDict = Dict{AbstractString, Any}()
+end
  
 ### Inquire medium
-Medium(name::AbstractString) = mediumDict[name]
+getMedium(name::AbstractString) = mediumDict[name]
 
 
 end # module

@@ -53,18 +53,18 @@ end
 
 
 """
-    medium = SingleGasNasa(;infos=nothing, constants=nothing, limits=FluidLimits(), data=nothing)
+    medium = SingleGasNasa(;infos=nothing, fluidConstants=nothing, fluidLimits=FluidLimits(), data=nothing)
 
 Generate a `SingleGasNasa <: PureSubstance` medium object.
 """
 struct SingleGasNasa <: PureSubstance
     infos::FluidInfos
-    constants::SVector{1,IdealGasFluidConstants}
-    limits::FluidLimits
+    fluidConstants::SVector{1,IdealGasFluidConstants}
+    fluidLimits::FluidLimits
     data::SingleGasNasaData
 
-    SingleGasNasa(;infos=nothing, constants=nothing, limits=nothing, data=nothing) =
-        new(infos, SVector{1,IdealGasFluidConstants}(constants), limits, data)
+    SingleGasNasa(;infos=nothing, fluidConstants=nothing, fluidLimits=nothing, data=nothing) =
+        new(infos, SVector{1,IdealGasFluidConstants}(fluidConstants), fluidLimits, data)
 end
 
 
@@ -150,7 +150,7 @@ to_DensityDisplayUnit(d) = d*1e-3
 
 function standardCharacteristics(m::SingleGasNasa)::Dict{AbstractString,Any}
     p_ref = m.infos.reference_p
-    T     = collect( range(m.limits.TMIN, stop=min(1600.0, m.limits.TMAX), length=501) )
+    T     = collect( range(m.fluidLimits.TMIN, stop=min(1600.0, m.fluidLimits.TMAX), length=501) )
     p     = [0.5e5, 1.0e5, 2.0e5]
     nT    = length(T)
     np    = length(p)

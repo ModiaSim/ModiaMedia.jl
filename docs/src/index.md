@@ -34,22 +34,22 @@ the instructions
 ## Use
 
 ```julia
-  import ModiaMedia
+  using ModiaMedia
 
   # Define medium to be used
-  medium = ModiaMedia.Medium("N2");
+  Medium = getMedium("N2");
 
-  # Define the operating point where the medium shall be evaluated. 
+  # Define the operating point where the medium shall be evaluated.
   p = 1e5    # in [Pa]
   T = 300.0  # in [K]
 
-  # Determine the medium-specific thermodynamic state
-  # (setState_ph, setState_ps, setState_dT could also be used)
-  state = ModiaMedia.setState_pT(medium, p, T)
+  # Set the medium-specific thermodynamic state from p and T
+  # (could be also set from p and h, or p and s, or d and T)
+  state = setState_pT(Medium, p, T)
 
   # Call media functions (here to compute density and specific enthalpy)
-  d = ModiaMedia.density(medium,state)
-  h = ModiaMedia.specificEnthalpy(medium,state)
+  d = density(Medium,state)
+  h = specificEnthalpy(Medium,state)
 
   # Print computed values
   println("data for p=$p, T=$T:")
@@ -57,7 +57,7 @@ the instructions
   println("specificEnthalpy = ", h)
 
   # Plot the most important characteristics of the medium
-  ModiaMedia.standardPlot(medium)
+  ModiaMedia.standardPlot(Medium)
 ```
 
 This example generates the following plot:
@@ -85,8 +85,8 @@ A medium is a struct of the following type:
 ```julia
 struct MediumXXX <: AbstractMedium  # or of a subtype of AbstractMedium
     infos::FluidInfos
-    constants::AbstractFluidConstants
-    limits::FluidLimits
+    fluidConstants::AbstractFluidConstants
+    fluidLimits::FluidLimits
     data  # medium specific data
 end
 ```

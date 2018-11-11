@@ -1,34 +1,34 @@
 module Runtests
 
-import ModiaMedia
+using ModiaMedia
 #using  Test
 
 
 #@testset "Test ModiaMedia" begin
-   medium = ModiaMedia.Medium("SimpleLiquidWater")
+   Medium = getMedium("SimpleLiquidWater")
 
-   println("\n... medium = ", medium)
+   println("\n... Medium = ", Medium)
 
-   state  = ModiaMedia.setState_pT(medium, 1e5, 300.0)
-   d      = ModiaMedia.density(medium,state)
-   h      = ModiaMedia.specificEnthalpy(medium,state)
+   state  = setState_pT(Medium, 1e5, 300.0)
+   d      = density(Medium,state)
+   h      = specificEnthalpy(Medium,state)
 
    println("\nd = ", d)
    println("h = ", h)
-   ModiaMedia.standardPlot(medium; figure=1)
+   ModiaMedia.standardPlot(Medium; figure=1)
 
 
-   medium2 = ModiaMedia.Medium("N2")
+   Medium2 = getMedium("N2")
 
-   println("\n... medium2 = ", medium2)
+   println("\n... Medium2 = ", Medium2)
 
-   state2 = ModiaMedia.setState_pT(medium2, 1e5, 300.0)
-   d2     = ModiaMedia.density(medium2,state2)
-   h2     = ModiaMedia.specificEnthalpy(medium2,state2)
+   state2 = setState_pT(Medium2, 1e5, 300.0)
+   d2     = density(Medium2,state2)
+   h2     = specificEnthalpy(Medium2,state2)
 
    println("\nd = ", d2)
    println("h = ", h2)
-   ModiaMedia.standardPlot(medium2; figure=2)
+   ModiaMedia.standardPlot(Medium2; figure=2)
 
 #end
 

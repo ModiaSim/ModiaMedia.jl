@@ -3,7 +3,7 @@
     "infos": {
     },
 
-    "constants": {
+    "fluidConstants": {
         "chemicalFormula"  : "H2O",
         "structureFormula" : "H2O",
         "casRegistryNumber": "7732-18-5",
@@ -11,7 +11,7 @@
         "molarMass"        : 0.018015268
     },
 
-    "limits": {
+    "fluidLimits": {
         "TMIN": 272.15,
         "TMAX": 403.15
     },

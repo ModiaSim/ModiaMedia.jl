@@ -35,22 +35,22 @@ the instructions
 ## Use
 
 ```julia
-  import ModiaMedia
+  using ModiaMedia
 
   # Define medium to be used
-  medium = ModiaMedia.Medium("N2");
+  Medium = getMedium("N2");
 
-  # Define the operating point where the medium shall be evaluated. 
+  # Define the operating point where the medium shall be evaluated.
   p = 1e5    # in [Pa]
   T = 300.0  # in [K]
 
-  # Determine the medium-specific thermodynamic state
-  # (setState_ph, setState_ps, setState_dT could also be used)
-  state = ModiaMedia.setState_pT(medium, p, T)
+  # Set the medium-specific thermodynamic state from p and T
+  # (could be also set from p and h, or p and s, or d and T)
+  state = setState_pT(Medium, p, T)
 
   # Call media functions (here to compute density and specific enthalpy)
-  d = ModiaMedia.density(medium,state)
-  h = ModiaMedia.specificEnthalpy(medium,state)
+  d = density(Medium,state)
+  h = specificEnthalpy(Medium,state)
 
   # Print computed values
   println("data for p=$p, T=$T:")
@@ -58,7 +58,7 @@ the instructions
   println("specificEnthalpy = ", h)
 
   # Plot the most important characteristics of the medium
-  ModiaMedia.standardPlot(medium)
+  ModiaMedia.standardPlot(Medium)
 ```
 
 The last command results in the following plot:
@@ -70,7 +70,7 @@ The last command results in the following plot:
 - SimpleLiquidWater
 
 - The following 37 ideal gases (from NASA Glenn coefficients):\
-  Ar, CH4, CH3OH, CO, CO2, C2H2_vinylidene, C2H4, C2H5OH, C2H6, C3H6_propylene, C3H8, C3H8O_1propanol, C4H8_1_butene, C4H10_n_butane, C5H10_1_pentene, C5H12_n_pentane, C6H6, C6H12_1_hexene, C6H14_n_hexane, C7H14_1_heptene, C7H16_n_heptane, C8H10_ethylbenz, C8H18_n_octane, CL2, F2, H2, H2O, He, NH3, NO, NO2, N2, N2O, Ne, O2, SO2, SO3 
+  Ar, CH4, CH3OH, CO, CO2, C2H2_vinylidene, C2H4, C2H5OH, C2H6, C3H6_propylene, C3H8, C3H8O_1propanol, C4H8_1_butene, C4H10_n_butane, C5H10_1_pentene, C5H12_n_pentane, C6H6, C6H12_1_hexene, C6H14_n_hexane, C7H14_1_heptene, C7H16_n_heptane, C8H10_ethylbenz, C8H18_n_octane, CL2, F2, H2, H2O, He, NH3, NO, NO2, N2, N2O, Ne, O2, SO2, SO3
 
 
 ## Structure of package
@@ -80,8 +80,8 @@ A medium is a struct of the following type:
 ```julia
 struct MediumXXX <: AbstractMedium  # or of a subtype of AbstractMedium
     infos::FluidInfos
-    constants::AbstractFluidConstants
-    limits::FluidLimits
+    fluidConstants::AbstractFluidConstants
+    fluidLimits::FluidLimits
     data  # medium specific data
 end
 ```

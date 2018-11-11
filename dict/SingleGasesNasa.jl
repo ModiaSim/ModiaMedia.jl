@@ -7,6 +7,7 @@ const Modelica_Media_IdealGases_Common_DataRecord = ModiaMedia.SingleGasNasaData
 const singleGasesData = Dict{AbstractString, ModiaMedia.SingleGasNasaData}()
 const fluidData       = Dict{AbstractString, ModiaMedia.IdealGasFluidConstants}()
 
+
 # Include data from Modelica.Media.IdealGases.Common.SingleGasesData.jl into dict
 include(joinpath(dirname(@__FILE__), "Modelica.Media.IdealGases.Common.SingleGasesData.jl"))
 
@@ -50,11 +51,13 @@ function SingleGasNasa(name::AbstractString, fluidConstants::ModiaMedia.IdealGas
     fluidConstants.molarMass = data.MM
     fluidInfos = ModiaMedia.FluidInfos(mediumName=name, 
                                        singleState=false,
+                                       baseProperties= :BaseProperties_SingleGasNasa,
                                        ThermoStates=ModiaMedia.IndependentVariables_pT)
     fluidInfos.h_default = ModiaMedia.h_T(data, fluidInfos.T_default)
-    ModiaMedia.SingleGasNasa(infos  = fluidInfos, constants = fluidConstants,
-                             limits = ModiaMedia.FluidLimits(TMIN=200.0, TMAX=6000.0),
-                             data   = data)
+    ModiaMedia.SingleGasNasa(infos          = fluidInfos, 
+                             fluidConstants = fluidConstants,
+                             fluidLimits    = ModiaMedia.FluidLimits(TMIN=200.0, TMAX=6000.0),
+                             data           = data)
 end
 
 
@@ -65,8 +68,8 @@ function storeSingleGasNasaMedium!(mediumDict)
     for (name,fluidConstants) in fluidData
         data = singleGasesData[name]
         m    = SingleGasNasa(name, fluidConstants, data)
-        m.limits.HMIN = ModiaMedia.h_T(m.data, m.limits.TMIN)
-        m.limits.HMAX = ModiaMedia.h_T(m.data, m.limits.TMAX)
+        m.fluidLimits.HMIN = ModiaMedia.h_T(m.data, m.fluidLimits.TMIN)
+        m.fluidLimits.HMAX = ModiaMedia.h_T(m.data, m.fluidLimits.TMAX)
         dict[name] = m
     end
 end

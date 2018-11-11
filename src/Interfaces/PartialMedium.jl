@@ -7,8 +7,8 @@
 # A medium is defined by a struct and accompanying functions. The struct has the following structure:
     struct MediumXXX <: AbstractMedium
         infos::FluidInfos
-        constants::AbstractFluidConstants
-        limits::FluidLimits
+        fluidConstants::Vector{AbstractFluidConstants}
+        fluidLimits::FluidLimits
         data  # medium specific data
     end
 
@@ -112,8 +112,8 @@ end
 """
     infos = FluidInfos(;mediumName=Missing, substanceNames=[mediumName],
                         extraPropertiesNames=fill("",0), ThermoStates=Missing,
-                        singleState=Missing, reducedX=true, fixedX=false, 
-                        reference_p=101325, reference_T=298.15,
+                        baseProperties=Missing, singleState=Missing, reducedX=true, 
+                        fixedX=false, reference_p=101325, reference_T=298.15,
                         reference_X=fill(1/length(substanceNames),length(substanceNames)),
                         p_default=101325, T_default=293.15, h_default=NaN,
                         X_default=reference_X, C_nominal=1e-6*ones(length(extraPropertiesNames)))
@@ -126,6 +126,7 @@ mutable struct FluidInfos
     substanceNames::Vector{AbstractString}       # "Names of the mixture substances. Set substanceNames=[mediumName] if only one substance.";
     extraPropertiesNames::Vector{AbstractString} # "Names of the additional (extra) transported properties. Set extraPropertiesNames=fill(\"\",0) if unused"
     ThermoStates::IndependentVariables           # "Enumeration type for independent variables";
+    baseProperties::Symbol                       # "Symbol of baseProperties model = :BaseProperties_<StructName>
     singleState::Bool                            # "= true, if u and d are not a function of pressure";
     reducedX::Bool                               # "= true if medium contains the equation sum(X) = 1.0; set reducedX=true if only one substance (see docu for details)";
     fixedX::Bool                                 # "= true if medium contains the equation X = reference_X";
@@ -143,7 +144,7 @@ mutable struct FluidInfos
     C_nominal::Vector{Float64}                   # "Default for the nominal values for the extra properties"             
 
     function FluidInfos(; mediumName=Missing, substanceNames=[mediumName],
-                          extraPropertiesNames=fill("",0), ThermoStates=Missing,
+                          extraPropertiesNames=fill("",0), ThermoStates=Missing, baseProperties=Missing,
                           singleState=Missing, reducedX=true, fixedX=false, 
                           reference_p=101325, reference_T=298.15,
                           reference_X=fill(1/length(substanceNames),length(substanceNames)),
@@ -154,7 +155,7 @@ mutable struct FluidInfos
          nC  = length(extraPropertiesNames)
 
          new(mediumName, substanceNames, extraPropertiesNames,
-             ThermoStates, singleState, reducedX, fixedX, reference_p,
+             ThermoStates, baseProperties, singleState, reducedX, fixedX, reference_p,
              reference_T, reference_X, p_default, T_default, h_default, X_default,
              nS, nS, nXi, nC, C_nominal)
     end
@@ -162,8 +163,8 @@ end
 
 
 """
-    limits = FluidLimits(; TMIN=NaN, TMAX=NaN, DMIN=NaN, DMAX=NaN, PMIN=NaN, PMAX=NaN, 
-                           HMIN=NaN, HMAX=NaN, SMIN=NaN, SMAX=NaN)
+    fluidLimits = FluidLimits(; TMIN=NaN, TMAX=NaN, DMIN=NaN, DMAX=NaN, PMIN=NaN, PMAX=NaN, 
+                                HMIN=NaN, HMAX=NaN, SMIN=NaN, SMAX=NaN)
 
 Generate a new `FluidLimits` object, containing the validity limits of the medium.
 """
