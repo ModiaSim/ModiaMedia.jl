@@ -28,7 +28,14 @@ end
 
 
 """
-    medium = SimpleMedium(;infos=nothing, fluidConstants=nothing, fluidLimits=FluidLimits(), data=nothing)
+    medium = SimpleMedium(; mediumName     = Missing,
+                            reference_p    = 101325,
+                            reference_T    = 298.15,
+                            p_default      = 101325,
+                            T_default      = 293.15,
+                            fluidConstants = nothing, 
+                            fluidLimits    = FluidLimits(), 
+                            data           = nothing)
 
 Generate a `SimpleMedium <: PureSubstance` medium object.
 """
@@ -38,8 +45,35 @@ struct SimpleMedium <: PureSubstance
     fluidLimits::FluidLimits
     data::SimpleMediumData
 
-    SimpleMedium(;infos=nothing, fluidConstants=nothing, fluidLimits=FluidLimits(), data=nothing) =
+    function SimpleMedium(; mediumName=Missing,
+                            reference_p=101325,
+                            reference_T=298.15,
+                            p_default=101325,
+                            T_default=293.15,
+                            fluidConstants=nothing, 
+                            fluidLimits=FluidLimits(), 
+                            data=nothing)
+
+        infos = FluidInfos(mediumName           = mediumName,
+                           substanceNames       = [mediumName],
+                           extraPropertiesNames = fill("",0),
+                           ThermoStates         = IndependentVariables_T,
+                           baseProperties       = :BaseProperties_SimpleMedium,
+                           singleState          = true,
+                           reducedX             = true,
+                           fixedX               = false,
+                           reference_p          = reference_p,
+                           reference_T          = reference_T,
+                           reference_X          = fill(1.0,1),
+                           p_default            = p_default,
+                           T_default            = T_default,
+                           h_default            = specificEnthalpy(data, ThermodynamicState_pT(p_default,T_default)))
+
+        fluidLimits.HMIN = specificEnthalpy(data, ThermodynamicState_pT(p_default,fluidLimits.TMIN))
+        fluidLimits.HMAX = specificEnthalpy(data, ThermodynamicState_pT(p_default,fluidLimits.TMAX))
+
         new(infos, fill(fluidConstants,1), fluidLimits, data)
+    end
 end
 
 
@@ -48,12 +82,15 @@ setState_phX(m::SimpleMedium,p,h,X) = ThermodynamicState_pT(p,m.data.T0+h/m.data
 setState_psX(m::SimpleMedium,p,s,X) = ThermodynamicState_pT(p,exp(s/m.data.cp_const + log(m.infos.reference_T)))
 setState_dTX(m::SimpleMedium,d,T,X) = error("From setState_dTX: Pressure cannot be computed from temperature and density for the incompressible fluid $(m.infos.mediumName)!")
 
-pressure(              m::SimpleMedium, state::ThermodynamicState_pT)::Float64 = state.p
-temperature(           m::SimpleMedium, state::ThermodynamicState_pT)::Float64 = state.T
-density(               m::SimpleMedium, state::ThermodynamicState_pT)::Float64 = m.data.d_const
-specificEnthalpy(      m::SimpleMedium, state::ThermodynamicState_pT)::Float64 = m.data.cp_const*(state.T - m.data.T0)
-specificInternalEnergy(m::SimpleMedium, state::ThermodynamicState_pT)::Float64 = m.data.cv_const*(state.T - m.data.T0)
-specificHeatCapacityCp(m::SimpleMedium, state::ThermodynamicState_pT)::Float64 = m.data.cp_const
+
+specificEnthalpy(data::SimpleMediumData, state::ThermodynamicState_pT)::Float64 = data.cp_const*(state.T - data.T0)
+pressure(               m::SimpleMedium, state::ThermodynamicState_pT)::Float64 = state.p
+temperature(            m::SimpleMedium, state::ThermodynamicState_pT)::Float64 = state.T
+density(                m::SimpleMedium, state::ThermodynamicState_pT)::Float64 = m.data.d_const
+specificEnthalpy(       m::SimpleMedium, state::ThermodynamicState_pT)::Float64 = specificEnthalpy(m.data,state)
+specificInternalEnergy( m::SimpleMedium, state::ThermodynamicState_pT)::Float64 = m.data.cv_const*(state.T - m.data.T0)
+specificHeatCapacityCp( m::SimpleMedium, state::ThermodynamicState_pT)::Float64 = m.data.cp_const
+
 
 
 function standardCharacteristics(m::SimpleMedium)::Dict{AbstractString,Any}

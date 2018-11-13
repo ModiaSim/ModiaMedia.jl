@@ -15,7 +15,7 @@ import Serialization
 
 
 const path    = dirname(dirname(@__FILE__))          # Absolute path of package directory
-const Version = "0.1.0-dev from 2018-11-11 22:00"
+const Version = "0.1.0-dev from 2018-11-13 21:34"
 const dict    = Dict{AbstractString,ModiaMedia.AbstractMedium}()
 
 println(" \nImporting GenerateMediumDict version ", Version)

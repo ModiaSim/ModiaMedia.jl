@@ -6,7 +6,9 @@
 #=
 # A medium is defined by a struct and accompanying functions. The struct has the following structure:
     struct MediumXXX <: AbstractMedium
-        infos::FluidInfos
+        mediumName::AbstractString 
+        substanceNames::Vector{AbstractString}
+        < ... other generic data >
         fluidConstants::Vector{AbstractFluidConstants}
         fluidLimits::FluidLimits
         data  # medium specific data
@@ -110,18 +112,46 @@ end
 ### Data structures ---------------------------------------------------------------------------------
 
 """
-    infos = FluidInfos(;mediumName=Missing, substanceNames=[mediumName],
-                        extraPropertiesNames=fill("",0), ThermoStates=Missing,
-                        baseProperties=Missing, singleState=Missing, reducedX=true, 
-                        fixedX=false, reference_p=101325, reference_T=298.15,
-                        reference_X=fill(1/length(substanceNames),length(substanceNames)),
-                        p_default=101325, T_default=293.15, h_default=NaN,
-                        X_default=reference_X, C_nominal=1e-6*ones(length(extraPropertiesNames)))
+    infos = FluidInfos(; <keyword arguments, see below>)
 
-Generate a new `FluidInfos` object defining the substance names, states, dimensions, 
-reference and default values for a medium.
+Generate a new `FluidInfos` object, containing generic properties of a medium.
+
+# Keyword arguments
+
+| Name and type                                  | Description                                                                                             |
+|:-----------------------------------------------|:--------------------------------------------------------------------------------------------------------|
+| `mediumName::AbstractString`                   | Name of the medium                                                                                      |
+| `substanceNames::Vector{AbstractString}`       | Names of the mixture substances. Set substanceNames=[mediumName] if only one substance.                 |
+| `extraPropertiesNames::Vector{AbstractString}` | Names of the additional (extra) transported properties. Set extraPropertiesNames=fill(\"\",0) if unused |
+| `ThermoStates::IndependentVariables`           | Enumeration type for independent variables                                                              |
+| `baseProperties::Symbol`                       | Symbol of baseProperties model = :BaseProperties_<StructName>                                           |
+| `singleState::Bool`                            | = true, if u and d are not a function of pressure                                                       |
+| `reducedX::Bool`                               | = true if medium contains the equation sum(X) = 1.0; set reducedX=true if only one substance            |
+| `fixedX::Bool`                                 | = true if medium contains the equation X = reference_X                                                  |
+| `reference_p`                                  | Reference pressure of Medium: default 1 atmosphere                                                      |
+| `reference_T`                                  | Reference temperature of Medium: default 25 deg Celsius                                                 |
+| `reference_X`                                  | Reference mass fractions of medium                                                                      |
+| `p_default`                                    | Default value for pressure of medium (for initialization)                                               |
+| `T_default`                                    | Default value for temperature of medium (for initialization)                                            |
+| `h_default`                                    | Default value for specific enthalpy of medium (for initialization)                                      |
+| `X_default`                                    | Default value for specific enthalpy of medium (for initialization)                                      |
+| `nS`                                           | Number of substances                                                                                    |
+| `nX`                                           | Number of mass fractions                                                                                |
+| `nXi`                                          | Number of structurally independent mass fractions                                                       |
+| `nC`                                           | Number of extra (outside of standard mass-balance) transported properties                               |
+| `C_nominal`                                    | Default for the nominal values for the extra properties                                                 |
+
+# Example
+```julia
+import ModiaMedia
+
+infos = ModiaMedia.FluidInfos(mediumName           = "simpleMedium",
+                              substanceNames       = [mediumName],
+                              extraPropertiesNames = fill("",0),
+                              ThermoStates         = IndependentVariables_T)
+```
 """
-mutable struct FluidInfos
+struct FluidInfos
     mediumName::AbstractString                   # "Name of the medium";
     substanceNames::Vector{AbstractString}       # "Names of the mixture substances. Set substanceNames=[mediumName] if only one substance.";
     extraPropertiesNames::Vector{AbstractString} # "Names of the additional (extra) transported properties. Set extraPropertiesNames=fill(\"\",0) if unused"
@@ -132,7 +162,7 @@ mutable struct FluidInfos
     fixedX::Bool                                 # "= true if medium contains the equation X = reference_X";
     reference_p::Float64                         # "Reference pressure of Medium: default 1 atmosphere";
     reference_T::Float64                         # "Reference temperature of Medium: default 25 deg Celsius";
-    reference_X::AbstractVector                  # "Default mass fractions of medium";
+    reference_X::AbstractVector                  # "Reference mass fractions of medium";
     p_default::Float64                           # "Default value for pressure of medium (for initialization)";
     T_default::Float64                           # "Default value for temperature of medium (for initialization)";
     h_default::Float64                           # "Default value for specific enthalpy of medium (for initialization)";
@@ -143,13 +173,22 @@ mutable struct FluidInfos
     nC::Int                                      # "Number of extra (outside of standard mass-balance) transported properties"
     C_nominal::Vector{Float64}                   # "Default for the nominal values for the extra properties"             
 
-    function FluidInfos(; mediumName=Missing, substanceNames=[mediumName],
-                          extraPropertiesNames=fill("",0), ThermoStates=Missing, baseProperties=Missing,
-                          singleState=Missing, reducedX=true, fixedX=false, 
-                          reference_p=101325, reference_T=298.15,
+    function FluidInfos(; mediumName=Missing,
+                          substanceNames=[mediumName],
+                          extraPropertiesNames=fill("",0), 
+                          ThermoStates=Missing,
+                          baseProperties=Missing,
+                          singleState=Missing, 
+                          reducedX=true,
+                          fixedX=false, 
+                          reference_p=101325,
+                          reference_T=298.15,
                           reference_X=fill(1/length(substanceNames),length(substanceNames)),
-                          p_default=101325, T_default=293.15, h_default=NaN,
-                          X_default=reference_X, C_nominal=1e-6*ones(length(extraPropertiesNames)))
+                          p_default=101325,
+                          T_default=293.15,
+                          h_default=NaN,
+                          X_default=reference_X,
+                          C_nominal=1e-6*ones(length(extraPropertiesNames)))
          nS  = length(substanceNames)
          nXi = fixedX ? 0 : ( reducedX ? nS-1 : nS )
          nC  = length(extraPropertiesNames)
@@ -160,6 +199,7 @@ mutable struct FluidInfos
              nS, nS, nXi, nC, C_nominal)
     end
 end
+
 
 
 """
@@ -194,7 +234,7 @@ end
 Generate a `BasicFluidConstants <: AbstractFluidConstants` object 
 containing the minimal information about the standard data of the medium.
 """
-mutable struct BasicFluidConstants <: AbstractFluidConstants
+struct BasicFluidConstants <: AbstractFluidConstants
     iupacName::AbstractString           # "Complete IUPAC name (or common name, if non-existent)";
     casRegistryNumber::AbstractString   # "Chemical abstracts sequencing number (if it exists)";
     chemicalFormula::AbstractString     # "Chemical formula, (brutto, nomenclature according to Hill";
@@ -222,7 +262,7 @@ Generate a `IdealGasFluidConstants <: AbstractFluidConstants` object
 containing the minimal information about the standard data of ideal gas media
 (critical, triple, molecular and other standard data).
 """
-mutable struct IdealGasFluidConstants <: AbstractFluidConstants
+struct IdealGasFluidConstants <: AbstractFluidConstants
     iupacName::AbstractString           # "Complete IUPAC name (or common name, if non-existent)";
     casRegistryNumber::AbstractString   # "Chemical abstracts sequencing number (if it exists)";
     chemicalFormula::AbstractString     # "Chemical formula, (brutto, nomenclature according to Hill";

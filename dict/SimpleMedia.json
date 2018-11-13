@@ -1,7 +1,10 @@
 {
 "SimpleLiquidWater":{
-    "infos": {
-    },
+    "mediumName": "SimpleLiquidWater",
+    "reference_p": 101325,
+    "reference_T": 298.15,
+    "p_default"  : 101325,
+    "T_default"  : 293.15,
 
     "fluidConstants": {
         "chemicalFormula"  : "H2O",

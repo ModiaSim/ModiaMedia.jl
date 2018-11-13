@@ -53,7 +53,14 @@ end
 
 
 """
-    medium = SingleGasNasa(;infos=nothing, fluidConstants=nothing, fluidLimits=FluidLimits(), data=nothing)
+    medium = SingleGasNasa(; mediumName     = Missing,
+                             reference_p    = 101325,
+                             reference_T    = 298.15,
+                             p_default      = 101325,
+                             T_default      = 293.15,
+                             fluidConstants = nothing, 
+                             fluidLimits    = FluidLimits(TMIN=200.0, TMAX=6000.0), 
+                             data           = nothing)
 
 Generate a `SingleGasNasa <: PureSubstance` medium object.
 """
@@ -63,8 +70,36 @@ struct SingleGasNasa <: PureSubstance
     fluidLimits::FluidLimits
     data::SingleGasNasaData
 
-    SingleGasNasa(;infos=nothing, fluidConstants=nothing, fluidLimits=nothing, data=nothing) =
+    function SingleGasNasa(; mediumName=Missing,
+                             reference_p=101325,
+                             reference_T=298.15,
+                             p_default=101325,
+                             T_default=293.15,
+                             fluidConstants=nothing, 
+                             fluidLimits=FluidLimits(TMIN=200.0, TMAX=6000.0), 
+                             data=nothing)
+
+        infos = FluidInfos(mediumName           = mediumName,
+                           substanceNames       = [mediumName],
+                           extraPropertiesNames = fill("",0),
+                           ThermoStates         = IndependentVariables_pT,
+                           baseProperties       = :BaseProperties_SingleGasNasa,
+                           singleState          = false,
+                           reducedX             = true,
+                           fixedX               = false,
+                           reference_p          = reference_p,
+                           reference_T          = reference_T,
+                           reference_X          = fill(1.0,1),
+                           p_default            = p_default,
+                           T_default            = T_default,
+                           h_default            = h_T(data, T_default))
+
+        fluidConstants.molarMass = data.MM
+        fluidLimits.HMIN         = h_T(data, fluidLimits.TMIN)
+        fluidLimits.HMAX         = h_T(data, fluidLimits.TMAX)
+
         new(infos, SVector{1,IdealGasFluidConstants}(fluidConstants), fluidLimits, data)
+    end
 end
 
 

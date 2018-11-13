@@ -85,9 +85,53 @@ A medium is a struct of the following type:
 ```julia
 struct MediumXXX <: AbstractMedium  # or of a subtype of AbstractMedium
     infos::FluidInfos
-    fluidConstants::AbstractFluidConstants
+    fluidConstants::Vector{AbstractFluidConstants}
     fluidLimits::FluidLimits
     data  # medium specific data
+end
+
+struct FluidInfos 
+    mediumName::AbstractString                   # "Name of the medium";
+    substanceNames::Vector{AbstractString}       # "Names of the mixture substances. Set substanceNames=[mediumName] if only one substance.";
+    extraPropertiesNames::Vector{AbstractString} # "Names of the additional (extra) transported properties. Set extraPropertiesNames=fill(\"\",0) if unused"
+    ThermoStates::IndependentVariables           # "Enumeration type for independent variables";
+    baseProperties::Symbol                       # "Symbol of baseProperties model = :BaseProperties_<StructName>
+    singleState::Bool                            # "= true, if u and d are not a function of pressure";
+    reducedX::Bool                               # "= true if medium contains the equation sum(X) = 1.0; set reducedX=true if only one substance (see docu for details)";
+    fixedX::Bool                                 # "= true if medium contains the equation X = reference_X";
+    reference_p::Float64                         # "Reference pressure of Medium: default 1 atmosphere";
+    reference_T::Float64                         # "Reference temperature of Medium: default 25 deg Celsius";
+    reference_X::AbstractVector                  # "Default mass fractions of medium";
+    p_default::Float64                           # "Default value for pressure of medium (for initialization)";
+    T_default::Float64                           # "Default value for temperature of medium (for initialization)";
+    h_default::Float64                           # "Default value for specific enthalpy of medium (for initialization)";
+    X_default::Vector{Float64}                   # "Default value for specific enthalpy of medium (for initialization)";
+    nS::Int                                      # "Number of substances"
+    nX::Int                                      # "Number of mass fractions"
+    nXi::Int                                     # "Default value for mass fractions of medium (for initialization)"
+    nC::Int                                      # "Number of extra (outside of standard mass-balance) transported properties"
+    C_nominal::Vector{Float64}                   # "Default for the nominal values for the extra properties"  
+end
+
+struct BasicFluidConstants <: AbstractFluidConstants
+    iupacName::AbstractString           # "Complete IUPAC name (or common name, if non-existent)";
+    casRegistryNumber::AbstractString   # "Chemical abstracts sequencing number (if it exists)";
+    chemicalFormula::AbstractString     # "Chemical formula, (brutto, nomenclature according to Hill";
+    structureFormula::AbstractString    # "Chemical structure formula";
+    molarMass::Float64                  # "Molar mass";
+end
+
+mutable struct FluidLimits
+    TMIN::Float64  # "Minimum temperature";
+    TMAX::Float64  # "Maximum temperature";
+    DMIN::Float64  # "Minimum density";
+    DMAX::Float64  # "Maximum density";
+    PMIN::Float64  # "Minimum pressure";
+    PMAX::Float64  # "Maximum pressure";
+    HMIN::Float64  # "Minimum enthalpy";
+    HMAX::Float64  # "Maximum enthalpy";
+    SMIN::Float64  # "Minimum entropy";
+    SMAX::Float64  # "Maximum entropy";
 end
 ```
 

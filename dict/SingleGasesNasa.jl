@@ -48,13 +48,7 @@ Modelica package, which in turn was copied from the ThermoFluid library and
 adapted to Modelica. 
 """
 function SingleGasNasa(name::AbstractString, fluidConstants::ModiaMedia.IdealGasFluidConstants, data::ModiaMedia.SingleGasNasaData)
-    fluidConstants.molarMass = data.MM
-    fluidInfos = ModiaMedia.FluidInfos(mediumName=name, 
-                                       singleState=false,
-                                       baseProperties= :BaseProperties_SingleGasNasa,
-                                       ThermoStates=ModiaMedia.IndependentVariables_pT)
-    fluidInfos.h_default = ModiaMedia.h_T(data, fluidInfos.T_default)
-    ModiaMedia.SingleGasNasa(infos          = fluidInfos, 
+    ModiaMedia.SingleGasNasa(mediumName     = name,
                              fluidConstants = fluidConstants,
                              fluidLimits    = ModiaMedia.FluidLimits(TMIN=200.0, TMAX=6000.0),
                              data           = data)
@@ -66,11 +60,7 @@ function storeSingleGasNasaMedium!(mediumDict)
     global fluidData
     global singleGasesData
     for (name,fluidConstants) in fluidData
-        data = singleGasesData[name]
-        m    = SingleGasNasa(name, fluidConstants, data)
-        m.fluidLimits.HMIN = ModiaMedia.h_T(m.data, m.fluidLimits.TMIN)
-        m.fluidLimits.HMAX = ModiaMedia.h_T(m.data, m.fluidLimits.TMAX)
-        dict[name] = m
+        dict[name] = SingleGasNasa(name, fluidConstants, singleGasesData[name])
     end
 end
 

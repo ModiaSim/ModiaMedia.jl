@@ -14,7 +14,7 @@ This package is currently under development.
 module ModiaMedia
 
 const path    = dirname(dirname(@__FILE__))          # Absolute path of package directory
-const Version = "0.1.0-dev from 2018-11-11 22:00"
+const Version = "0.1.0-dev from 2018-11-13 21:34"
 
 println(" \nImporting ModiaMedia version ", Version)
 
@@ -64,20 +64,32 @@ include("Media/SingleGasNasa.jl")
 
 
 ### Load medium dictionary from file
-const file = "$path/src/Media/media.julia_serializer"
+function loadMediumDict(file::AbstractString)
+    mediumDict = Dict{AbstractMedium,Any}()
+    if isfile(file)
+        println("... Read media dictionary from file:\n",
+                "    ", file)
 
-if isfile(file)
-    println("... Read media dictionary from file:\n",
-            "    ", file)
+        try
+            f = open(file)  
+            mediumDict = Serialization.deserialize(f)
+            close(f)
+        catch
+            error("\n\nFile \"", file, "\" is not compatible to the modified ModiaMedia source.\n",
+                  "You have to delete this file and run `include(\"\$(ModiaMedia.path)/dict/GenerateMediumDict.jl\")` to regenerate it.\n")
+        end 
 
-    f = open(file)  
-    const mediumDict = Serialization.deserialize(f)
-    close(f)
-else
-    println("... File ", file, " does not exist.\n",
-            "    No medium can be used.")
-    const mediumDict = Dict{AbstractString, Any}()
+    else
+        println("\n... File ", file, " does not exist.\n",
+                "    You have to run `include(\"\$(ModiaMedia.path)/dict/GenerateMediumDict.jl\")` to generate it.\n",
+                "    Without this file, no Medium can be used, because the Medium data is missing.")
+    end
+    return mediumDict
 end
+
+const mediumDictFile = "$path/src/Media/media.julia_serializer"
+const mediumDict     = loadMediumDict(mediumDictFile)
+
  
 ### Inquire medium
 getMedium(name::AbstractString) = mediumDict[name]
