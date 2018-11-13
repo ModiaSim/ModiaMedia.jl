@@ -24,7 +24,51 @@
   # Plot the most important characteristics of the medium
   ModiaMedia.standardPlot(Medium)</code></pre><p>This example generates the following plot:</p><p><img src="../resources/images/N2.png" alt="standardPlot"/></p><h3><a class="nav-anchor" id="Currently-available-media-1" href="#Currently-available-media-1">Currently available media</a></h3><ul><li>SimpleLiquidWater</li></ul><ul><li>The following 37 ideal gases (from NASA Glenn coefficients):  Ar, CH4, CH3OH, CO, CO2, C2H2<em>vinylidene, C2H4, C2H5OH, C2H6, C3H6</em>propylene,  C3H8, C3H8O<em>1propanol, C4H8</em>1<em>butene, C4H10</em>n<em>butane, C5H10</em>1<em>pentene,  C5H12</em>n<em>pentane, C6H6, C6H12</em>1<em>hexene, C6H14</em>n<em>hexane, C7H14</em>1<em>heptene,   C7H16</em>n<em>heptane, C8H10</em>ethylbenz, C8H18<em>n</em>octane, CL2, F2, H2, H2O,     He, NH3, NO, NO2, N2, N2O, Ne, O2, SO2, SO3 </li></ul><h3><a class="nav-anchor" id="Structure-of-package-1" href="#Structure-of-package-1">Structure of package</a></h3><p>A medium is a struct of the following type:</p><pre><code class="language-julia">struct MediumXXX &lt;: AbstractMedium  # or of a subtype of AbstractMedium
     infos::FluidInfos
-    fluidConstants::AbstractFluidConstants
+    fluidConstants::Vector{AbstractFluidConstants}
     fluidLimits::FluidLimits
     data  # medium specific data
+end
+
+struct FluidInfos 
+    mediumName::AbstractString                   # &quot;Name of the medium&quot;;
+    substanceNames::Vector{AbstractString}       # &quot;Names of the mixture substances. Set substanceNames=[mediumName] if only one substance.&quot;;
+    extraPropertiesNames::Vector{AbstractString} # &quot;Names of the additional (extra) transported properties. Set extraPropertiesNames=fill(\&quot;\&quot;,0) if unused&quot;
+    ThermoStates::IndependentVariables           # &quot;Enumeration type for independent variables&quot;;
+    baseProperties::Symbol                       # &quot;Symbol of baseProperties model = :BaseProperties_&lt;StructName&gt;
+    singleState::Bool                            # &quot;= true, if u and d are not a function of pressure&quot;;
+    reducedX::Bool                               # &quot;= true if medium contains the equation sum(X) = 1.0; set reducedX=true if only one substance (see docu for details)&quot;;
+    fixedX::Bool                                 # &quot;= true if medium contains the equation X = reference_X&quot;;
+    reference_p::Float64                         # &quot;Reference pressure of Medium: default 1 atmosphere&quot;;
+    reference_T::Float64                         # &quot;Reference temperature of Medium: default 25 deg Celsius&quot;;
+    reference_X::AbstractVector                  # &quot;Default mass fractions of medium&quot;;
+    p_default::Float64                           # &quot;Default value for pressure of medium (for initialization)&quot;;
+    T_default::Float64                           # &quot;Default value for temperature of medium (for initialization)&quot;;
+    h_default::Float64                           # &quot;Default value for specific enthalpy of medium (for initialization)&quot;;
+    X_default::Vector{Float64}                   # &quot;Default value for specific enthalpy of medium (for initialization)&quot;;
+    nS::Int                                      # &quot;Number of substances&quot;
+    nX::Int                                      # &quot;Number of mass fractions&quot;
+    nXi::Int                                     # &quot;Default value for mass fractions of medium (for initialization)&quot;
+    nC::Int                                      # &quot;Number of extra (outside of standard mass-balance) transported properties&quot;
+    C_nominal::Vector{Float64}                   # &quot;Default for the nominal values for the extra properties&quot;  
+end
+
+struct BasicFluidConstants &lt;: AbstractFluidConstants
+    iupacName::AbstractString           # &quot;Complete IUPAC name (or common name, if non-existent)&quot;;
+    casRegistryNumber::AbstractString   # &quot;Chemical abstracts sequencing number (if it exists)&quot;;
+    chemicalFormula::AbstractString     # &quot;Chemical formula, (brutto, nomenclature according to Hill&quot;;
+    structureFormula::AbstractString    # &quot;Chemical structure formula&quot;;
+    molarMass::Float64                  # &quot;Molar mass&quot;;
+end
+
+mutable struct FluidLimits
+    TMIN::Float64  # &quot;Minimum temperature&quot;;
+    TMAX::Float64  # &quot;Maximum temperature&quot;;
+    DMIN::Float64  # &quot;Minimum density&quot;;
+    DMAX::Float64  # &quot;Maximum density&quot;;
+    PMIN::Float64  # &quot;Minimum pressure&quot;;
+    PMAX::Float64  # &quot;Maximum pressure&quot;;
+    HMIN::Float64  # &quot;Minimum enthalpy&quot;;
+    HMAX::Float64  # &quot;Maximum enthalpy&quot;;
+    SMIN::Float64  # &quot;Minimum entropy&quot;;
+    SMAX::Float64  # &quot;Maximum entropy&quot;;
 end</code></pre><p>and all instances of this struct are stored in a <strong>dictionary</strong>. This dictionary is constructed in a preprocessing step by running &quot;ModiaMedia/dict/GenerateMediumDict.jl&quot;. This module contains code that was mostly automatically converted from Modelica.Media to Julia. The resulting dictionary is serialized and stored in &quot;ModiaMedia/src/Media/media.julia_serializer&quot;. When package ModiaMedia is compiled, this serialized dictionary is deserialized and included in the compiled package.</p><p>Function <code>ModiaMedia.Medium(name)</code> returns the <code>MediumXXX</code> instance stored in the medium dictionary with key <code>name</code>.</p><h3><a class="nav-anchor" id="Status-1" href="#Status-1">Status</a></h3><p>The ModiaMedia package development has just started and a lot has to be improved.</p><h2><a class="nav-anchor" id="Release-Notes-1" href="#Release-Notes-1">Release Notes</a></h2><h3><a class="nav-anchor" id="Version-0.1.0-dev-1" href="#Version-0.1.0-dev-1">Version 0.1.0-dev</a></h3><p>A version is not yet released.</p><footer><hr/><a class="next" href="lib/Types.html"><span class="direction">Next</span><span class="title">Types</span></a></footer></article></body></html>
