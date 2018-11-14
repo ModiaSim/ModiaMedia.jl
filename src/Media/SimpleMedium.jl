@@ -100,7 +100,7 @@ specificHeatCapacityCp( m::SimpleMedium, state::ThermodynamicState_pT)::Float64 
 density(      m::SimpleMedium)::Float64 = m.data.d_const
 density_der_1(m::SimpleMedium)::Float64 = 0.0
 
-specificInternalEnergy_T(      m::SimpleMedium,T)::Float64 = m.data.cv_const*(state.T - m.data.T0)
+specificInternalEnergy_T(      m::SimpleMedium,T)::Float64 = m.data.cv_const*(T - m.data.T0)
 specificInternalEnergy_T_der_1(m::SimpleMedium,T)::Float64 = 0.0
 specificInternalEnergy_T_der_2(m::SimpleMedium,T)::Float64 = m.data.cv_const
 
