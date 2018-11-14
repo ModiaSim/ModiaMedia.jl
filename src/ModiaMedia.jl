@@ -43,9 +43,18 @@ abstract type AbstractMedium end
 
 "`abstract type PureSubstance <: AbstractMedium` - Abstract type of all media consisting of a pure substance"
 abstract type PureSubstance <: AbstractMedium end
+
+"`abstract type MixtureMedium <: AbstractMedium` - Abstract type of all media consisting of a mixture"
+abstract type MixtureMedium <: AbstractMedium end
+
+"`abstract type CondensingGases <: AbstractMedium` - Abstract type of all media consisting of condensing media"
+abstract type CondensingGases <: MixtureMedium end
  
 "`abstract type ThermodynamicState` - Abstract type of all media states"
 abstract type ThermodynamicState end
+
+"`abstract type MixtureThermodynamicState <: ThermodynamicState` - Abstract type of the states of all media consisting of a mixture"
+abstract type MixtureThermodynamicState <: ThermodynamicState end
 
 "`abstract type AbstractFluidConstants` - Abstract type of all FluidConstants structures"
 abstract type AbstractFluidConstants end
@@ -65,10 +74,12 @@ using  .Unitful_U_str
 
 include("Interfaces/PartialMedium.jl")
 include("Interfaces/PartialPureSubstance.jl")
+include("Interfaces/PartialMixtureMedium.jl")
+include("Interfaces/PartialCondensingGases.jl")
+
 include("Media/SimpleMedium.jl")
 include("Media/SimpleIdealGasMedium.jl")
 include("Media/SingleGasNasa.jl")
-
 
 ### Load medium dictionary from file
 function loadMediumDict(file::AbstractString)
@@ -97,6 +108,7 @@ end
 const mediumDictFile = "$path/src/Media/media.julia_serializer"
 const mediumDict     = loadMediumDict(mediumDictFile)
 
+include("Media/IdealMoistAir.jl")
  
 ### Inquire medium
 getMedium(name::AbstractString) = mediumDict[name]
