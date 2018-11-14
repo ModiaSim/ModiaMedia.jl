@@ -4,8 +4,8 @@
 #
 
 """
-    data = SimpleMediumData(;cp_const=NaN, cv_const=NaN, d_const=NaN, eta_const=NaN,
-                             lambda_const=NaN, a_const=NaN, T0=NaN, MM_const=NaN)
+    data = SimpleMediumData(;cp_const=nothing, cv_const=nothing, d_const=nothing, eta_const=nothing,
+                             lambda_const=nothing, a_const=nothing, T0=nothing, MM_const=nothing)
 
 Generate a `SimpleMediumData` object containing the data
 for a SimpleMedium medium.
@@ -17,24 +17,26 @@ mutable struct SimpleMediumData
     eta_const::Float64      # "Constant dynamic viscosity";
     lambda_const::Float64   # "Constant thermal conductivity";
     a_const::Float64        # "Constant velocity of sound";
+    T_min::Float64          # Minimum temperature valid for medium model 
+    T_max::Float64          # Maximum temperature valid for medium model
     T0::Float64             # "Zero enthalpy temperature";
     MM_const                # "Molar mass";
 
-    SimpleMediumData(;cp_const=NaN, cv_const=NaN, d_const=NaN, eta_const=NaN,
-                      lambda_const=NaN, a_const=NaN, T0=NaN, MM_const=NaN) =
-         new(cp_const, cv_const, d_const, eta_const, lambda_const, a_const, T0, MM_const)
+    SimpleMediumData(;cp_const=nothing, cv_const=nothing, d_const=nothing, eta_const=nothing,
+                      lambda_const=nothing, a_const=nothing, T_min=nothing, T_max=nothing, 
+                      T0=nothing, MM_const=nothing) =
+         new(cp_const, cv_const, d_const, eta_const, lambda_const, a_const, T_min, T_max, T0, MM_const)
 end
 
 
 
 """
-    medium = SimpleMedium(; mediumName     = Missing,
+    medium = SimpleMedium(; mediumName     = nothing,
                             reference_p    = 101325,
                             reference_T    = 298.15,
                             p_default      = 101325,
                             T_default      = 293.15,
                             fluidConstants = nothing, 
-                            fluidLimits    = FluidLimits(), 
                             data           = nothing)
 
 Generate a `SimpleMedium <: PureSubstance` medium object.
@@ -45,13 +47,12 @@ struct SimpleMedium <: PureSubstance
     fluidLimits::FluidLimits
     data::SimpleMediumData
 
-    function SimpleMedium(; mediumName=Missing,
+    function SimpleMedium(; mediumName=nothing,
                             reference_p=101325,
                             reference_T=298.15,
                             p_default=101325,
                             T_default=293.15,
                             fluidConstants=nothing, 
-                            fluidLimits=FluidLimits(), 
                             data=nothing)
 
         infos = FluidInfos(mediumName           = mediumName,
@@ -69,8 +70,10 @@ struct SimpleMedium <: PureSubstance
                            T_default            = T_default,
                            h_default            = specificEnthalpy(data, ThermodynamicState_pT(p_default,T_default)))
 
-        fluidLimits.HMIN = specificEnthalpy(data, ThermodynamicState_pT(p_default,fluidLimits.TMIN))
-        fluidLimits.HMAX = specificEnthalpy(data, ThermodynamicState_pT(p_default,fluidLimits.TMAX))
+        fluidLimits = FluidLimits(TMIN = data.T_min, 
+                                  TMAX = data.T_max,
+                                  HMIN = specificEnthalpy(data, ThermodynamicState_pT(p_default,data.T_min)),
+                                  HMAX = specificEnthalpy(data, ThermodynamicState_pT(p_default,data.T_max)))
 
         new(infos, fill(fluidConstants,1), fluidLimits, data)
     end

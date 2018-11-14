@@ -234,7 +234,7 @@ end
 Generate a `BasicFluidConstants <: AbstractFluidConstants` object 
 containing the minimal information about the standard data of the medium.
 """
-struct BasicFluidConstants <: AbstractFluidConstants
+mutable struct BasicFluidConstants <: AbstractFluidConstants
     iupacName::AbstractString           # "Complete IUPAC name (or common name, if non-existent)";
     casRegistryNumber::AbstractString   # "Chemical abstracts sequencing number (if it exists)";
     chemicalFormula::AbstractString     # "Chemical formula, (brutto, nomenclature according to Hill";
@@ -262,7 +262,7 @@ Generate a `IdealGasFluidConstants <: AbstractFluidConstants` object
 containing the minimal information about the standard data of ideal gas media
 (critical, triple, molecular and other standard data).
 """
-struct IdealGasFluidConstants <: AbstractFluidConstants
+mutable struct IdealGasFluidConstants <: AbstractFluidConstants
     iupacName::AbstractString           # "Complete IUPAC name (or common name, if non-existent)";
     casRegistryNumber::AbstractString   # "Chemical abstracts sequencing number (if it exists)";
     chemicalFormula::AbstractString     # "Chemical formula, (brutto, nomenclature according to Hill";
@@ -387,6 +387,10 @@ density_phX(m::AbstractMedium, p,h,X) = density(m, setState_phX(m,p,h,X))
 
 
 ### Other functions operating on the medium ---------------------------------------------------------------------------------
+
+to_DensityDisplayUnit(d) = d*1e-3
+from_degC(Celsius)       = Celsius + 273.15
+
 
 """
     dict = standardCharacteristics(medium::AbstractMedium)

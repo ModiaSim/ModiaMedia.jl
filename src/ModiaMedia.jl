@@ -12,13 +12,13 @@ such as multiple dispatch.
 This package is currently under development.
 """
 module ModiaMedia
-
+ 
 const path    = dirname(dirname(@__FILE__))          # Absolute path of package directory
-const Version = "0.1.0-dev from 2018-11-13 21:34"
+const Version = "0.1.0-dev from 2018-11-14 11:00"
 
 println(" \nImporting ModiaMedia version ", Version)
 
-
+ 
 export getMedium
 export density, pressure, specificEnthalpy, specificInternalEnergy, temperature
 export setState_pT, setState_ph, setState_ps, setState_dT
@@ -60,6 +60,7 @@ using  .Unitful_U_str
 include("Interfaces/PartialMedium.jl")
 include("Interfaces/PartialPureSubstance.jl")
 include("Media/SimpleMedium.jl")
+include("Media/SimpleIdealGasMedium.jl")
 include("Media/SingleGasNasa.jl")
 
 
