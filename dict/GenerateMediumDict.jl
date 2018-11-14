@@ -43,8 +43,8 @@ end
 
 
 ### Including data --------------------------------------------------------
-include("SimpleMedia.jl")
-include("SimpleAir.jl")
+include("SimpleMedium.jl")
+include("SimpleIdealGasMedium.jl")
 include("SingleGasesNasa.jl")
 
 ### Write data to file ----------------------------------------------------
