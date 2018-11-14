@@ -104,6 +104,16 @@ isentropicExponent(     m::SimpleIdealGasMedium, state::ThermodynamicState_pT)::
 velocityOfSound(        m::SimpleIdealGasMedium, state::ThermodynamicState_pT)::Float64 = sqrt(m.data.cp_const/m.data.cv_const*m.data.R_gas*state.T)
 
 
+density_pT(      m::SimpleIdealGasMedium,p,T)::Float64 = p/(m.data.R_gas*T)
+density_pT_der_1(m::SimpleIdealGasMedium,p,T)::Float64 = 0.0
+density_pT_der_2(m::SimpleIdealGasMedium,p,T)::Float64 = 1.0/(m.data.R_gas*T)
+density_pT_der_3(m::SimpleIdealGasMedium,p,T)::Float64 = -p/(m.data.R_gas*T*T)
+
+specificInternalEnergy_T(      m::SimpleIdealGasMedium,T)::Float64 = m.data.cp_const*(T-m.data.T0)-m.data.R_gas*T
+specificInternalEnergy_T_der_1(m::SimpleIdealGasMedium,T)::Float64 = 0.0
+specificInternalEnergy_T_der_2(m::SimpleIdealGasMedium,T)::Float64 = m.data.cp_const - m.data.R_gas
+
+
 function standardCharacteristics(m::SimpleIdealGasMedium)::Dict{AbstractString,Any}
     p_ref = m.infos.reference_p
     T     = collect( range(m.fluidLimits.TMIN, stop=min(1600.0, m.fluidLimits.TMAX), length=501) )

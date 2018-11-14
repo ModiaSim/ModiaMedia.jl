@@ -5,16 +5,7 @@
 
 ### Data structures that are additionally available for media <: PartialPureSubstance -----------------------
 
-"""
-    state = ThermodynamicState_pT(p,T)
 
-Generate a `ThermodynamicState_pT <: PureSubstanceThermodynamicState` object containg
-pressure `p` [Pa] and temperature `T` [K] as states.
-"""
-mutable struct ThermodynamicState_pT <: PureSubstanceThermodynamicState
-    p::Float64
-    T::Float64
-end
 
 
 """ 
@@ -67,5 +58,15 @@ pressure_dT(m::PureSubstance, d,T) = pressure(m, setState_dT(m,d,T))
 
 "h = specificEnthalpy_dT(medium,d,T) - return specific enthalpy in [J/kg] for `medium` from density `d` [kg/m^3] and and temperature `T` [K]."
 specificEnthalpy_dT(m::PureSubstance, d,T) = specificEnthalpy(m, setState_dT(m,d,T))
+
+
+
+
+### Derivatives needed for mass and energy balance ------------------------------------------------------
+
+density_ph_der_1(m::PureSubstance, p, h) = 0.0
+density_ph_der_2(m::PureSubstance, p, h) = undefinedFunction("density_ph_der_2")
+density_ph_der_3(m::PureSubstance, p, h) = undefinedFunction("density_ph_der_3")
+
 
 
