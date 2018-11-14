@@ -1,6 +1,6 @@
 # ModiaMedia.jl Documentation
 
-[ModiaMedia](https://github.com/ModiaSim/ModiaMedia.jl) shall provide Media models 
+[ModiaMedia](https://github.com/ModiaSim/ModiaMedia.jl) shall provide Media models
 for use with [Modia](https://github.com/ModiaSim/Modia.jl)
 and other Julia packages. The initial goal is to achieve a similar functionality as
 [Modelica.Media](https://doc.modelica.org/Modelica%203.2.3/Resources/helpDymola/Modelica_Media.html#Modelica.Media),
@@ -68,14 +68,15 @@ This example generates the following plot:
 
 ### Currently available media
 
-- SimpleLiquidWater
+- Media from `struct SimpleMedium <: PureSubstance`:\
+  ConstantPropertyLiquidWater
 
-- The following 37 ideal gases (from NASA Glenn coefficients): 
-  Ar, CH4, CH3OH, CO, CO2, C2H2_vinylidene, C2H4, C2H5OH, C2H6, C3H6_propylene, 
-  C3H8, C3H8O_1propanol, C4H8_1_butene, C4H10_n_butane, C5H10_1_pentene, 
-  C5H12_n_pentane, C6H6, C6H12_1_hexene, C6H14_n_hexane, C7H14_1_heptene,  
-  C7H16_n_heptane, C8H10_ethylbenz, C8H18_n_octane, CL2, F2, H2, H2O,    
-  He, NH3, NO, NO2, N2, N2O, Ne, O2, SO2, SO3 
+- Media from `struct SimpleIdealGasMedium <: PureSubstance`: \
+  SimpleAir
+
+- Media from `struct SingleGasNasa <: PureSubstance`: \
+  Ar, CH4, CH3OH, CO, CO2, C2H2\_vinylidene, C2H4, C2H5OH, C2H6, C3H6\_propylene, C3H8, C3H8O\_1propanol, C4H8\_1\_butene, C4H10\_n\_butane, C5H10\_1\_pentene, C5H12\_n\_pentane, C6H6, C6H12\_1\_hexene, C6H14\_n\_hexane, C7H14\_1\_heptene, C7H16\_n\_heptane, C8H10\_ethylbenz, C8H18\_n\_octane, CL2, F2, H2, H2O, He, NH3, NO, NO2, N2, N2O, Ne, O2, SO2, SO3
+
 
 
 ### Structure of package
@@ -90,7 +91,7 @@ struct MediumXXX <: AbstractMedium  # or of a subtype of AbstractMedium
     data  # medium specific data
 end
 
-struct FluidInfos 
+struct FluidInfos
     mediumName::AbstractString                   # "Name of the medium";
     substanceNames::Vector{AbstractString}       # "Names of the mixture substances. Set substanceNames=[mediumName] if only one substance.";
     extraPropertiesNames::Vector{AbstractString} # "Names of the additional (extra) transported properties. Set extraPropertiesNames=fill(\"\",0) if unused"
@@ -110,7 +111,7 @@ struct FluidInfos
     nX::Int                                      # "Number of mass fractions"
     nXi::Int                                     # "Default value for mass fractions of medium (for initialization)"
     nC::Int                                      # "Number of extra (outside of standard mass-balance) transported properties"
-    C_nominal::Vector{Float64}                   # "Default for the nominal values for the extra properties"  
+    C_nominal::Vector{Float64}                   # "Default for the nominal values for the extra properties"
 end
 
 struct BasicFluidConstants <: AbstractFluidConstants

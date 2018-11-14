@@ -14,14 +14,11 @@ const h_offset                   = 0.0                          # User defined o
 
 
 ### Data structures
-const alowUndefined = SVector(NaN,NaN,NaN,NaN,NaN,NaN,NaN)
-const blowUndefined = SVector(NaN,NaN)
-
 
 """
-    data = SingleGasNasaData(;name=Missing, MM=NaN, Hf=NaN, H0=NaN, Tlimit=NaN,
+    data = SingleGasNasaData(;name=Missing, MM=nothing, Hf=nothing, H0=nothing, Tlimit=nothing,
                               alow=Missing, blow=Missing, ahigh=Missing,
-                              bhigh=Missing, R=NaN)
+                              bhigh=Missing, R=nothing)
 
 Generate a `SingleGasNasaData` object containing the data
 for an ideal Gas based on the NASA Glenn coefficients.
@@ -38,16 +35,16 @@ mutable struct SingleGasNasaData
     bhigh::SVector{2,Float64}  # "High temperature constants b"
     R::Float64                 # SI.SpecificHeatCapacity R "Gas constant"
 
-    SingleGasNasaData(;name=Missing,
-                       MM=NaN,
-                       Hf=NaN,
-                       H0=NaN,
-                       Tlimit=NaN,
-                       alow=alowUndefined,
-                       blow=blowUndefined,
-                       ahigh=alowUndefined,
-                       bhigh=blowUndefined,
-                       R=NaN) = 
+    SingleGasNasaData(;name=nothing,
+                       MM=nothing,
+                       Hf=nothing,
+                       H0=nothing,
+                       Tlimit=nothing,
+                       alow=nothing,
+                       blow=nothing,
+                       ahigh=nothing,
+                       bhigh=nothing,
+                       R=nothing) = 
                        new(name, MM,Hf,H0,Tlimit,alow,blow,ahigh,bhigh,R)
 end
 
@@ -70,7 +67,7 @@ struct SingleGasNasa <: PureSubstance
     fluidLimits::FluidLimits
     data::SingleGasNasaData
 
-    function SingleGasNasa(; mediumName=Missing,
+    function SingleGasNasa(; mediumName=nothing,
                              reference_p=101325,
                              reference_T=298.15,
                              p_default=101325,
@@ -181,7 +178,6 @@ specificEnthalpy(      m::SingleGasNasa, state::ThermodynamicState_pT)::Float64 
 specificInternalEnergy(m::SingleGasNasa, state::ThermodynamicState_pT)::Float64 = h_T(m.data,state.T) - m.data.R*state.T
 specificHeatCapacityCp(m::SingleGasNasa, state::ThermodynamicState_pT)::Float64 = s0_T(m.data,state.T) - m.data.R*log(state.p/m.infos.reference_p)
 
-to_DensityDisplayUnit(d) = d*1e-3
 
 function standardCharacteristics(m::SingleGasNasa)::Dict{AbstractString,Any}
     p_ref = m.infos.reference_p

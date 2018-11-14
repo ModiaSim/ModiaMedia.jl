@@ -44,6 +44,7 @@ end
 
 ### Including data --------------------------------------------------------
 include("SimpleMedia.jl")
+include("SimpleAir.jl")
 include("SingleGasesNasa.jl")
 
 ### Write data to file ----------------------------------------------------
