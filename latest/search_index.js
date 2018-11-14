@@ -13,7 +13,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "ModiaMedia.jl Documentation",
     "category": "section",
-    "text": "ModiaMedia shall provide Media models  for use with Modia and other Julia packages. The initial goal is to achieve a similar functionality as Modelica.Media, the standard media library for Modelica models, but with improvements based on Julia features such as multiple dispatch.This package is under development and it is planned to provide all media from Modelica.Media in this package."
+    "text": "ModiaMedia shall provide Media models for use with Modia and other Julia packages. The initial goal is to achieve a similar functionality as Modelica.Media, the standard media library for Modelica models, but with improvements based on Julia features such as multiple dispatch.This package is under development and it is planned to provide all media from Modelica.Media in this package."
 },
 
 {
@@ -37,7 +37,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Currently available media",
     "category": "section",
-    "text": "SimpleLiquidWaterThe following 37 ideal gases (from NASA Glenn coefficients):  Ar, CH4, CH3OH, CO, CO2, C2H2vinylidene, C2H4, C2H5OH, C2H6, C3H6propylene,  C3H8, C3H8O1propanol, C4H81butene, C4H10nbutane, C5H101pentene,  C5H12npentane, C6H6, C6H121hexene, C6H14nhexane, C7H141heptene,   C7H16nheptane, C8H10ethylbenz, C8H18noctane, CL2, F2, H2, H2O,     He, NH3, NO, NO2, N2, N2O, Ne, O2, SO2, SO3 "
+    "text": "Media from struct SimpleMedium <: PureSubstance:\nConstantPropertyLiquidWaterMedia from struct SimpleIdealGasMedium <: PureSubstance: \nSimpleAirMedia from struct SingleGasNasa <: PureSubstance: \nAr, CH4, CH3OH, CO, CO2, C2H2_vinylidene, C2H4, C2H5OH, C2H6, C3H6_propylene, C3H8, C3H8O_1propanol, C4H8_1_butene, C4H10_n_butane, C5H10_1_pentene, C5H12_n_pentane, C6H6, C6H12_1_hexene, C6H14_n_hexane, C7H14_1_heptene, C7H16_n_heptane, C8H10_ethylbenz, C8H18_n_octane, CL2, F2, H2, H2O, He, NH3, NO, NO2, N2, N2O, Ne, O2, SO2, SO3"
 },
 
 {
@@ -45,7 +45,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Structure of package",
     "category": "section",
-    "text": "A medium is a struct of the following type:struct MediumXXX <: AbstractMedium  # or of a subtype of AbstractMedium\r\n    infos::FluidInfos\r\n    fluidConstants::Vector{AbstractFluidConstants}\r\n    fluidLimits::FluidLimits\r\n    data  # medium specific data\r\nend\r\n\r\nstruct FluidInfos \r\n    mediumName::AbstractString                   # \"Name of the medium\";\r\n    substanceNames::Vector{AbstractString}       # \"Names of the mixture substances. Set substanceNames=[mediumName] if only one substance.\";\r\n    extraPropertiesNames::Vector{AbstractString} # \"Names of the additional (extra) transported properties. Set extraPropertiesNames=fill(\\\"\\\",0) if unused\"\r\n    ThermoStates::IndependentVariables           # \"Enumeration type for independent variables\";\r\n    baseProperties::Symbol                       # \"Symbol of baseProperties model = :BaseProperties_<StructName>\r\n    singleState::Bool                            # \"= true, if u and d are not a function of pressure\";\r\n    reducedX::Bool                               # \"= true if medium contains the equation sum(X) = 1.0; set reducedX=true if only one substance (see docu for details)\";\r\n    fixedX::Bool                                 # \"= true if medium contains the equation X = reference_X\";\r\n    reference_p::Float64                         # \"Reference pressure of Medium: default 1 atmosphere\";\r\n    reference_T::Float64                         # \"Reference temperature of Medium: default 25 deg Celsius\";\r\n    reference_X::AbstractVector                  # \"Default mass fractions of medium\";\r\n    p_default::Float64                           # \"Default value for pressure of medium (for initialization)\";\r\n    T_default::Float64                           # \"Default value for temperature of medium (for initialization)\";\r\n    h_default::Float64                           # \"Default value for specific enthalpy of medium (for initialization)\";\r\n    X_default::Vector{Float64}                   # \"Default value for specific enthalpy of medium (for initialization)\";\r\n    nS::Int                                      # \"Number of substances\"\r\n    nX::Int                                      # \"Number of mass fractions\"\r\n    nXi::Int                                     # \"Default value for mass fractions of medium (for initialization)\"\r\n    nC::Int                                      # \"Number of extra (outside of standard mass-balance) transported properties\"\r\n    C_nominal::Vector{Float64}                   # \"Default for the nominal values for the extra properties\"  \r\nend\r\n\r\nstruct BasicFluidConstants <: AbstractFluidConstants\r\n    iupacName::AbstractString           # \"Complete IUPAC name (or common name, if non-existent)\";\r\n    casRegistryNumber::AbstractString   # \"Chemical abstracts sequencing number (if it exists)\";\r\n    chemicalFormula::AbstractString     # \"Chemical formula, (brutto, nomenclature according to Hill\";\r\n    structureFormula::AbstractString    # \"Chemical structure formula\";\r\n    molarMass::Float64                  # \"Molar mass\";\r\nend\r\n\r\nmutable struct FluidLimits\r\n    TMIN::Float64  # \"Minimum temperature\";\r\n    TMAX::Float64  # \"Maximum temperature\";\r\n    DMIN::Float64  # \"Minimum density\";\r\n    DMAX::Float64  # \"Maximum density\";\r\n    PMIN::Float64  # \"Minimum pressure\";\r\n    PMAX::Float64  # \"Maximum pressure\";\r\n    HMIN::Float64  # \"Minimum enthalpy\";\r\n    HMAX::Float64  # \"Maximum enthalpy\";\r\n    SMIN::Float64  # \"Minimum entropy\";\r\n    SMAX::Float64  # \"Maximum entropy\";\r\nendand all instances of this struct are stored in a dictionary. This dictionary is constructed in a preprocessing step by running \"ModiaMedia/dict/GenerateMediumDict.jl\". This module contains code that was mostly automatically converted from Modelica.Media to Julia. The resulting dictionary is serialized and stored in \"ModiaMedia/src/Media/media.julia_serializer\". When package ModiaMedia is compiled, this serialized dictionary is deserialized and included in the compiled package.Function ModiaMedia.Medium(name) returns the MediumXXX instance stored in the medium dictionary with key name."
+    "text": "A medium is a struct of the following type:struct MediumXXX <: AbstractMedium  # or of a subtype of AbstractMedium\r\n    infos::FluidInfos\r\n    fluidConstants::Vector{AbstractFluidConstants}\r\n    fluidLimits::FluidLimits\r\n    data  # medium specific data\r\nend\r\n\r\nstruct FluidInfos\r\n    mediumName::AbstractString                   # \"Name of the medium\";\r\n    substanceNames::Vector{AbstractString}       # \"Names of the mixture substances. Set substanceNames=[mediumName] if only one substance.\";\r\n    extraPropertiesNames::Vector{AbstractString} # \"Names of the additional (extra) transported properties. Set extraPropertiesNames=fill(\\\"\\\",0) if unused\"\r\n    ThermoStates::IndependentVariables           # \"Enumeration type for independent variables\";\r\n    baseProperties::Symbol                       # \"Symbol of baseProperties model = :BaseProperties_<StructName>\r\n    singleState::Bool                            # \"= true, if u and d are not a function of pressure\";\r\n    reducedX::Bool                               # \"= true if medium contains the equation sum(X) = 1.0; set reducedX=true if only one substance (see docu for details)\";\r\n    fixedX::Bool                                 # \"= true if medium contains the equation X = reference_X\";\r\n    reference_p::Float64                         # \"Reference pressure of Medium: default 1 atmosphere\";\r\n    reference_T::Float64                         # \"Reference temperature of Medium: default 25 deg Celsius\";\r\n    reference_X::AbstractVector                  # \"Default mass fractions of medium\";\r\n    p_default::Float64                           # \"Default value for pressure of medium (for initialization)\";\r\n    T_default::Float64                           # \"Default value for temperature of medium (for initialization)\";\r\n    h_default::Float64                           # \"Default value for specific enthalpy of medium (for initialization)\";\r\n    X_default::Vector{Float64}                   # \"Default value for specific enthalpy of medium (for initialization)\";\r\n    nS::Int                                      # \"Number of substances\"\r\n    nX::Int                                      # \"Number of mass fractions\"\r\n    nXi::Int                                     # \"Default value for mass fractions of medium (for initialization)\"\r\n    nC::Int                                      # \"Number of extra (outside of standard mass-balance) transported properties\"\r\n    C_nominal::Vector{Float64}                   # \"Default for the nominal values for the extra properties\"\r\nend\r\n\r\nstruct BasicFluidConstants <: AbstractFluidConstants\r\n    iupacName::AbstractString           # \"Complete IUPAC name (or common name, if non-existent)\";\r\n    casRegistryNumber::AbstractString   # \"Chemical abstracts sequencing number (if it exists)\";\r\n    chemicalFormula::AbstractString     # \"Chemical formula, (brutto, nomenclature according to Hill\";\r\n    structureFormula::AbstractString    # \"Chemical structure formula\";\r\n    molarMass::Float64                  # \"Molar mass\";\r\nend\r\n\r\nmutable struct FluidLimits\r\n    TMIN::Float64  # \"Minimum temperature\";\r\n    TMAX::Float64  # \"Maximum temperature\";\r\n    DMIN::Float64  # \"Minimum density\";\r\n    DMAX::Float64  # \"Maximum density\";\r\n    PMIN::Float64  # \"Minimum pressure\";\r\n    PMAX::Float64  # \"Maximum pressure\";\r\n    HMIN::Float64  # \"Minimum enthalpy\";\r\n    HMAX::Float64  # \"Maximum enthalpy\";\r\n    SMIN::Float64  # \"Minimum entropy\";\r\n    SMAX::Float64  # \"Maximum entropy\";\r\nendand all instances of this struct are stored in a dictionary. This dictionary is constructed in a preprocessing step by running \"ModiaMedia/dict/GenerateMediumDict.jl\". This module contains code that was mostly automatically converted from Modelica.Media to Julia. The resulting dictionary is serialized and stored in \"ModiaMedia/src/Media/media.julia_serializer\". When package ModiaMedia is compiled, this serialized dictionary is deserialized and included in the compiled package.Function ModiaMedia.Medium(name) returns the MediumXXX instance stored in the medium dictionary with key name."
 },
 
 {
@@ -177,11 +177,27 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lib/Types.html#ModiaMedia.SimpleIdealGasMedium",
+    "page": "Types",
+    "title": "ModiaMedia.SimpleIdealGasMedium",
+    "category": "type",
+    "text": "medium = SimpleIdealGasMedium(; mediumName     = nothing,\n                                reference_p    = 101325,\n                                reference_T    = 298.15,\n                                p_default      = 101325,\n                                T_default      = 293.15,\n                                fluidConstants = nothing, \n                                data           = nothing)\n\nGenerate a SimpleIdealGasMedium <: PureSubstance medium object.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/Types.html#ModiaMedia.SimpleIdealGasMediumData",
+    "page": "Types",
+    "title": "ModiaMedia.SimpleIdealGasMediumData",
+    "category": "type",
+    "text": "data = SimpleIdealGasMediumData(;cp_const=nothing, R_gas=nothing, MM_const=nothing, \n                                 eta_const=nothing, lambda_const=nothing, T_min=nothing,\n                                 T_max=nothing, T0=nothing)\n\nGenerate a SimpleIdealGasMediumData object containing the data for a SimpleIdealGas medium.\n\n\n\n\n\n"
+},
+
+{
     "location": "lib/Types.html#ModiaMedia.SimpleMedium",
     "page": "Types",
     "title": "ModiaMedia.SimpleMedium",
     "category": "type",
-    "text": "medium = SimpleMedium(; mediumName     = Missing,\n                        reference_p    = 101325,\n                        reference_T    = 298.15,\n                        p_default      = 101325,\n                        T_default      = 293.15,\n                        fluidConstants = nothing, \n                        fluidLimits    = FluidLimits(), \n                        data           = nothing)\n\nGenerate a SimpleMedium <: PureSubstance medium object.\n\n\n\n\n\n"
+    "text": "medium = SimpleMedium(; mediumName     = nothing,\n                        reference_p    = 101325,\n                        reference_T    = 298.15,\n                        p_default      = 101325,\n                        T_default      = 293.15,\n                        fluidConstants = nothing, \n                        data           = nothing)\n\nGenerate a SimpleMedium <: PureSubstance medium object.\n\n\n\n\n\n"
 },
 
 {
@@ -189,7 +205,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Types",
     "title": "ModiaMedia.SimpleMediumData",
     "category": "type",
-    "text": "data = SimpleMediumData(;cp_const=NaN, cv_const=NaN, d_const=NaN, eta_const=NaN,\n                         lambda_const=NaN, a_const=NaN, T0=NaN, MM_const=NaN)\n\nGenerate a SimpleMediumData object containing the data for a SimpleMedium medium.\n\n\n\n\n\n"
+    "text": "data = SimpleMediumData(;cp_const=nothing, cv_const=nothing, d_const=nothing, eta_const=nothing,\n                         lambda_const=nothing, a_const=nothing, T0=nothing, MM_const=nothing)\n\nGenerate a SimpleMediumData object containing the data for a SimpleMedium medium.\n\n\n\n\n\n"
 },
 
 {
@@ -205,7 +221,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Types",
     "title": "ModiaMedia.SingleGasNasaData",
     "category": "type",
-    "text": "data = SingleGasNasaData(;name=Missing, MM=NaN, Hf=NaN, H0=NaN, Tlimit=NaN,\n                          alow=Missing, blow=Missing, ahigh=Missing,\n                          bhigh=Missing, R=NaN)\n\nGenerate a SingleGasNasaData object containing the data for an ideal Gas based on the NASA Glenn coefficients.\n\n\n\n\n\n"
+    "text": "data = SingleGasNasaData(;name=Missing, MM=nothing, Hf=nothing, H0=nothing, Tlimit=nothing,\n                          alow=Missing, blow=Missing, ahigh=Missing,\n                          bhigh=Missing, R=nothing)\n\nGenerate a SingleGasNasaData object containing the data for an ideal Gas based on the NASA Glenn coefficients.\n\n\n\n\n\n"
 },
 
 {
