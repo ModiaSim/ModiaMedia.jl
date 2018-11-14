@@ -41,13 +41,34 @@ Enumeration defining the independent variables of a medium. Possible values:
 | `IndependentVariables_dTX` | Density, temperature, mass fractions        |
 """
 @enum IndependentVariables begin 
-    IndependentVariables_T         # Temperature
+    IndependentVariables_T=1       # Temperature
     IndependentVariables_pT        # Pressure, Temperature
     IndependentVariables_ph        # Pressure, Specific Enthalpy
     IndependentVariables_phX       # Pressure, Specific Enthalpy, Mass Fraction
     IndependentVariables_pTX       # Pressure, Temperature, Mass Fractions
     IndependentVariables_dTX       # Density, Temperature, Mass Fractions
 end
+
+
+"""
+    state = ThermodynamicState_pT(p,T)
+
+Generate a `ThermodynamicState_pT <: ThermodynamicState` object containg
+pressure `p` [Pa] and temperature `T` [K] as states.
+"""
+mutable struct ThermodynamicState_pT <: ThermodynamicState
+    p::Float64
+    T::Float64
+end
+
+
+const ThermodynamicStates = MVector{6,Any}(nothing,
+                                           ThermodynamicState_pT,
+                                           nothing,
+                                           nothing,
+                                           nothing,
+                                           nothing)
+
 
 
 """
@@ -367,6 +388,7 @@ specificInternalEnergy(m::AbstractMedium, state::ThermodynamicState) = undefined
 
 "cp = specificHeatCapacityCp(medium,state) - return specific heat capacity at constant pressure for `medium` from `state` in [J/(kg*K)]"
 specificHeatCapacityCp(m::AbstractMedium, state::ThermodynamicState) = undefinedFunction("specificHeatCapacity", m)
+
 
 
 

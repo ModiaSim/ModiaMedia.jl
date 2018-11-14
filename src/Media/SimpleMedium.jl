@@ -58,7 +58,7 @@ struct SimpleMedium <: PureSubstance
         infos = FluidInfos(mediumName           = mediumName,
                            substanceNames       = [mediumName],
                            extraPropertiesNames = fill("",0),
-                           ThermoStates         = IndependentVariables_T,
+                           ThermoStates         = IndependentVariables_pT,
                            baseProperties       = :BaseProperties_SimpleMedium,
                            singleState          = true,
                            reducedX             = true,
@@ -94,6 +94,15 @@ specificEnthalpy(       m::SimpleMedium, state::ThermodynamicState_pT)::Float64 
 specificInternalEnergy( m::SimpleMedium, state::ThermodynamicState_pT)::Float64 = m.data.cv_const*(state.T - m.data.T0)
 specificHeatCapacityCp( m::SimpleMedium, state::ThermodynamicState_pT)::Float64 = m.data.cp_const
 
+
+### Functions for mass and energy balance
+
+density(      m::SimpleMedium)::Float64 = m.data.d_const
+density_der_1(m::SimpleMedium)::Float64 = 0.0
+
+specificInternalEnergy_T(      m::SimpleMedium,T)::Float64 = m.data.cv_const*(state.T - m.data.T0)
+specificInternalEnergy_T_der_1(m::SimpleMedium,T)::Float64 = 0.0
+specificInternalEnergy_T_der_2(m::SimpleMedium,T)::Float64 = m.data.cv_const
 
 
 function standardCharacteristics(m::SimpleMedium)::Dict{AbstractString,Any}

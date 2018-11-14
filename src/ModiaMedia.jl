@@ -12,16 +12,26 @@ such as multiple dispatch.
 This package is currently under development.
 """
 module ModiaMedia
- 
+  
 const path    = dirname(dirname(@__FILE__))          # Absolute path of package directory
-const Version = "0.1.0-dev from 2018-11-14 11:00"
+const Version = "0.1.0-dev from 2018-11-14 16:28"
 
 println(" \nImporting ModiaMedia version ", Version)
 
  
-export getMedium
-export density, pressure, specificEnthalpy, specificInternalEnergy, temperature
-export setState_pT, setState_ph, setState_ps, setState_dT
+export AbstractMedium, PureSubstance, getMedium
+export density, density_der_1, density_pT, density_pT_der_1, density_pT_der_2, density_pT_der_3 
+export specificInternalEnergy_T, specificInternalEnergy_T_der_1, specificInternalEnergy_T_der_2
+
+export temperature, temperature_ph
+export pressure, pressure_dT
+export specificEnthalpy, specificEnthalpy_dT
+export specificInternalEnergy
+export setState_pTX, setState_pT, setState_ph, setState_ps, setState_dT
+
+export ThermodynamicState, ThermodynamicStates, ThermodynamicState_pT
+export IndependentVariables, IndependentVariables_T, IndependentVariables_pT, IndependentVariables_ph
+export IndependentVariables_phX, IndependentVariables_pT, IndependentVariables_dTX
 
 
 ### Abstract types -------------------------------------------------------------------------------
@@ -37,12 +47,8 @@ abstract type PureSubstance <: AbstractMedium end
 "`abstract type ThermodynamicState` - Abstract type of all media states"
 abstract type ThermodynamicState end
 
-"`abstract type PureSubstanceThermodynamicState <: ThermodynamicState` - Abstract type of the states of all media consisting of a pure substance"
-abstract type PureSubstanceThermodynamicState <: ThermodynamicState end
-
 "`abstract type AbstractFluidConstants` - Abstract type of all FluidConstants structures"
 abstract type AbstractFluidConstants end
-
 
 
 ### Importing packages -------------------------------------------------------------------------------
