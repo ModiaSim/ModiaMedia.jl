@@ -234,7 +234,7 @@ end
 Generate a `BasicFluidConstants <: AbstractFluidConstants` object 
 containing the minimal information about the standard data of the medium.
 """
-struct BasicFluidConstants <: AbstractFluidConstants
+mutable struct BasicFluidConstants <: AbstractFluidConstants
     iupacName::AbstractString           # "Complete IUPAC name (or common name, if non-existent)";
     casRegistryNumber::AbstractString   # "Chemical abstracts sequencing number (if it exists)";
     chemicalFormula::AbstractString     # "Chemical formula, (brutto, nomenclature according to Hill";
