@@ -94,12 +94,6 @@ function h_pTX(data::SVector{2,SingleGasNasaData},p,T,X)
     X_liquid = max(X[1]-X_sat, 0.0);
     X_steam = X[1]-X_liquid;
     X_air = 1-X[1];   
-    
-    println("X_sat=$X_sat\n")
-    println("X_liquid=$X_liquid\n")
-    println("X_steam=$X_steam\n")
-    println("X_air=$X_air\n")
-
 
     h = dot([h_T(data[1], T, excludeEnthalpyOfFormation, referenceEnthalpy, (46479.819 + 2501014.5)); 
              h_T(data[2], T, excludeEnthalpyOfFormation, referenceEnthalpy, 25104.684)], 
