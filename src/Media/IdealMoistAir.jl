@@ -103,14 +103,19 @@ function h_pTX(data::SVector{2,SingleGasNasaData},p,T,X)
     return h 
 end
 
+p_dTX(data::SVector{2,SingleGasNasaData},d,T,X) = d*dot([data[1].R; data[2].R], X)*T
+
 setState_pTX(m::IdealMoistAirMedium,p,T,X) = ThermodynamicState_pTX(p,T,X)
-#setState_phX(m::SimpleIdealGasMedium,p,h,X) = ThermodynamicState_pT(p,m.data.T0+h/m.data.cp_const)
-#setState_psX(m::SimpleIdealGasMedium,p,s,X) = ThermodynamicState_pT(p,exp(s/m.data.cp_const + log(m.infos.reference_T)+m.infos.R_gas*log(p/m.infos.reference_p)))
-#setState_dTX(m::SimpleIdealGasMedium,d,T,X) = ThermodynamicState_pT(d*m.infos.R_gas*T,T)
+setState_dTX(m::IdealMoistAirMedium,d,T,X) = ThermodynamicState_pTX(p_dTX(m.data,d,T,X),T,X)
+
+# need to write setState_phX later, since we have to solve the nonlinear equation.
+setState_phX(m::IdealMoistAirMedium,p,h,X) = undefinedFunction("setState_phX", m)
 
 pressure(               m::IdealMoistAirMedium, state::ThermodynamicState_pTX)::Float64 = state.p
 temperature(            m::IdealMoistAirMedium, state::ThermodynamicState_pTX)::Float64 = state.T
-#density(                m::SimpleIdealGasMedium, state::ThermodynamicState_pT)::Float64 = state.p/(m.data.R_gas*state.T)
+gasConstant(            m::IdealMoistAirMedium, state::ThermodynamicState_pTX)::Float64 = m.data[2].R*(1-state.X[1]) + m.data[1].R*state.X[1]
+density(                m::IdealMoistAirMedium, state::ThermodynamicState_pTX)::Float64 = state.p/(gasConstant(m,state)*state.T)
+specificEnthalpy(       m::IdealMoistAirMedium, state::ThermodynamicState_pTX)::Float64 = h_pTX(m.data,state.p,state.T,state.X)
 #specificEnthalpy(       m::SimpleIdealGasMedium, state::ThermodynamicState_pT)::Float64 = specificEnthalpy(m.data,state)
 #specificInternalEnergy( m::SimpleIdealGasMedium, state::ThermodynamicState_pT)::Float64 = m.data.cp_const*(state.T-m.data.T0)-m.data.R_gas*state.T
 #specificEntropy(        m::SimpleIdealGasMedium, state::ThermodynamicState_pT)::Float64 = m.data.cp_const*log(state.T/m.data.T0)-m.data.R_gas*log(state.p/m.infos.reference_p)
