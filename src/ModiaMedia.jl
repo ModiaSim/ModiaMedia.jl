@@ -74,10 +74,12 @@ using  .Unitful_U_str
 
 include("Interfaces/PartialMedium.jl")
 include("Interfaces/PartialPureSubstance.jl")
+include("Interfaces/PartialMixtureMedium.jl")
+include("Interfaces/PartialCondensingGases.jl")
+
 include("Media/SimpleMedium.jl")
 include("Media/SimpleIdealGasMedium.jl")
 include("Media/SingleGasNasa.jl")
-
 
 ### Load medium dictionary from file
 function loadMediumDict(file::AbstractString)
@@ -106,6 +108,7 @@ end
 const mediumDictFile = "$path/src/Media/media.julia_serializer"
 const mediumDict     = loadMediumDict(mediumDictFile)
 
+include("Media/IdealMoistAir.jl")
  
 ### Inquire medium
 getMedium(name::AbstractString) = mediumDict[name]
