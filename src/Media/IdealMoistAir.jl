@@ -4,6 +4,11 @@
 #
 using LinearAlgebra
 
+const excludeEnthalpyOfFormation = true                         # If true, enthalpy of formation Hf is not included in specific enthalpy hc
+const referenceEnthalpy          = ReferenceEnthalpy_ZeroAt0K   # Choice of reference enthalpy
+const h_offset                   = 0.0                          # User defined offset for reference enthalpy, if ReferenceEnthalpy = ReferenceEnthalpy_UserDefined
+
+
 """
     medium = SimpleIdealGasMedium(; mediumName     = nothing,
                                     reference_p    = 101325,
@@ -50,15 +55,13 @@ struct IdealMoistAirMedium <: CondensingGases
                            p_default            = p_default,
                            T_default            = T_default,
                            X_default            = X_default,
-                           h_default            = specificEnthalpy(SVector{2,SingleGasNasaData}(data), 
-                                                                   ThermodynamicState_pTX(p_default, T_default, X_default)))
+                           h_default            = h_pTX(SVector{2,SingleGasNasaData}(data),p_default,T_default,X_default))
 
-        fluidLimits = FluidLimits(TMIN = data[1].T_min, 
-                                  TMAX = data[1].T_max,
-                                  HMIN = specificEnthalpy(SVector{2,SingleGasNasaData}(data), 
-                                                          ThermodynamicState_pTX(p_default, data.T_min, X_default)),
-                                  HMAX = specificEnthalpy(SVector{2,SingleGasNasaData}(data), 
-                                                          ThermodynamicState_pTX(p_default, data.T_max, X_default)))
+        # these limits should be fixed after the specific enthalpy can be calculated below 273.15K; the high end also has problems as well. 
+        fluidLimits = FluidLimits(TMIN = max(mediumDict["H2O"].fluidLimits.TMIN, mediumDict["Air"].fluidLimits.TMIN), 
+                                  TMAX = min(mediumDict["H2O"].fluidLimits.TMAX, mediumDict["Air"].fluidLimits.TMAX),
+                                  HMIN = h_pTX(SVector{2,SingleGasNasaData}(data),p_default,280.0,X_default),
+                                  HMAX = h_pTX(SVector{2,SingleGasNasaData}(data),p_default,600.0,X_default))
 
         new(infos, SVector{2,IdealGasFluidConstants}(fluidConstants), fluidLimits, SVector{2,SingleGasNasaData}(data))
     end
@@ -82,13 +85,9 @@ end
 # enthalpy of water only for liquid condition; need to splice with the enthalpy of ice to get number valid over whole range
 enthalpyOfWater(T) = 4200.0
 
-function specificEnthalpy(data::SVector{2,SingleGasNasaData}, state::ThermodynamicState_pTX)
-    p = state.p 
-    T = state.T 
-    X = state.X 
-
+function h_pTX(data::SVector{2,SingleGasNasaData},p,T,X)
     # steam.MM/dryAir.MM 
-    k_mair = data[1].fluidConstants[1].molarMass/data[2].fluidConstants[1].molarMass 
+    k_mair = data[1].MM/data[2].MM 
 
     p_steam_sat = saturationPressure(T)
     X_sat = min(p_steam_sat*k_mair/max(100*eps(), p - p_steam_sat)*(1-X[1]), 1.0)
@@ -96,8 +95,8 @@ function specificEnthalpy(data::SVector{2,SingleGasNasaData}, state::Thermodynam
     X_steam = X[1] - X_liquid;
     X_air = 1 - X[1];   
 
-    h = dot([h_T(data[1], T, h_off=46479.819 + 2501014.5); 
-             h_T(data[2], T, h_off=25104.684)], 
+    h = dot([h_T(data[1], T, excludeEnthalpyOfFormation, referenceEnthalpy, (46479.819 + 2501014.5)); 
+             h_T(data[2], T, excludeEnthalpyOfFormation, referenceEnthalpy, 25104.684)], 
             [X_steam; X_air]) 
         + enthalpyOfWater(T)*X_liquid
 
