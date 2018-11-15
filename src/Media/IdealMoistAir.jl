@@ -5,7 +5,7 @@
 using LinearAlgebra
 
 const excludeEnthalpyOfFormation = true                         # If true, enthalpy of formation Hf is not included in specific enthalpy hc
-const referenceEnthalpy          = ReferenceEnthalpy_ZeroAt0K   # Choice of reference enthalpy
+const referenceEnthalpy          = ReferenceEnthalpy_UserDefined   # Choice of reference enthalpy
 const h_offset                   = 0.0                          # User defined offset for reference enthalpy, if ReferenceEnthalpy = ReferenceEnthalpy_UserDefined
 
 
@@ -90,10 +90,16 @@ function h_pTX(data::SVector{2,SingleGasNasaData},p,T,X)
     k_mair = data[1].MM/data[2].MM 
 
     p_steam_sat = saturationPressure(T)
-    X_sat = min(p_steam_sat*k_mair/max(100*eps(), p - p_steam_sat)*(1-X[1]), 1.0)
-    X_liquid = max(X[1] - X_sat, 0.0);
-    X_steam = X[1] - X_liquid;
-    X_air = 1 - X[1];   
+    X_sat = min(p_steam_sat*k_mair/max(100*eps(), p-p_steam_sat)*(1-X[1]), 1.0)
+    X_liquid = max(X[1]-X_sat, 0.0);
+    X_steam = X[1]-X_liquid;
+    X_air = 1-X[1];   
+    
+    println("X_sat=$X_sat\n")
+    println("X_liquid=$X_liquid\n")
+    println("X_steam=$X_steam\n")
+    println("X_air=$X_air\n")
+
 
     h = dot([h_T(data[1], T, excludeEnthalpyOfFormation, referenceEnthalpy, (46479.819 + 2501014.5)); 
              h_T(data[2], T, excludeEnthalpyOfFormation, referenceEnthalpy, 25104.684)], 
@@ -103,84 +109,30 @@ function h_pTX(data::SVector{2,SingleGasNasaData},p,T,X)
     return h 
 end
 
+function u_pTX(data::SVector{2,SingleGasNasaData},p,T,X)
+    # steam.MM/dryAir.MM 
+    k_mair = data[1].MM/data[2].MM 
+
+    p_steam_sat = saturationPressure(T)
+    X_sat = min(p_steam_sat*k_mair/max(100*eps(), p-p_steam_sat)*(1-X[1]), 1.0)
+    X_liquid = max(X[1]-X_sat, 0.0);
+    X_steam = X[1]-X_liquid;
+    X_air = 1-X[1];       
+    R_gas = data[2].R*X_air/(1-X_liquid) + data[1].R*X_steam/(1-X_liquid);
+
+    u = h_pTX(data,p,T,X) - R_gas*T
+    return u
+end
+
+
 p_dTX(data::SVector{2,SingleGasNasaData},d,T,X) = d*dot([data[1].R; data[2].R], X)*T
 
 setState_pTX(m::IdealMoistAirMedium,p,T,X) = ThermodynamicState_pTX(p,T,X)
 setState_dTX(m::IdealMoistAirMedium,d,T,X) = ThermodynamicState_pTX(p_dTX(m.data,d,T,X),T,X)
-
-# need to write setState_phX later, since we have to solve the nonlinear equation.
-setState_phX(m::IdealMoistAirMedium,p,h,X) = undefinedFunction("setState_phX", m)
 
 pressure(               m::IdealMoistAirMedium, state::ThermodynamicState_pTX)::Float64 = state.p
 temperature(            m::IdealMoistAirMedium, state::ThermodynamicState_pTX)::Float64 = state.T
 gasConstant(            m::IdealMoistAirMedium, state::ThermodynamicState_pTX)::Float64 = m.data[2].R*(1-state.X[1]) + m.data[1].R*state.X[1]
 density(                m::IdealMoistAirMedium, state::ThermodynamicState_pTX)::Float64 = state.p/(gasConstant(m,state)*state.T)
 specificEnthalpy(       m::IdealMoistAirMedium, state::ThermodynamicState_pTX)::Float64 = h_pTX(m.data,state.p,state.T,state.X)
-#specificEnthalpy(       m::SimpleIdealGasMedium, state::ThermodynamicState_pT)::Float64 = specificEnthalpy(m.data,state)
-#specificInternalEnergy( m::SimpleIdealGasMedium, state::ThermodynamicState_pT)::Float64 = m.data.cp_const*(state.T-m.data.T0)-m.data.R_gas*state.T
-#specificEntropy(        m::SimpleIdealGasMedium, state::ThermodynamicState_pT)::Float64 = m.data.cp_const*log(state.T/m.data.T0)-m.data.R_gas*log(state.p/m.infos.reference_p)
-#specificGibbsEnergy(    m::SimpleIdealGasMedium, state::ThermodynamicState_pT)::Float64 = m.data.cp_const*(state.T-m.data.T0)-state.T*specificEntropy(m,state)
-#specificHelmholtzEnergy(m::SimpleIdealGasMedium, state::ThermodynamicState_pT)::Float64 = specificInternalEnergy(state)-state.T*specificEntropy(state)
-#dynamicViscosity(       m::SimpleIdealGasMedium, state::ThermodynamicState_pT)::Float64 = m.data.eta_const
-#thermalConductivity(    m::SimpleIdealGasMedium, state::ThermodynamicState_pT)::Float64 = m.data.lambda_const
-#specificHeatCapacityCp( m::SimpleIdealGasMedium, state::ThermodynamicState_pT)::Float64 = m.data.cp_const
-#specificHeatCapacityCv( m::SimpleIdealGasMedium, state::ThermodynamicState_pT)::Float64 = m.data.cv_const
-#isentropicExponent(     m::SimpleIdealGasMedium, state::ThermodynamicState_pT)::Float64 = m.data.cp_const/m.data.cv_const
-#velocityOfSound(        m::SimpleIdealGasMedium, state::ThermodynamicState_pT)::Float64 = sqrt(m.data.cp_const/m.data.cv_const*m.data.R_gas*state.T)
-
-
-#density_pT(      m::SimpleIdealGasMedium,p,T)::Float64 = p/(m.data.R_gas*T)
-#density_pT_der_1(m::SimpleIdealGasMedium,p,T)::Float64 = 0.0
-#density_pT_der_2(m::SimpleIdealGasMedium,p,T)::Float64 = 1.0/(m.data.R_gas*T)
-#density_pT_der_3(m::SimpleIdealGasMedium,p,T)::Float64 = -p/(m.data.R_gas*T*T)
-
-#specificInternalEnergy_T(      m::SimpleIdealGasMedium,T)::Float64 = m.data.cp_const*(T-m.data.T0)-m.data.R_gas*T
-#specificInternalEnergy_T_der_1(m::SimpleIdealGasMedium,T)::Float64 = 0.0
-#specificInternalEnergy_T_der_2(m::SimpleIdealGasMedium,T)::Float64 = m.data.cp_const - m.data.R_gas
-
-
-#function standardCharacteristics(m::SimpleIdealGasMedium)::Dict{AbstractString,Any}
-#    p_ref = m.infos.reference_p
-#    T     = collect( range(m.fluidLimits.TMIN, stop=min(1600.0, m.fluidLimits.TMAX), length=501) )
-#    p     = [0.5e5, 1.0e5, 2.0e5]
-#    nT    = length(T)
-#    np    = length(p)
-#    h     = zeros(nT)
-#    u     = zeros(nT)
-#    cp    = zeros(nT)
-#    cv    = zeros(nT)
-#    d     = zeros(nT,np)
-
-#    for i in 1:nT
-#        state = setState_pT(m,p_ref,T[i])
-#        h[i]  = specificEnthalpy(      m, state)
-#        u[i]  = specificInternalEnergy(m, state)
-#        cp[i] = specificHeatCapacityCp(m, state)
-#        cv[i] = specificHeatCapacityCv(m, state)
-#    end
-
-#    for j in 1:np
-#        for i in 1:nT
-#            d[i,j] = to_DensityDisplayUnit( density(m, ThermodynamicState_pT(p[j],T[i]) ) )     
-#        end
-#    end       
-
-#    mediumDict = Dict{AbstractString,Any}()
-#    mediumDict["T"]  = uconvert.(u"°C", T*1U"K")
-#    mediumDict["h"]  = h*1U"J/kg"
-#    mediumDict["u"]  = u*1U"J/kg"
-#    mediumDict["cp"] = cp*1U"J/(kg*K)"
-#    mediumDict["cv"] = cv*1U"J/(kg*K)"
-#    mediumDict["d(p=0.5 bar)"] = d[:,1]*1U"g/cm^3"
-#    mediumDict["d(p=1.0 bar)"] = d[:,2]*1U"g/cm^3"
-#    mediumDict["d(p=2.0 bar)"] = d[:,3]*1U"g/cm^3"
-#    return mediumDict
-#end
-
-
-#function standardPlot(m::SimpleIdealGasMedium; figure=1) 
-#    mediumDict = standardCharacteristics(m)
-#    ModiaMath.plot(mediumDict, [("h", "u"), ("cp","cv"), ("d(p=0.5 bar)" ,
-#                                                          "d(p=1.0 bar)" ,
-#                                                          "d(p=2.0 bar)")], xAxis="T", heading=m.infos.mediumName, figure=figure)
-#end
+specificInternalEnergy( m::IdealMoistAirMedium, state::ThermodynamicState_pTX)::Float64 = u_pTX(m.data,state.p,state.T,state.X)
