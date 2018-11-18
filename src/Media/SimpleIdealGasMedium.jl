@@ -113,6 +113,8 @@ specificInternalEnergy_T(      m::SimpleIdealGasMedium,T)::Float64 = m.data.cp_c
 specificInternalEnergy_T_der_1(m::SimpleIdealGasMedium,T)::Float64 = 0.0
 specificInternalEnergy_T_der_2(m::SimpleIdealGasMedium,T)::Float64 = m.data.cp_const - m.data.R_gas
 
+specificEnthalpy_T(m::SimpleIdealGasMedium, T)::Float64 = m.data.cp_const*(T - m.data.T0)
+
 
 function standardCharacteristics(m::SimpleIdealGasMedium)::Dict{AbstractString,Any}
     p_ref = m.infos.reference_p
