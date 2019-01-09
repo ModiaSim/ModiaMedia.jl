@@ -143,14 +143,14 @@ function standardCharacteristics(m::SimpleIdealGasMedium)::Dict{AbstractString,A
     end       
 
     mediumDict = Dict{AbstractString,Any}()
-    mediumDict["T"]  = uconvert.(u"°C", T*1U"K")
-    mediumDict["h"]  = h*1U"J/kg"
-    mediumDict["u"]  = u*1U"J/kg"
-    mediumDict["cp"] = cp*1U"J/(kg*K)"
-    mediumDict["cv"] = cv*1U"J/(kg*K)"
-    mediumDict["d(p=0.5 bar)"] = d[:,1]*1U"g/cm^3"
-    mediumDict["d(p=1.0 bar)"] = d[:,2]*1U"g/cm^3"
-    mediumDict["d(p=2.0 bar)"] = d[:,3]*1U"g/cm^3"
+    mediumDict["T"]  = uconvert.(u"°C", T*1u"K")
+    mediumDict["h"]  = h*1u"J/kg"
+    mediumDict["u"]  = u*1u"J/kg"
+    mediumDict["cp"] = cp*1u"J/(kg*K)"
+    mediumDict["cv"] = cv*1u"J/(kg*K)"
+    mediumDict["d(p=0.5 bar)"] = d[:,1]*1u"g/cm^3"
+    mediumDict["d(p=1.0 bar)"] = d[:,2]*1u"g/cm^3"
+    mediumDict["d(p=2.0 bar)"] = d[:,3]*1u"g/cm^3"
     return mediumDict
 end
 

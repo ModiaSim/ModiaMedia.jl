@@ -116,7 +116,7 @@ function standardCharacteristics(m::SimpleMedium)::Dict{AbstractString,Any}
 
     mediumDict = Dict{AbstractString,Any}()
     mediumDict["T"] = uconvert.(u"°C", T*1u"K")
-    mediumDict["h"] = h*U"J/kg"
+    mediumDict["h"] = h*u"J/kg"
 
     return mediumDict
 end
