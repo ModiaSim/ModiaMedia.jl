@@ -71,9 +71,6 @@ import Serialization
 
  
 ### Including files for the ModiaMedia module --------------------------------------------------------
-include("Interfaces/Unitful_U_str.jl")   # only temporarily until the u".." issue is fixed in Unitful
-using  .Unitful_U_str
-
 include("Interfaces/PartialMedium.jl")
 include("Interfaces/PartialPureSubstance.jl")
 include("Interfaces/PartialMixtureMedium.jl")
