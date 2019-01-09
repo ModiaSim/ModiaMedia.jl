@@ -12,17 +12,17 @@ such as multiple dispatch.
 This package is currently under development.
 """
 module ModiaMedia
-  
+
 const path    = dirname(dirname(@__FILE__))          # Absolute path of package directory
-const Version = "0.1.0-dev from 2018-11-18 10:15"
+const Version = "0.1.0-dev from 2019-01-09 17:48"
 
 println(" \nImporting ModiaMedia version ", Version)
 
- 
+
 export AbstractMedium, PureSubstance, getMedium
 export IdealMoistAir, SimpleMedium, SimpleIdealGasMedium, SingleGasNasa
 
-export density, density_der_1, density_pT, density_pT_der_1, density_pT_der_2, density_pT_der_3 
+export density, density_der_1, density_pT, density_pT_der_1, density_pT_der_2, density_pT_der_3
 export specificInternalEnergy_T, specificInternalEnergy_T_der_1, specificInternalEnergy_T_der_2
 
 export temperature, temperature_ph
@@ -51,7 +51,7 @@ abstract type MixtureMedium <: AbstractMedium end
 
 "`abstract type CondensingGases <: AbstractMedium` - Abstract type of all media consisting of condensing media"
 abstract type CondensingGases <: MixtureMedium end
- 
+
 "`abstract type ThermodynamicState` - Abstract type of all media states"
 abstract type ThermodynamicState end
 
@@ -69,7 +69,7 @@ using  Unitful
 import ModiaMath
 import Serialization
 
- 
+
 ### Including files for the ModiaMedia module --------------------------------------------------------
 include("Interfaces/PartialMedium.jl")
 include("Interfaces/PartialPureSubstance.jl")
@@ -88,13 +88,13 @@ function loadMediumDict(file::AbstractString)
                 "    ", file)
 
         try
-            f = open(file)  
+            f = open(file)
             mediumDict = Serialization.deserialize(f)
             close(f)
         catch
             error("\n\nFile \"", file, "\" is not compatible to the modified ModiaMedia source.\n",
                   "You have to delete this file and run `include(\"\$(ModiaMedia.path)/dict/GenerateMediumDict.jl\")` to regenerate it.\n")
-        end 
+        end
 
     else
         println("\n... File ", file, " does not exist.\n",
@@ -108,7 +108,7 @@ const mediumDictFile = "$path/src/Media/media.julia_serializer"
 const mediumDict     = loadMediumDict(mediumDictFile)
 
 include("Media/IdealMoistAir.jl")
- 
+
 ### Inquire medium
 getMedium(name::AbstractString) = mediumDict[name]
 
