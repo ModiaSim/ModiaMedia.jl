@@ -14,7 +14,7 @@ This package is currently under development.
 module ModiaMedia
 
 const path    = dirname(dirname(@__FILE__))          # Absolute path of package directory
-const Version = "0.1.0-dev from 2019-01-09 17:48"
+const Version = "0.1.0-dev from 2019-01-17 15:56"
 
 println(" \nImporting ModiaMedia version ", Version)
 
