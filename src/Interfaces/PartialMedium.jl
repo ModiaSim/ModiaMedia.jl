@@ -389,6 +389,8 @@ specificInternalEnergy(m::AbstractMedium, state::ThermodynamicState) = undefined
 "cp = specificHeatCapacityCp(medium,state) - return specific heat capacity at constant pressure for `medium` from `state` in [J/(kg*K)]"
 specificHeatCapacityCp(m::AbstractMedium, state::ThermodynamicState) = undefinedFunction("specificHeatCapacity", m)
 
+"eta = dynamicViscosity(medium,state) - return dynamic viscosity for `medium` from `state` in [Pa*s]"
+dynamicViscosity(m::AbstractMedium, state::ThermodynamicState) = undefinedFunction("dynamicViscosity", m)
 
 
 

@@ -93,7 +93,7 @@ density(                m::SimpleMedium, state::ThermodynamicState_pT)::Float64 
 specificEnthalpy(       m::SimpleMedium, state::ThermodynamicState_pT)::Float64 = specificEnthalpy(m.data,state)
 specificInternalEnergy( m::SimpleMedium, state::ThermodynamicState_pT)::Float64 = m.data.cv_const*(state.T - m.data.T0)
 specificHeatCapacityCp( m::SimpleMedium, state::ThermodynamicState_pT)::Float64 = m.data.cp_const
-
+dynamicViscosity(       m::SimpleMedium, state::ThermodynamicState_pT)::Float64 = m.data.eta_const
 
 ### Functions for mass and energy balance
 
