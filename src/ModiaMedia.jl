@@ -22,14 +22,15 @@ println(" \nImporting ModiaMedia version ", Version)
 export AbstractMedium, PureSubstance, getMedium
 export IdealMoistAir, SimpleMedium, SimpleIdealGasMedium, SingleGasNasa
 
-export density, density_der_1, density_pT, density_pT_der_1, density_pT_der_2, density_pT_der_3
+export density, density_phX, density_pTX, density_der_1, density_pT, density_pT_der_1, density_pT_der_2, density_pT_der_3
 export specificInternalEnergy_T, specificInternalEnergy_T_der_1, specificInternalEnergy_T_der_2
 
-export temperature, temperature_ph
+export temperature, temperature_phX, temperature_ph
 export pressure, pressure_dT
-export specificEnthalpy, specificEnthalpy_dT, specificEnthalpy_T
-export specificInternalEnergy
+export specificEnthalpy, specificEnthalpy_pTX, specificEnthalpy_dT, specificEnthalpy_T
+export specificInternalEnergy, specificHeatCapacityCp
 export setState_pTX, setState_pT, setState_ph, setState_ps, setState_dT
+export dynamicViscosity
 
 export ThermodynamicState, ThermodynamicStates, ThermodynamicState_pT
 export IndependentVariables, IndependentVariables_T, IndependentVariables_pT, IndependentVariables_ph
