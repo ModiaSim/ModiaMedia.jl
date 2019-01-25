@@ -30,6 +30,7 @@ export pressure, pressure_dT
 export specificEnthalpy, specificEnthalpy_pTX, specificEnthalpy_dT, specificEnthalpy_T
 export specificInternalEnergy, specificHeatCapacityCp
 export setState_pTX, setState_pT, setState_ph, setState_ps, setState_dT
+export isenthalpicState
 export dynamicViscosity
 
 export ThermodynamicState, ThermodynamicStates, ThermodynamicState_pT

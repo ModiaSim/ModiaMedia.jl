@@ -87,6 +87,9 @@ setState_phX(m::SimpleIdealGasMedium,p,h,X) = ThermodynamicState_pT(p,m.data.T0+
 setState_psX(m::SimpleIdealGasMedium,p,s,X) = ThermodynamicState_pT(p,exp(s/m.data.cp_const + log(m.infos.reference_T)+m.infos.R_gas*log(p/m.infos.reference_p)))
 setState_dTX(m::SimpleIdealGasMedium,d,T,X) = ThermodynamicState_pT(d*m.infos.R_gas*T,T)
 
+isenthalpicState(m::SimpleIdealGasMedium, state::ThermodynamicState_pT, dp::Float64) = ThermodynamicState_pT(state.p+dp, state.T)
+
+
 specificEnthalpy(data::SimpleIdealGasMediumData, state::ThermodynamicState_pT)::Float64 = data.cp_const*(state.T - data.T0)
 pressure(               m::SimpleIdealGasMedium, state::ThermodynamicState_pT)::Float64 = state.p
 temperature(            m::SimpleIdealGasMedium, state::ThermodynamicState_pT)::Float64 = state.T

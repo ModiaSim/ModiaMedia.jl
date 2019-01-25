@@ -86,6 +86,10 @@ setState_psX(m::SimpleMedium,p,s,X) = ThermodynamicState_pT(p,exp(s/m.data.cp_co
 setState_dTX(m::SimpleMedium,d,T,X) = error("From setState_dTX: Pressure cannot be computed from temperature and density for the incompressible fluid $(m.infos.mediumName)!")
 
 
+isenthalpicState(m::SimpleMedium, state::ThermodynamicState_pT, dp::Float64) = ThermodynamicState_pT(state.p+dp, state.T)
+
+
+
 specificEnthalpy(data::SimpleMediumData, state::ThermodynamicState_pT)::Float64 = data.cp_const*(state.T - data.T0)
 pressure(               m::SimpleMedium, state::ThermodynamicState_pT)::Float64 = state.p
 temperature(            m::SimpleMedium, state::ThermodynamicState_pT)::Float64 = state.T
