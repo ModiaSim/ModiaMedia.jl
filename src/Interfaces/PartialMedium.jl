@@ -22,6 +22,8 @@
 undefinedFunction(name::AbstractString, m::AbstractMedium) = 
     error("\n\nModiaMedia: Function $name not defined for medium $(m.infos.mediumName).\n")
 
+undefinedFunction(name::AbstractString, state::ThermodynamicState) = 
+    error("\n\nModiaMedia: Function $name not defined for typeof(state) = ", typeof(state), ".\n")
 
 
 ### Enumerations and constants --------------------------------------------------------------------
@@ -51,7 +53,7 @@ end
 
 
 """
-    state = ThermodynamicState_pT(p,T)
+    state = ThermodynamicState_pT(Medium,p,T)
 
 Generate a `ThermodynamicState_pT <: ThermodynamicState` object containg
 pressure `p` [Pa] and temperature `T` [K] as states.
@@ -172,7 +174,7 @@ infos = ModiaMedia.FluidInfos(mediumName           = "simpleMedium",
                               ThermoStates         = IndependentVariables_T)
 ```
 """
-struct FluidInfos
+mutable struct FluidInfos
     mediumName::AbstractString                   # "Name of the medium";
     substanceNames::Vector{AbstractString}       # "Names of the mixture substances. Set substanceNames=[mediumName] if only one substance.";
     extraPropertiesNames::Vector{AbstractString} # "Names of the additional (extra) transported properties. Set extraPropertiesNames=fill(\"\",0) if unused"
@@ -202,10 +204,10 @@ struct FluidInfos
                           singleState=Missing, 
                           reducedX=true,
                           fixedX=false, 
-                          reference_p=101325,
+                          reference_p=101325.0,
                           reference_T=298.15,
-                          reference_X=fill(1/length(substanceNames),length(substanceNames)),
-                          p_default=101325,
+                          reference_X=fill(1.0/length(substanceNames),length(substanceNames)),
+                          p_default=101325.0,
                           T_default=293.15,
                           h_default=NaN,
                           X_default=reference_X,
@@ -371,42 +373,54 @@ setState_dTX(m::AbstractMedium,d,T,X) = undefinedFunction("setState_dTX", m)
 
 ### Medium functions ---------------------------------------------------------------------------------
 
-"p = pressure(medium,state) - return pressure for `medium` from `state` in [Pa]"
+"p = pressure(state) - return pressure from `state` in [Pa]"
 pressure(m::AbstractMedium, state::ThermodynamicState) = undefinedFunction("pressure", m)
 
-"T = temperature(medium,state) - return temperature for `medium` from `state` in [K]"
+"T = temperature(state) - return temperature from `state` in [K]"
 temperature(m::AbstractMedium, state::ThermodynamicState) = undefinedFunction("temperature", m)
 
-"d = density(medium,state) - return density for `medium` from `state` in [kg/m^3]"
+"d = density(state) - return density from `state` in [kg/m^3]"
 density(m::AbstractMedium, state::ThermodynamicState) = undefinedFunction("density", m)
 
-"h = specificEnthalpy(medium,state) - return specific enthalpy for `medium` from `state` in [J/kg]"
+"h = specificEnthalpy(state) - return specific enthalpy from `state` in [J/kg]"
 specificEnthalpy(m::AbstractMedium, state::ThermodynamicState) = undefinedFunction("specificEnthalpy", m)
 
-"u = specificInternalEnergy(medium,state) - return specific internal energy from `medium` at `state` in [J/kg]"
+"u = specificInternalEnergy(state) - return specific internal energy at `state` in [J/kg]"
 specificInternalEnergy(m::AbstractMedium, state::ThermodynamicState) = undefinedFunction("specificInternalEnergy", m)
 
-"cp = specificHeatCapacityCp(medium,state) - return specific heat capacity at constant pressure for `medium` from `state` in [J/(kg*K)]"
+"cp = specificHeatCapacityCp(state) - return specific heat capacity at constant pressure from `state` in [J/(kg*K)]"
 specificHeatCapacityCp(m::AbstractMedium, state::ThermodynamicState) = undefinedFunction("specificHeatCapacity", m)
 
-"eta = dynamicViscosity(medium,state) - return dynamic viscosity for `medium` from `state` in [Pa*s]"
+"eta = dynamicViscosity(state) - return dynamic viscosity `state` in [Pa*s]"
 dynamicViscosity(m::AbstractMedium, state::ThermodynamicState) = undefinedFunction("dynamicViscosity", m)
 
+"state_b = isenthalpicState(state_a,dp) - return state_b by an isenthalpic transformation of state_a with pressure drop dp"
+isenthalpicState(m::AbstractMedium, state::ThermodynamicState, dp::Float64) = undefinedFunction("isenthalpicState", m)
+
+
+### Functions from above -------------------------------------------------
+pressure(              state::ThermodynamicState)::Float64 = pressure(              state.Medium, state)
+temperature(           state::ThermodynamicState)::Float64 = temperature(           state.Medium, state)
+density(               state::ThermodynamicState)::Float64 = density(               state.Medium, state)
+specificEnthalpy(      state::ThermodynamicState)::Float64 = specificEnthalpy(      state.Medium, state)
+specificInternalEnergy(state::ThermodynamicState)::Float64 = specificInternalEnergy(state.Medium, state)
+specificHeatCapacityCp(state::ThermodynamicState)::Float64 = specificHeatCapacityCp(state.Medium, state)
+dynamicViscosity(      state::ThermodynamicState)::Float64 = dynamicViscosity(      state.Medium, state)
+isenthalpicState(      state::ThermodynamicState, dp::Float64) = isenthalpicState(state.Medium, state, dp)
 
 
 ### Medium functions expressed from the functions above -------------------------------------------------
-
 "h = specificEnthalpy_pTX(medium,p,T,X) - return specific enthalpy for `medium` from p, T, and X or Xi in [J/kg]"
-specificEnthalpy_pTX(m::AbstractMedium, p,T,X) = specficEnthalpy(m, setState_pTX(m,p,T,X))
+specificEnthalpy_pTX(m::AbstractMedium, p,T,X) = specficEnthalpy(setState_pTX(m,p,T,X))
 
 "T = temperature_phX(medium,p,h,X) - return temperature for `medium` from p, h, and X or Xi in [K]"
-temperature_phX(m::AbstractMedium, p,h,X) = temperature(m, setState_phX(m,p,h,X))
+temperature_phX(m::AbstractMedium, p,h,X) = temperature(setState_phX(m,p,h,X))
 
 "d = density_pTX(medium,p,T,X) - return density for `medium` from p, T, and X or Xi in [kg/m^3]"
-density_pTX(m::AbstractMedium, p,T,X) = density(m, setState_pTX(m,p,T,X))
+density_pTX(m::AbstractMedium, p,T,X) = density(setState_pTX(m,p,T,X))
 
 "d = density_phX(medium,p,h,X) - return density for `medium` from p, h, and X or Xi in [kg/m^3]"
-density_phX(m::AbstractMedium, p,h,X) = density(m, setState_phX(m,p,h,X))
+density_phX(m::AbstractMedium, p,h,X) = density(setState_phX(m,p,h,X))
 
 
 

@@ -6,9 +6,9 @@
 # Dictionary of medium data
 
 
-const excludeEnthalpyOfFormation = true                         # If true, enthalpy of formation Hf is not included in specific enthalpy hc
-const referenceEnthalpy          = ReferenceEnthalpy_ZeroAt0K   # Choice of reference enthalpy
-const h_offset                   = 0.0                          # User defined offset for reference enthalpy, if ReferenceEnthalpy = ReferenceEnthalpy_UserDefined
+const SingleGasNasa_excludeEnthalpyOfFormation = true                         # If true, enthalpy of formation Hf is not included in specific enthalpy hc
+const SingleGasNasa_referenceEnthalpy          = ReferenceEnthalpy_ZeroAt0K   # Choice of reference enthalpy
+const SingleGasNasa_h_offset                   = 0.0                          # User defined offset for reference enthalpy, if ReferenceEnthalpy = ReferenceEnthalpy_UserDefined
 
 
 
@@ -66,42 +66,51 @@ struct SingleGasNasa <: PureSubstance
     fluidConstants::SVector{1,IdealGasFluidConstants}
     fluidLimits::FluidLimits
     data::SingleGasNasaData
-
-    function SingleGasNasa(; mediumName=nothing,
-                             reference_p=101325,
-                             reference_T=298.15,
-                             p_default=101325,
-                             T_default=293.15,
-                             fluidConstants=nothing, 
-                             fluidLimits=FluidLimits(TMIN=200.0, TMAX=6000.0), 
-                             data=nothing)
-
-        infos = FluidInfos(mediumName           = mediumName,
-                           substanceNames       = [mediumName],
-                           extraPropertiesNames = fill("",0),
-                           ThermoStates         = IndependentVariables_pT,
-                           baseProperties       = :BaseProperties_SingleGasNasa,
-                           singleState          = false,
-                           reducedX             = true,
-                           fixedX               = false,
-                           reference_p          = reference_p,
-                           reference_T          = reference_T,
-                           reference_X          = fill(1.0,1),
-                           p_default            = p_default,
-                           T_default            = T_default,
-                           h_default            = h_T(data, T_default))
-
-        fluidConstants.molarMass = data.MM
-        fluidLimits.HMIN         = h_T(data, fluidLimits.TMIN)
-        fluidLimits.HMAX         = h_T(data, fluidLimits.TMAX)
-
-        new(infos, SVector{1,IdealGasFluidConstants}(fluidConstants), fluidLimits, data)
-    end
 end
 
 
+mutable struct SingleGasNasaState <: ThermodynamicState
+    Medium::SingleGasNasa
+    p::Float64
+    T::Float64
+end
 
 
+function SingleGasNasa(; mediumName=nothing,
+                         reference_p=101325,
+                         reference_T=298.15,
+                         p_default=101325,
+                         T_default=293.15,
+                         fluidConstants=nothing, 
+                         fluidLimits=FluidLimits(TMIN=200.0, TMAX=6000.0), 
+                         data=nothing)
+
+    infos = FluidInfos(mediumName           = mediumName,
+                       substanceNames       = [mediumName],
+                       extraPropertiesNames = fill("",0),
+                       ThermoStates         = IndependentVariables_pT,
+                       baseProperties       = :BaseProperties_SingleGasNasa,
+                       singleState          = false,
+                       reducedX             = true,
+                       fixedX               = false,
+                       reference_p          = reference_p,
+                       reference_T          = reference_T,
+                       reference_X          = fill(1.0,1),
+                       p_default            = p_default,
+                       T_default            = T_default)
+
+    fluidConstants.molarMass = data.MM
+    infos.h_default          = h_T(data, T_default)
+    fluidLimits.HMIN         = h_T(data, fluidLimits.TMIN)
+    fluidLimits.HMAX         = h_T(data, fluidLimits.TMAX)
+
+    Medium = SingleGasNasa(infos, SVector{1,IdealGasFluidConstants}(fluidConstants), fluidLimits, data)
+
+    return Medium
+end
+
+
+                       
 ### Functions specific for SingleGasNasa
 
 "cp = cp_T(data::SingleGasNasaData, T) - Compute specific heat capacity at constant pressure from temperature and gas data"
@@ -130,10 +139,10 @@ Return specific enthalpy from temperature and gas data.
 - `T::Float64`: Temperature in [K].
 - `exclEnthForm::Bool`: If true, enthalpy of formation Hf is not included in specific enthalpy h.
 - `refChoice::ReferenceEnthalpy`: Choice of reference enthalpy.
-- `h_off::Float64`: User defined offset for reference enthalpy, if referenceEnthalpy = ReferenceEnthalpy_UserDefined
+- `h_off::Float64`: User defined offset for reference enthalpy, if SingleGasNasa_referenceEnthalpy = ReferenceEnthalpy_UserDefined
 """
-h_T(data::SingleGasNasaData, T::Float64, exclEnthForm::Bool=excludeEnthalpyOfFormation,
-    refChoice::ReferenceEnthalpy=referenceEnthalpy, h_off::Float64=h_offset)::Float64 = 
+h_T(data::SingleGasNasaData, T::Float64, exclEnthForm::Bool=SingleGasNasa_excludeEnthalpyOfFormation,
+    refChoice::ReferenceEnthalpy=SingleGasNasa_referenceEnthalpy, h_off::Float64=SingleGasNasa_h_offset)::Float64 = 
                  (if T<data.Tlimit; data.R*
                  (
                  (-data.alow[1]+T*
@@ -164,19 +173,57 @@ s0_T(data::SingleGasNasaData,   # Ideal gas data
 
 
 
+"Dynamic viscosity of low pressure gases"
+function dynamicViscosityLowPressure(
+    T::Float64,                      # Gas temperature
+    Tc::Float64,                     # Critical temperature of gas
+    M::Float64,                      # Molar mass of gas
+    Vc::Float64,                     # Critical molar volume of gas
+    w::Float64,                      # Acentric factor of gas
+    mu::Float64;                     # Modelica.Media.Interfaces.Types.DipoleMoment; Dipole moment of gas molecule
+    k::Float64=0.0,                  # Special correction for highly polar substances
+    # returns eta::Float64,          # Dynamic viscosity of gas
+    )
+    Const1_SI::Float64 = 40.785*10.0^(-9.5)  # Constant in formula for eta converted to SI units
+    Const2_SI::Float64 = 131.3/1000.0        # Constant in formula for mur converted to SI units
+    mur::Float64       = Const2_SI*mu/sqrt(Vc*Tc) # Dimensionless dipole moment of gas molecule
+    Fc::Float64        = 1 - 0.2756*w + 0.059035*mur^4 + k                 # Factor to account for molecular shape and polarities of gas
+    Tstar = 1.2593*T/Tc
+    Ov = 1.16145*Tstar^(-0.14874)+0.52487*exp(-0.7732*Tstar)+2.16178*exp(-2.43787*Tstar)
+    eta = Const1_SI*Fc*sqrt(M*T)/(Vc^(2/3)*Ov)
+    return eta
+end
+
+T_h( data::SingleGasNasaData, h::Float64) = ModiaMath.solveOneNonlinearEquation(T->h-h_T(data,T), 200.0, 6000.0; u_nominal=300.0)
+T_ps(m::SingleGasNasa, p::Float64, s::Float64) = ModiaMath.solveOneNonlinearEquation(T->s0_T(m.data,T)-m.data.R*log(p/m.infos.reference_p), 200.0, 6000.0; u_nominal=300.0)
+
 
 ### Set states
-setState_pTX(m::SingleGasNasa,p,T,X) = ThermodynamicState_pT(p,T)
-#setState_phX(m::SingleGasNasa,p,h,X) = ???     solve nonlinear equation with Brent algorithm (needs to be transferred from Modelica to Modia and stord in ModiaMath)
-#setState_psX(m::SingleGasNasa,p,s,X) = ???     solve nonlinear equation with Brent algorithm
-setState_dTX(m::SingleGasNasa,d,T,X) = ThermodynamicState_pT(d*m.data.R*T, T)
+setState_pTX(m::SingleGasNasa,p,T,X) = SingleGasNasaState(m,p,T)
+setState_phX(m::SingleGasNasa,p,h,X) = SingleGasNasaState(m,p,T_h(m.data,h))
+setState_psX(m::SingleGasNasa,p,s,X) = SingleGasNasaState(m,p,T_ps(m,p,s))
+setState_dTX(m::SingleGasNasa,d,T,X) = SingleGasNasaState(m,d*m.data.R*T, T)
+isenthalpicState(m::SingleGasNasa, state::SingleGasNasaState, dp::Float64) = SingleGasNasaState(m, state.p+dp, state.T)
 
-pressure(              m::SingleGasNasa, state::ThermodynamicState_pT)::Float64 = state.p
-temperature(           m::SingleGasNasa, state::ThermodynamicState_pT)::Float64 = state.T
-density(               m::SingleGasNasa, state::ThermodynamicState_pT)::Float64 = state.p/(m.data.R*state.T)
-specificEnthalpy(      m::SingleGasNasa, state::ThermodynamicState_pT)::Float64 = h_T(m.data,state.T)
-specificInternalEnergy(m::SingleGasNasa, state::ThermodynamicState_pT)::Float64 = h_T(m.data,state.T) - m.data.R*state.T
-specificHeatCapacityCp(m::SingleGasNasa, state::ThermodynamicState_pT)::Float64 = s0_T(m.data,state.T) - m.data.R*log(state.p/m.infos.reference_p)
+
+pressure(              m::SingleGasNasa, state::SingleGasNasaState)::Float64 = state.p
+temperature(           m::SingleGasNasa, state::SingleGasNasaState)::Float64 = state.T
+density(               m::SingleGasNasa, state::SingleGasNasaState)::Float64 = state.p/(m.data.R*state.T)
+specificEnthalpy(      m::SingleGasNasa, state::SingleGasNasaState)::Float64 = h_T(m.data,state.T)
+specificInternalEnergy(m::SingleGasNasa, state::SingleGasNasaState)::Float64 = h_T(m.data,state.T) - m.data.R*state.T
+specificHeatCapacityCp(m::SingleGasNasa, state::SingleGasNasaState)::Float64 = s0_T(m.data,state.T) - m.data.R*log(state.p/m.infos.reference_p)
+
+function dynamicViscosity(m::SingleGasNasa, state::SingleGasNasaState)::Float64
+    @assert(m.fluidConstants[1].hasCriticalData, "Failed to compute dynamicViscosity: For the species \""+m.mediumName+"\" no critical data is available.")
+    @assert(m.fluidConstants[1].hasDipoleMoment, "Failed to compute dynamicViscosity: For the species \""+m.mediumName+"\" no critical data is available.")
+    c   = m.fluidConstants[1]
+    eta = dynamicViscosityLowPressure(state.T, c.criticalTemperature, 
+                                               c.molarMass, 
+                                               c.criticalMolarVolume, 
+                                               c.acentricFactor, 
+                                               c.dipoleMoment)
+    return eta
+end
 
 
 function standardCharacteristics(m::SingleGasNasa)::Dict{AbstractString,Any}
@@ -199,7 +246,7 @@ function standardCharacteristics(m::SingleGasNasa)::Dict{AbstractString,Any}
 
     for j in 1:np
         for i in 1:nT
-            d[i,j] = to_DensityDisplayUnit( density(m, ThermodynamicState_pT(p[j],T[i]) ) )     
+            d[i,j] = to_DensityDisplayUnit( density(SingleGasNasaState(m,p[j],T[i]) ) )     
         end
     end       
 

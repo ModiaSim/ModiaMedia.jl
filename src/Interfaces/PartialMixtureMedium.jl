@@ -12,6 +12,7 @@ Generate a `ThermodynamicState_pT <: MixtureThermodynamicState` object containin
 pressure `p` [Pa], temperature `T` [K], and a vector of mass fractions `X` as states.
 """
 mutable struct ThermodynamicState_pTX <: MixtureThermodynamicState
+    Medium::AbstractMedium
     p::Float64
     T::Float64
     X::Vector{Float64}
@@ -21,6 +22,7 @@ end
 # should this be MixtureMedium?
 # should this take MixtureThermodynamicState? 
 gas_constant(m::AbstractMedium, state::ThermodynamicState) = undefinedFunction("gas constant", m)
+gas_constant(                   state::ThermodynamicState) = undefinedFunction("gas constant", state)
 
 # moleToMassFractions: use inner constructor with fluid information. 
 # massToMoleFractions: use inner constructor with fluid information from abstract medium, since we have that type.

@@ -49,8 +49,8 @@ the instructions
   state = setState_pT(Medium, p, T)
 
   # Call media functions (here to compute density and specific enthalpy)
-  d = density(Medium,state)
-  h = specificEnthalpy(Medium,state)
+  d = density(state)
+  h = specificEnthalpy(state)
 
   # Print computed values
   println("data for p=$p, T=$T:")
@@ -89,7 +89,7 @@ struct MediumXXX <: AbstractMedium  # or of a subtype of AbstractMedium
     data  # medium specific data
 end
 
-struct FluidInfos 
+struct FluidInfos
     mediumName::AbstractString                   # "Name of the medium";
     substanceNames::Vector{AbstractString}       # "Names of the mixture substances. Set substanceNames=[mediumName] if only one substance.";
     extraPropertiesNames::Vector{AbstractString} # "Names of the additional (extra) transported properties. Set extraPropertiesNames=fill(\"\",0) if unused"
@@ -109,7 +109,7 @@ struct FluidInfos
     nX::Int                                      # "Number of mass fractions"
     nXi::Int                                     # "Default value for mass fractions of medium (for initialization)"
     nC::Int                                      # "Number of extra (outside of standard mass-balance) transported properties"
-    C_nominal::Vector{Float64}                   # "Default for the nominal values for the extra properties"  
+    C_nominal::Vector{Float64}                   # "Default for the nominal values for the extra properties"
 end
 
 struct BasicFluidConstants <: AbstractFluidConstants

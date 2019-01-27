@@ -14,7 +14,7 @@ This package is currently under development.
 module ModiaMedia
 
 const path    = dirname(dirname(@__FILE__))          # Absolute path of package directory
-const Version = "0.1.0-dev from 2019-01-17 15:56"
+const Version = "0.1.0-dev from 2019-01-26 12:21"
 
 println(" \nImporting ModiaMedia version ", Version)
 
@@ -33,6 +33,10 @@ export setState_pTX, setState_pT, setState_ph, setState_ps, setState_dT
 export isenthalpicState
 export dynamicViscosity
 
+# PureSubstance functions
+export density_ph, temperature_ph, pressure_dT, specificEnthalpy_dT
+
+# ThermodynamicState functions
 export ThermodynamicState, ThermodynamicStates, ThermodynamicState_pT
 export IndependentVariables, IndependentVariables_T, IndependentVariables_pT, IndependentVariables_ph
 export IndependentVariables_phX, IndependentVariables_pT, IndependentVariables_dTX
@@ -112,7 +116,6 @@ const mediumDict     = loadMediumDict(mediumDictFile)
 include("Media/IdealMoistAir.jl")
 
 ### Inquire medium
-getMedium(name::AbstractString) = mediumDict[name]
-
+getMedium(name::AbstractString) = length(mediumDict) == 0 ? loadMediumDict[name] : mediumDict[name]
 
 end # module
