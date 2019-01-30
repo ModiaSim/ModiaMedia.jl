@@ -50,6 +50,12 @@ mutable struct SimpleMedium <: PureSubstance
 end
 
 
+"""
+    state = SimpleMediumState(Medium, p, T)
+
+Generate a `SimpleMediumState <: ThermodynamicState` object containing
+pressure `p` [Pa] and temperature `T` [K] as thermodynamic states.
+"""
 mutable struct SimpleMediumState <: ThermodynamicState
     Medium::SimpleMedium
     p::Float64
@@ -69,7 +75,6 @@ function SimpleMedium(; mediumName=nothing,
                        substanceNames       = [mediumName],
                        extraPropertiesNames = fill("",0),
                        ThermoStates         = IndependentVariables_pT,
-                       baseProperties       = :BaseProperties_SimpleMedium,
                        singleState          = true,
                        reducedX             = true,
                        fixedX               = false,

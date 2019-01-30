@@ -146,8 +146,7 @@ Generate a new `FluidInfos` object, containing generic properties of a medium.
 | `mediumName::AbstractString`                   | Name of the medium                                                                                      |
 | `substanceNames::Vector{AbstractString}`       | Names of the mixture substances. Set substanceNames=[mediumName] if only one substance.                 |
 | `extraPropertiesNames::Vector{AbstractString}` | Names of the additional (extra) transported properties. Set extraPropertiesNames=fill(\"\",0) if unused |
-| `ThermoStates::IndependentVariables`           | Enumeration type for independent variables                                                              |
-| `baseProperties::Symbol`                       | Symbol of baseProperties model = :BaseProperties_<StructName>                                           |
+| `ThermoStates::IndependentVariables`           | Enumeration type for independent variables                                                              |                                         |
 | `singleState::Bool`                            | = true, if u and d are not a function of pressure                                                       |
 | `reducedX::Bool`                               | = true if medium contains the equation sum(X) = 1.0; set reducedX=true if only one substance            |
 | `fixedX::Bool`                                 | = true if medium contains the equation X = reference_X                                                  |
@@ -179,7 +178,6 @@ mutable struct FluidInfos
     substanceNames::Vector{AbstractString}       # "Names of the mixture substances. Set substanceNames=[mediumName] if only one substance.";
     extraPropertiesNames::Vector{AbstractString} # "Names of the additional (extra) transported properties. Set extraPropertiesNames=fill(\"\",0) if unused"
     ThermoStates::IndependentVariables           # "Enumeration type for independent variables";
-    baseProperties::Symbol                       # "Symbol of baseProperties model = :BaseProperties_<StructName>
     singleState::Bool                            # "= true, if u and d are not a function of pressure";
     reducedX::Bool                               # "= true if medium contains the equation sum(X) = 1.0; set reducedX=true if only one substance (see docu for details)";
     fixedX::Bool                                 # "= true if medium contains the equation X = reference_X";
@@ -200,7 +198,6 @@ mutable struct FluidInfos
                           substanceNames=[mediumName],
                           extraPropertiesNames=fill("",0), 
                           ThermoStates=Missing,
-                          baseProperties=Missing,
                           singleState=Missing, 
                           reducedX=true,
                           fixedX=false, 
@@ -217,7 +214,7 @@ mutable struct FluidInfos
          nC  = length(extraPropertiesNames)
 
          new(mediumName, substanceNames, extraPropertiesNames,
-             ThermoStates, baseProperties, singleState, reducedX, fixedX, reference_p,
+             ThermoStates, singleState, reducedX, fixedX, reference_p,
              reference_T, reference_X, p_default, T_default, h_default, X_default,
              nS, nS, nXi, nC, C_nominal)
     end
