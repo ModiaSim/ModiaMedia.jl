@@ -163,7 +163,7 @@ h_T(data::SingleGasNasaData, T::Float64;
                  (1.0*data.ahigh[3]+T*
                  (0.5*data.ahigh[4]+T*
                  (1/3*data.ahigh[5]+T*(0.25*data.ahigh[6]+0.2*data.ahigh[7]*T))))))/T) end)+(if exclEnthForm; -data.Hf else 0.0 end)+
-                 (if refChoice==ReferenceEnthalpy_ZeroAt0K   ; data.H0 else 0.0 end)+
+                 (if refChoice==ReferenceEnthalpy_ZeroAt0K   ; data.H0 else 0.0 end) +
                  (if refChoice==ReferenceEnthalpy_UserDefined; h_off   else 0.0 end)
 
 
@@ -175,8 +175,8 @@ h_Tlow(data::SingleGasNasaData,      # Ideal gas data
     h_off::Float64=SingleGasNasa_h_offset) = 
         data.R*((-data.alow[1]+T*(data.blow[1]+data.alow[2]*log(T)+T*(1.0*data.alow[3]+T*(0.5*data.alow[4]+T*(1/3*data.alow[5]+T*(0.25*data.alow[6]+0.2*data.alow[7]*T))))))/T)+
              (if exclEnthForm; -data.Hf else 0.0 end)+
-             (if (refChoice==Choices.ReferenceEnthalpy.ZeroAt0K); data.H0 else 0.0 end)+
-             (if refChoice==Choices.ReferenceEnthalpy.UserDefined; h_off else 0.0 end)
+             (if refChoice==ReferenceEnthalpy_ZeroAt0K   ; data.H0 else 0.0 end) +
+             (if refChoice==ReferenceEnthalpy_UserDefined; h_off   else 0.0 end)
 
 
 "Compute specific entropy from temperature and gas data"

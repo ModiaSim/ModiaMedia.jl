@@ -64,7 +64,4 @@ function storeSingleGasNasaMedium!(mediumDict)
     end
 end
 
-# Manually insert air into the dictionary according to model from Modelica.Media.Air.MoistAir; should probably fix somehow 
-dict["Air"] = SingleGasNasa("Air", fluidData["N2"], singleGasesData["Air"])
-
 storeSingleGasNasaMedium!(dict)

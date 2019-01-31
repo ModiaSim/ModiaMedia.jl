@@ -15,7 +15,7 @@ import Serialization
 
 
 const path    = dirname(dirname(@__FILE__))          # Absolute path of package directory
-const Version = "0.1.0-dev from 2018-11-13 21:34"
+const Version = "0.1.0-dev from 2019-01-31 12:11"
 const dict    = Dict{AbstractString,ModiaMedia.AbstractMedium}()
 
 println(" \nImporting GenerateMediumDict version ", Version)
@@ -46,6 +46,8 @@ end
 include("SimpleMedium.jl")
 include("SimpleIdealGasMedium.jl")
 include("SingleGasesNasa.jl")
+include("MoistAir.jl")
+
 
 ### Write data to file ----------------------------------------------------
 file   = "$path/src/Media/media.julia_serializer"

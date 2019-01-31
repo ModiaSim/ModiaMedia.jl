@@ -14,13 +14,13 @@ This package is currently under development.
 module ModiaMedia
 
 const path    = dirname(dirname(@__FILE__))          # Absolute path of package directory
-const Version = "0.1.0-dev from 2019-01-30 19:46"
+const Version = "0.1.0-dev from 2019-01-31 12:28"
 
 println(" \nImporting ModiaMedia version ", Version)
 
 
 export AbstractMedium, PureSubstance, getMedium
-export IdealMoistAir, SimpleMedium, SimpleIdealGasMedium, SingleGasNasa
+export MoistAir, SimpleMedium, SimpleIdealGasMedium, SingleGasNasa
 
 export density, density_phX, density_pTX, density_der_1, density_pT, density_pT_der_1, density_pT_der_2, density_pT_der_3
 export specificInternalEnergy_T, specificInternalEnergy_T_der_1, specificInternalEnergy_T_der_2
@@ -85,6 +85,8 @@ include("Interfaces/PartialCondensingGases.jl")
 include("Media/SimpleMedium.jl")
 include("Media/SimpleIdealGasMedium.jl")
 include("Media/SingleGasNasa.jl")
+include("Media/MoistAir.jl")
+
 
 ### Load medium dictionary from file
 function loadMediumDict(file::AbstractString)
@@ -113,9 +115,9 @@ end
 const mediumDictFile = "$path/src/Media/media.julia_serializer"
 const mediumDict     = loadMediumDict(mediumDictFile)
 
-include("Media/IdealMoistAir.jl")
+
 
 ### Inquire medium
-getMedium(name::AbstractString) = length(mediumDict) == 0 ? loadMediumDict[name] : mediumDict[name]
+getMedium(name::AbstractString) = length(mediumDict) == 0 ? loadMediumDict(mediumDictFile) : mediumDict[name]
 
 end # module
