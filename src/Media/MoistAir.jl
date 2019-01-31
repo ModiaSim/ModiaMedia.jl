@@ -208,6 +208,7 @@ p_dTX(data::MoistAirData,d,T,X) = d*(data.steam.R*X[1]+data.dryair.R*(1.0-X[1]))
 setState_pTX(m::MoistAir,p,T,X) = MoistAirState(m,p,T,X)
 setState_phX(m::MoistAir,p,h,X) = MoistAirState(m,p,T_phX(m.data,p,h,X),X)
 setState_dTX(m::MoistAir,d,T,X) = MoistAirState(m,p_dTX(m.data,d,T,X),T,X)
+isenthalpicState(m::MoistAir, state::MoistAirState, dp::Float64) = MoistAirState(m, state.p+dp, state.T, state.X)
 
 pressure(               m::MoistAir, state::MoistAirState)::Float64 = state.p
 temperature(            m::MoistAir, state::MoistAirState)::Float64 = state.T
@@ -227,3 +228,43 @@ specificInternalEnergy( m::MoistAir, state::MoistAirState)::Float64 = u_pTX(m.da
             end
 
 =#
+
+function standardCharacteristics(m::MoistAir)::Dict{AbstractString,Any}
+    p     = m.infos.reference_p
+    T     = collect( range(m.fluidLimits.TMIN, m.fluidLimits.TMAX, length=101) )
+    X1    = [0.01, 0.02, 0.03]
+    nT    = length(T)
+    nX1   = length(X1)
+    h     = zeros(nT,nX1)
+    u     = zeros(nT,nX1)
+    #cp    = zeros(nT,nX1)
+    d     = zeros(nT,nX1)
+
+    for i in 1:nT
+        for j in 1:nX1
+            state   = setState_pTX(m,p,T[i],[X1[j]])
+            h[i,j]  = specificEnthalpy(      state)
+            u[i,j]  = specificInternalEnergy(state)
+            #cp[i,j] = specificHeatCapacityCp(state)
+            d[i,j]  = to_DensityDisplayUnit( density(state) )     
+        end
+    end
+
+    mediumDict = Dict{AbstractString,Any}()
+    mediumDict["p"]  = p
+    mediumDict["T"]  = uconvert.(u"°C", T*1u"K")
+    mediumDict["h"]  = h*1u"J/kg"
+    mediumDict["u"]  = u*1u"J/kg"
+    #mediumDict["cp"] = cp*1u"J/(kg*K)"
+    mediumDict["d"]  = d*1u"g/cm^3"
+
+    return mediumDict
+end
+
+
+function standardPlot(m::MoistAir; figure=1) 
+    mediumDict = standardCharacteristics(m)
+    p = mediumDict["p"]
+    ModiaMath.plot(mediumDict, [("h", "u"), "d"], xAxis="T", heading=m.infos.mediumName*" (p=$p Pa, X[Water] = 0.01, 0.02, 0.03)", figure=figure)
+end
+

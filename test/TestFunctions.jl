@@ -3,7 +3,7 @@ module TestFunctions
 using ModiaMedia
 using Test
 
-const mediaNames = ["ConstantPropertyLiquidWater", "SimpleAir", "N2"]
+const mediaNames = ["ConstantPropertyLiquidWater", "SimpleAir", "N2", "MoistAir"]
 
 function testMediumFunctions(mediumName; figure=1)
    Medium = getMedium(mediumName)
@@ -17,10 +17,11 @@ function testMediumFunctions(mediumName; figure=1)
    h   = specificEnthalpy(state)
    d   = density(state)
    u   = specificInternalEnergy(state)
-   Cp  = specificHeatCapacityCp(state)
-   eta = dynamicViscosity(state)
+   #Cp  = specificHeatCapacityCp(state)
+   #eta = dynamicViscosity(state)
  
-   println("... ", mediumName, " (figure=",figure,"): p = ", p, ", T = ", T, ", h = ", h, ", d = ", d, ", u = ", u, ", Cp = ", Cp, ", eta = ", eta)
+   #println("... ", mediumName, " (figure=",figure,"): p = ", p, ", T = ", T, ", h = ", h, ", d = ", d, ", u = ", u, ", Cp = ", Cp, ", eta = ", eta)
+   println("... ", mediumName, " (figure=",figure,"): p = ", p, ", T = ", T, ", h = ", h, ", d = ", d, ", u = ", u)
 
    state_b = isenthalpicState(state, 0.1e5)
    h_b     = specificEnthalpy(state_b)

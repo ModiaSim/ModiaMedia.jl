@@ -87,37 +87,54 @@ include("Media/SimpleIdealGasMedium.jl")
 include("Media/SingleGasNasa.jl")
 include("Media/MoistAir.jl")
 
+const mediumDictFile   = "$path/src/Media/media.julia_serializer"
+const generateDictFile = "$path/dict/GenerateMediumDict.jl"
+const mediumDict       = Array{Any}(nothing,1)
+
 
 ### Load medium dictionary from file
-function loadMediumDict(file::AbstractString)
-    mediumDict = Dict{AbstractMedium,Any}()
-    if isfile(file)
-        println("... Read media dictionary from file:\n",
-                "    ", file)
-
-        try
-            f = open(file)
-            mediumDict = Serialization.deserialize(f)
-            close(f)
-        catch
-            error("\n\nFile \"", file, "\" is not compatible to the modified ModiaMedia source.\n",
-                  "You have to delete this file and run `include(\"\$(ModiaMedia.path)/dict/GenerateMediumDict.jl\")` to regenerate it.\n")
-        end
-
-    else
-        println("\n... File ", file, " does not exist.\n",
-                "    You have to run `include(\"\$(ModiaMedia.path)/dict/GenerateMediumDict.jl\")` to generate it.\n",
-                "    Without this file, no Medium can be used, because the Medium data is missing.")
-    end
-    return mediumDict
+function loadMediumDictFile()
+    global mediumDictFile
+    println("... Read media dictionary from file:\n",
+            "    ", mediumDictFile)
+    f = open(mediumDictFile)
+    dict = Serialization.deserialize(f)
+    close(f)
+    return dict
 end
 
-const mediumDictFile = "$path/src/Media/media.julia_serializer"
-const mediumDict     = loadMediumDict(mediumDictFile)
+function loadMediumDict()
+    global generateDictFile
+
+    if isfile(mediumDictFile)
+        try
+            dict = loadMediumDictFile()
+        catch
+            println("... Regenerate media dictionary")
+            include(generateDictFile)
+            dict = loadMediumDictFile()
+        end
+    else
+        include(generateDictFile)
+        dict = loadMediumDictFile()
+    end
+
+    return dict
+end
 
 
 
-### Inquire medium
-getMedium(name::AbstractString) = length(mediumDict) == 0 ? loadMediumDict(mediumDictFile) : mediumDict[name]
+""" 
+    Medium = getMedium(name::AbstractString)
+
+Return `Medium` object from medium `name`.
+"""
+function getMedium(name::AbstractString) 
+    global mediumDict
+    if typeof(mediumDict[1]) == Nothing
+        mediumDict[1] = loadMediumDict()
+    end
+    return mediumDict[1][name]
+end
 
 end # module
