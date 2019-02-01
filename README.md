@@ -79,8 +79,8 @@ The ModiaMedia package development has just started and a lot has to be improved
 
 ## Main Developers
 
-[Martin Otter](https://rmc.dlr.de/sr/en/staff/martin.otter/) ([DLR - Institute of System Dynamics and Control](https://www.dlr.de/sr/en))\\
-Hilding Elmqvist ([Mogram](http://www.mogram.net/)),\\
-[Chris Laughman](http://www.merl.com/people/laughman) ([MERL](http://www.merl.com/)).
+[Martin Otter](https://rmc.dlr.de/sr/en/staff/martin.otter/) ([DLR - Institute of System Dynamics and Control](https://www.dlr.de/sr/en))\
+Hilding Elmqvist ([Mogram](http://www.mogram.net/)),\
+[Christopher Laughman](http://www.merl.com/people/laughman) ([MERL](http://www.merl.com/)).
 
 License: MIT (expat)
