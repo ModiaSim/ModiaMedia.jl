@@ -14,12 +14,12 @@ This package is currently under development.
 module ModiaMedia
 
 const path    = dirname(dirname(@__FILE__))          # Absolute path of package directory
-const Version = "0.1.0-dev from 2019-01-31 12:28"
+const Version = "0.1.0-dev from 2019-02-01 09:30"
 
 println(" \nImporting ModiaMedia version ", Version)
 
 
-export AbstractMedium, PureSubstance, getMedium
+export AbstractMedium, PureSubstance, getMedium, listMedia
 export MoistAir, SimpleMedium, SimpleIdealGasMedium, SingleGasNasa
 
 export density, density_phX, density_pTX, density_der_1, density_pT, density_pT_der_1, density_pT_der_2, density_pT_der_3
@@ -72,6 +72,7 @@ abstract type AbstractFluidConstants end
 using  JSON
 using  StaticArrays
 using  Unitful
+import DataFrames
 import ModiaMath
 import Serialization
 
@@ -129,12 +130,37 @@ end
 
 Return `Medium` object from medium `name`.
 """
-function getMedium(name::AbstractString) 
+function getMedium(name::AbstractString)::AbstractMedium 
     global mediumDict
     if typeof(mediumDict[1]) == Nothing
         mediumDict[1] = loadMediumDict()
     end
     return mediumDict[1][name]
 end
+
+
+"""
+    listMedia()
+
+List available media of ModiaMedia
+"""
+function listMedia()::Nothing
+    global mediumDict
+    if typeof(mediumDict[1]) == Nothing
+        mediumDict[1] = loadMediumDict()
+    end
+
+    dict = mediumDict[1]
+    media_table = DataFrames.DataFrame(name=AbstractString[], type=Symbol[])
+
+    for key in sort(collect(keys(dict)))
+        push!(media_table, [key, Symbol(typeof(dict[key]))])
+    end
+
+    println("\nMedia available in ModiaMedia:\n")
+    show(media_table,allrows=true,allcols=true,summary=false)
+    return nothing
+end
+
 
 end # module
