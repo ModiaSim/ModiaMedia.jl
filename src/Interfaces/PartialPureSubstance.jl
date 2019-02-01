@@ -5,7 +5,7 @@
 
 ### Data structures that are additionally available for media <: PartialPureSubstance -----------------------
 
-
+const X_dummy = fill(0.0,0)
 
 
 """ 
@@ -14,7 +14,18 @@
 Generate a state object for medium `medium::PureSubstance` for
 pressure `p` [Pa] and temperature `T` [K].
 """
-setState_pT( m::PureSubstance,p,T) = setState_pTX(m,p,T,fill(0.0,0))
+setState_pT( m::PureSubstance,p,T) = setState_pTX(m,p,T,X_dummy)
+
+
+
+""" 
+    setState_pT!(state, p,T)
+
+Update the `state::ThermodynamicState` of a `PureSubstance` medium with 
+pressure `p` [Pa] and temperature `T` [K].
+"""
+setState_pT!(state::ThermodynamicState,p,T) = setState_pTX!(state,p,T,X_dummy)
+
 
 
 """ 
@@ -23,7 +34,17 @@ setState_pT( m::PureSubstance,p,T) = setState_pTX(m,p,T,fill(0.0,0))
 Generate a state object for medium `medium::PureSubstance` for
 pressure `p` [Pa] and specific enthalpy `h` [J/kg].
 """
-setState_ph( m::PureSubstance,p,h) = setState_phX(m,p,h,fill(0.0,0))
+setState_ph(m::PureSubstance,p,h) = setState_phX(m,p,h,X_dummy)
+
+
+""" 
+    setState_ph!(state, p,h)
+
+Update the `state::ThermodynamicState` of a `PureSubstance` medium with 
+pressure `p` [Pa] and specific enthalpy `h` [J/kg]].
+"""
+setState_ph!(state::ThermodynamicState,p,h) = setState_phX!(state,p,h,X_dummy)
+
 
 
 """ 
@@ -32,7 +53,18 @@ setState_ph( m::PureSubstance,p,h) = setState_phX(m,p,h,fill(0.0,0))
 Generate a state object for medium `medium::PureSubstance` for
 pressure `p` [Pa] and specific entropy `s` [J/(kg*K)].
 """
-setState_ps( m::PureSubstance,p,s) = setState_psX(m,p,s,fill(0.0,0))
+setState_ps( m::PureSubstance,p,s) = setState_psX(m,p,s,X_dummy)
+
+
+
+""" 
+    setState_ps!(state, p,s)
+
+Update the `state::ThermodynamicState` of a `PureSubstance` medium with 
+pressure `p` [Pa] and specific entropy `s` [J/(kg*K)].
+"""
+setState_ps!(state::ThermodynamicState,p,s) = setState_psX!(state,p,s,X_dummy)
+
 
 
 """ 
@@ -41,7 +73,17 @@ setState_ps( m::PureSubstance,p,s) = setState_psX(m,p,s,fill(0.0,0))
 Generate a state object for medium `medium::PureSubstance` for
 density `d` [kg/m^3] and temperature `T` [K].
 """
-setState_dT( m::PureSubstance,d,T) = setState_dTX(m,d,T,fill(0.0,0))
+setState_dT( m::PureSubstance,d,T) = setState_dTX(m,d,T,X_dummy)
+
+
+""" 
+    setState_dT!(state, d,T)
+
+Update the `state::ThermodynamicState` of a `PureSubstance` medium with 
+density `d` [kg/m^3] and temperature `T` [K].
+"""
+setState_dT!(state::ThermodynamicState,d,T) = setState_dTX!(state,d,T,X_dummy)
+
 
 
 

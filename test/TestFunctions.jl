@@ -27,13 +27,70 @@ function testMediumFunctions(mediumName; figure=1)
    h_b     = specificEnthalpy(state_b)
    @test isapprox(h,h_b)
 
+   state_b = setState_phX(Medium, p, h, infos.reference_X)
+   T_b     = temperature(state_b)
+   @test isapprox(T,T_b)
+   
+   if !infos.singleState
+      state_b = setState_dTX(Medium, d, T, infos.reference_X)
+      h_b     = specificEnthalpy(state_b)
+      @test isapprox(h,h_b)
+   end
+
+   state_c = setState_pTX(Medium, 0.9*infos.reference_p,
+                                  0.9*infos.reference_T, 
+                                  0.9*infos.reference_X)
+   state_d = deepcopy(state_c)
+   setState_pTX!(state_d, p,T,infos.reference_X)
+   @test isapprox(p, pressure(state_d))
+   @test isapprox(T, temperature(state_d))
+
+   state_d = deepcopy(state_c)
+   setState_phX!(state_d, p,h,infos.reference_X)
+   @test isapprox(p, pressure(state_d))
+   @test isapprox(h, specificEnthalpy(state_d))
+
+   if !infos.singleState
+      state_d = deepcopy(state_c)
+      setState_dTX!(state_d, d,T,infos.reference_X)
+      @test isapprox(d, density(state_d))
+      @test isapprox(T, temperature(state_d))
+   end
+
    if typeof(Medium) <: PureSubstance
+      state_b = setState_pT(Medium, p, T)
+      T_b     = temperature(state_b)
+      @test isapprox(T,T_b)
+
+      state_b = setState_ph(Medium, p, h)
+      T_b     = temperature(state_b)
+      @test isapprox(T,T_b)
+
+      state_d = deepcopy(state_c)
+      setState_pT!(state_d, p,T)
+      @test isapprox(p, pressure(state_d))
+      @test isapprox(T, temperature(state_d))
+
+      state_d = deepcopy(state_c)
+      setState_ph!(state_d, p,h)
+      @test isapprox(p, pressure(state_d))
+      @test isapprox(h, specificEnthalpy(state_d))
+
       d2 = density_ph(Medium,p,h)
       T2 = temperature_ph(Medium,p,h)
       @test isapprox(d,d2)
       @test isapprox(T,T2)
 
-      if !Medium.infos.singleState
+      if !infos.singleState
+         state_b = setState_dT(Medium, d, T)
+         h_b     = specificEnthalpy(state_b)
+         @test isapprox(h,h_b)
+
+         state_d = deepcopy(state_c)
+         setState_dT!(state_d, d,T)
+         @test isapprox(d, density(state_d))
+         @test isapprox(T, temperature(state_d))
+
          p2 = pressure_dT(Medium,d,T)
          h2 = specificEnthalpy_dT(Medium,d,T)
          @test isapprox(p,p2)

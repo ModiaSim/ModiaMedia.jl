@@ -66,28 +66,66 @@ This example generates the following plot:
 
 
 
-### Currently available media
+## Available media
 
-- Media from `struct SimpleMedium <: PureSubstance`:\
-  ConstantPropertyLiquidWater
+The available media can be listed with `listMedia()` resulting in:
 
-- Media from `struct SimpleIdealGasMedium <: PureSubstance`: \
-  SimpleAir
+```
+Media available in ModiaMedia:
 
-- Media from `struct SingleGasNasa <: PureSubstance`: \
-  Ar, CH4, CH3OH, CO, CO2, C2H2\_vinylidene, C2H4, C2H5OH, C2H6, C3H6\_propylene, C3H8, C3H8O\_1propanol, C4H8\_1\_butene, C4H10\_n\_butane, C5H10\_1\_pentene, C5H12\_n\_pentane, C6H6, C6H12\_1\_hexene, C6H14\_n\_hexane, C7H14\_1\_heptene, C7H16\_n\_heptane, C8H10\_ethylbenz, C8H18\_n\_octane, CL2, F2, H2, H2O, He, NH3, NO, NO2, N2, N2O, Ne, O2, SO2, SO3
+¦ Row ¦ name                        ¦ type                 ¦
++-----+-----------------------------+----------------------¦
+¦ 1   ¦ Ar                          ¦ SingleGasNasa        ¦
+¦ 2   ¦ C2H2_vinylidene             ¦ SingleGasNasa        ¦
+¦ 3   ¦ C2H4                        ¦ SingleGasNasa        ¦
+¦ 4   ¦ C2H5OH                      ¦ SingleGasNasa        ¦
+¦ 5   ¦ C2H6                        ¦ SingleGasNasa        ¦
+¦ 6   ¦ C3H6_propylene              ¦ SingleGasNasa        ¦
+¦ 7   ¦ C3H8                        ¦ SingleGasNasa        ¦
+¦ 8   ¦ C4H10_n_butane              ¦ SingleGasNasa        ¦
+¦ 9   ¦ C4H8_1_butene               ¦ SingleGasNasa        ¦
+¦ 10  ¦ C5H10_1_pentene             ¦ SingleGasNasa        ¦
+¦ 11  ¦ C5H12_n_pentane             ¦ SingleGasNasa        ¦
+¦ 12  ¦ C6H12_1_hexene              ¦ SingleGasNasa        ¦
+¦ 13  ¦ C6H14_n_hexane              ¦ SingleGasNasa        ¦
+¦ 14  ¦ C6H6                        ¦ SingleGasNasa        ¦
+¦ 15  ¦ C7H14_1_heptene             ¦ SingleGasNasa        ¦
+¦ 16  ¦ C7H16_n_heptane             ¦ SingleGasNasa        ¦
+¦ 17  ¦ C8H10_ethylbenz             ¦ SingleGasNasa        ¦
+¦ 18  ¦ C8H18_n_octane              ¦ SingleGasNasa        ¦
+¦ 19  ¦ CH3OH                       ¦ SingleGasNasa        ¦
+¦ 20  ¦ CH4                         ¦ SingleGasNasa        ¦
+¦ 21  ¦ CL2                         ¦ SingleGasNasa        ¦
+¦ 22  ¦ CO                          ¦ SingleGasNasa        ¦
+¦ 23  ¦ CO2                         ¦ SingleGasNasa        ¦
+¦ 24  ¦ ConstantPropertyLiquidWater ¦ SimpleMedium         ¦
+¦ 25  ¦ F2                          ¦ SingleGasNasa        ¦
+¦ 26  ¦ H2                          ¦ SingleGasNasa        ¦
+¦ 27  ¦ H2O                         ¦ SingleGasNasa        ¦
+¦ 28  ¦ He                          ¦ SingleGasNasa        ¦
+¦ 29  ¦ MoistAir                    ¦ MoistAir             ¦
+¦ 30  ¦ N2                          ¦ SingleGasNasa        ¦
+¦ 31  ¦ N2O                         ¦ SingleGasNasa        ¦
+¦ 32  ¦ NH3                         ¦ SingleGasNasa        ¦
+¦ 33  ¦ NO                          ¦ SingleGasNasa        ¦
+¦ 34  ¦ NO2                         ¦ SingleGasNasa        ¦
+¦ 35  ¦ Ne                          ¦ SingleGasNasa        ¦
+¦ 36  ¦ O2                          ¦ SingleGasNasa        ¦
+¦ 37  ¦ SO2                         ¦ SingleGasNasa        ¦
+¦ 38  ¦ SO3                         ¦ SingleGasNasa        ¦
+¦ 39  ¦ SimpleAir                   ¦ SimpleIdealGasMedium ¦
+```
 
 
-
-### Structure of package
+## Structure of package
 
 A medium is a struct of the following type:
 
 ```julia
-struct MediumXXX <: AbstractMedium  # or of a subtype of AbstractMedium
-    infos::FluidInfos
-    fluidConstants::Vector{AbstractFluidConstants}
-    fluidLimits::FluidLimits
+mutable struct MediumName <: ModiaMedia.AbstractMedium  # or of a subtype of AbstractMedium
+    infos::ModiaMedia.FluidInfos
+    fluidConstants::Vector{ModiaMedia.AbstractFluidConstants}
+    fluidLimits::ModiaMedia.FluidLimits
     data  # medium specific data
 end
 
@@ -96,7 +134,6 @@ struct FluidInfos
     substanceNames::Vector{AbstractString}       # "Names of the mixture substances. Set substanceNames=[mediumName] if only one substance.";
     extraPropertiesNames::Vector{AbstractString} # "Names of the additional (extra) transported properties. Set extraPropertiesNames=fill(\"\",0) if unused"
     ThermoStates::IndependentVariables           # "Enumeration type for independent variables";
-    baseProperties::Symbol                       # "Symbol of baseProperties model = :BaseProperties_<StructName>
     singleState::Bool                            # "= true, if u and d are not a function of pressure";
     reducedX::Bool                               # "= true if medium contains the equation sum(X) = 1.0; set reducedX=true if only one substance (see docu for details)";
     fixedX::Bool                                 # "= true if medium contains the equation X = reference_X";
@@ -149,12 +186,20 @@ Function `ModiaMedia.Medium(name)` returns the `MediumXXX` instance stored
 in the medium dictionary with key `name`.
 
 
-### Status
 
-The ModiaMedia package development has just started and a lot has to be improved.
+## Main Developers
+
+[Martin Otter](https://rmc.dlr.de/sr/en/staff/martin.otter/) ([DLR - Institute of System Dynamics and Control](https://www.dlr.de/sr/en))\\
+Hilding Elmqvist ([Mogram](http://www.mogram.net/)),\\
+[Chris Laughman](http://www.merl.com/people/laughman) ([MERL](http://www.merl.com/)).
+
+License: MIT (expat)
 
 
 ## Release Notes
+
+The ModiaMedia package development has just started and a lot has to be improved.
+
 
 ### Version 0.1.0-dev
 

@@ -225,6 +225,13 @@ setState_dTX(m::SingleGasNasa,d,T,X) = SingleGasNasaState(m,d*m.data.R*T, T)
 isenthalpicState(m::SingleGasNasa, state::SingleGasNasaState, dp::Float64) = SingleGasNasaState(m, state.p+dp, state.T)
 
 
+setState_pTX!(state::SingleGasNasaState,p,T,X) = begin state.p=p; state.T=T; nothing end
+setState_phX!(state::SingleGasNasaState,p,h,X) = begin state.p=p; state.T=T_h(state.Medium.data,h); nothing end
+setState_psX!(state::SingleGasNasaState,p,s,X) = begin state.p=p; state.T=T_ps(state.Medium,p,s); nothing end
+setState_dTX!(state::SingleGasNasaState,d,T,X) = begin state.p=d*state.Medium.data.R*T; state.T=T; nothing end
+isenthalpicState!(state_b::SingleGasNasaState, state_a::SingleGasNasaState, dp::Float64) = begin state_b.p = state_a.p+dp; state_b.T = state_a.T; nothing end
+
+
 pressure(              m::SingleGasNasa, state::SingleGasNasaState)::Float64 = state.p
 temperature(           m::SingleGasNasa, state::SingleGasNasaState)::Float64 = state.T
 density(               m::SingleGasNasa, state::SingleGasNasaState)::Float64 = state.p/(m.data.R*state.T)

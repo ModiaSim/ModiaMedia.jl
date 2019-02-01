@@ -107,6 +107,13 @@ setState_dTX(m::SimpleIdealGasMedium,d,T,X) = SimpleIdealGasMediumState(m,d*m.da
 isenthalpicState(m::SimpleIdealGasMedium, state::SimpleIdealGasMediumState, dp::Float64) = SimpleIdealGasMediumState(m, state.p+dp, state.T)
 
 
+setState_pTX!(state::SimpleIdealGasMediumState,p,T,X) = begin state.p=p; state.T=T; nothing end
+setState_phX!(state::SimpleIdealGasMediumState,p,h,X) = begin state.p=p; state.T=state.Medium.data.T0+h/state.Medium.data.cp_const; nothing end
+setState_psX!(state::SimpleIdealGasMediumState,p,s,X) = begin state.p=p; state.T=exp(s/state.Medium.data.cp_const + log(state.Medium.infos.reference_T)); nothing end
+setState_dTX!(state::SimpleIdealGasMediumState,d,T,X) = begin state.p=d*state.Medium.data.R_gas*T; state.T=T; nothing end
+isenthalpicState!(state_b::SimpleIdealGasMediumState, state_a::SimpleIdealGasMediumState, dp::Float64) = begin state_b.p = state_a.p+dp; state_b.T = state_a.T; nothing end
+
+
 specificEnthalpy(data::SimpleIdealGasMediumData, state::SimpleIdealGasMediumState)::Float64 = data.cp_const*(state.T - data.T0)
 pressure(               m::SimpleIdealGasMedium, state::SimpleIdealGasMediumState)::Float64 = state.p
 temperature(            m::SimpleIdealGasMedium, state::SimpleIdealGasMediumState)::Float64 = state.T

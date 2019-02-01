@@ -59,10 +59,10 @@ mutable struct MoistAirState <: MixtureThermodynamicState
     Medium::MoistAir
     p::Float64
     T::Float64
-    X::SVector{2,Float64}
+    X::MVector{2,Float64}
 
     MoistAirState(Medium::MoistAir, p::Float64, T::Float64, X::AbstractVector) =
-        new(Medium, p, T, SVector{2,Float64}(X[1], length(X)>1 ? X[2] : max(1.0 - X[1], 0.0)))
+        new(Medium, p, T, MVector{2,Float64}(X[1], length(X)>1 ? X[2] : max(1.0 - X[1], 0.0)))
 end
 
 
@@ -202,13 +202,24 @@ function u_pTX(data::MoistAirData,p::Float64,T::Float64,X::AbstractVector)
 end
 
 
-T_phX(data::MoistAirData, p::Float64, h::Float64, X) = ModiaMath.solveOneNonlinearEquation(T->h-h_pTX(data,p,T,X), 190.0, 647; u_nominal=300.0)
-p_dTX(data::MoistAirData,d,T,X) = d*(data.steam.R*X[1]+data.dryair.R*(1.0-X[1]))*T
+T_phX(data::MoistAirData, p::Float64, h::Float64, X::AbstractVector) = ModiaMath.solveOneNonlinearEquation(T->h-h_pTX(data,p,T,X), 190.0, 647; u_nominal=300.0)
+p_dTX(data::MoistAirData,d,T,X::AbstractVector) = d*(data.steam.R*X[1]+data.dryair.R*(1.0-X[1]))*T
+T_pTX(data::MoistAirData, p_a::Float64, dp::Float64, T_a::Float64, X_a::AbstractVector) = T_phX(data, p_a+dp, h_pTX(data,p_a,T_a,X_a), X_a)
 
-setState_pTX(m::MoistAir,p,T,X) = MoistAirState(m,p,T,X)
-setState_phX(m::MoistAir,p,h,X) = MoistAirState(m,p,T_phX(m.data,p,h,X),X)
-setState_dTX(m::MoistAir,d,T,X) = MoistAirState(m,p_dTX(m.data,d,T,X),T,X)
-isenthalpicState(m::MoistAir, state::MoistAirState, dp::Float64) = MoistAirState(m, state.p+dp, state.T, state.X)
+setState_pTX(m::MoistAir,p,T,X::AbstractVector) = MoistAirState(m,p,T,X)
+setState_phX(m::MoistAir,p,h,X::AbstractVector) = MoistAirState(m,p,T_phX(m.data,p,h,X),X)
+setState_dTX(m::MoistAir,d,T,X::AbstractVector) = MoistAirState(m,p_dTX(m.data,d,T,X),T,X)
+isenthalpicState(m::MoistAir, state::MoistAirState, dp::Float64) = MoistAirState(m, state.p+dp, T_pTX(m.data,state.p,dp,state.T,state.X), state.X)
+
+
+setState_pTX!(state::MoistAirState,p,T,X::AbstractVector) = begin state.p=p; state.T=T; state.X[1]=X[1]; nothing end
+setState_phX!(state::MoistAirState,p,h,X::AbstractVector) = begin state.p=p; state.T=T_phX(state.Medium.data,p,h,X); state.X[1]=X[1]; nothing end
+setState_psX!(state::MoistAirState,p,s,X::AbstractVector) = begin state.p=p; state.T=T_ps(state.Medium,p,s); nothing end
+setState_dTX!(state::MoistAirState,d,T,X::AbstractVector) = begin state.p=p_dTX(state.Medium.data,d,T,X); state.T=T; state.X[1]=X[1]; nothing end
+isenthalpicState!(state_b::MoistAirState, state_a::MoistAirState, dp::Float64) = begin state_b.p    = state_a.p+dp; 
+                                                                                       state_b.T    = T_pTX(state.Medium.data,state_a.p,dp,state_a.T,state_a.X); 
+                                                                                       state_b.X[1] = X[1]; nothing end
+
 
 pressure(               m::MoistAir, state::MoistAirState)::Float64 = state.p
 temperature(            m::MoistAir, state::MoistAirState)::Float64 = state.T

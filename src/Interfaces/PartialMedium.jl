@@ -339,6 +339,17 @@ pressure `p` [Pa], temperature `T` [K] and mass fractions vector `X` or `Xi`.
 setState_pTX(m::AbstractMedium,p,T,X) = undefinedFunction("setState_pTX", m)
 
 
+
+""" 
+    setState_pTX!(state, p,T,X)
+
+Update the `state::ThermodynamicState` object with 
+pressure `p` [Pa], temperature `T` [K] and mass fractions vector `X` or `Xi`.
+"""
+setState_pTX!(state::ThermodynamicState,p,T,X) = undefinedFunction("setState_pTX!", state)
+
+
+
 """ 
     state = setState_phX(medium, p,h,X)
 
@@ -346,6 +357,17 @@ Generate a state object for medium `medium::AbstractMedium` for
 pressure `p` [Pa], specific enthalpy `h` [J/kg]] and mass fractions vector `X` or `Xi`.
 """
 setState_phX(m::AbstractMedium,p,h,X) = undefinedFunction("setState_phX", m)
+
+
+
+""" 
+    setState_phX!(state, p,h,X)
+
+Update the `state::ThermodynamicState` object with 
+pressure `p` [Pa], specific enthalpy `h` [J/kg]] and mass fractions vector `X` or `Xi`.
+"""
+setState_phX!(state::ThermodynamicState,p,h,X) = undefinedFunction("setState_phX!", state)
+
 
 
 
@@ -358,6 +380,17 @@ pressure `p` [Pa], specific entropy `s` [J/(kg*K)] and mass fractions vector `X`
 setState_psX(m::AbstractMedium,p,s,X) = undefinedFunction("setState_psX", m)
 
 
+
+""" 
+    setState_psX!(state, p,s,X)
+
+Update the `state::ThermodynamicState` object with 
+pressure `p` [Pa], specific entropy `s` [J/(kg*K)] and mass fractions vector `X` or `Xi`.
+"""
+setState_psX!(state::ThermodynamicState,p,s,X) = undefinedFunction("setState_psX!", state)
+
+
+
 """ 
     state = setState_dTX(medium, d,T,X)
 
@@ -365,6 +398,35 @@ Generate a state object for medium `medium::AbstractMedium` for
 density `d` [kg/m^3], temperature `T` [K] and mass fractions vector `X` or `Xi`.
 """
 setState_dTX(m::AbstractMedium,d,T,X) = undefinedFunction("setState_dTX", m)
+
+
+
+""" 
+    setState_dTX!(state, d,T,X)
+
+Update the `state::ThermodynamicState` object with 
+density `d` [kg/m^3], temperature `T` [K] and mass fractions vector `X` or `Xi`.
+"""
+setState_dTX!(state::ThermodynamicState,d,T,X) = undefinedFunction("setState_dTX!", state)
+
+
+
+""" 
+    state_b = isenthalpicState(state_a,dp)
+
+Return state_b by an isenthalpic transformation of state_a with pressure drop dp.
+"""
+isenthalpicState(m::AbstractMedium, state::ThermodynamicState, dp::Float64) = undefinedFunction("isenthalpicState", m)
+
+
+
+""" 
+    isenthalpicState!(state_b,state_a,dp)
+
+Update state_b by an isenthalpic transformation of state_a with pressure drop dp.
+"""
+isenthalpicState!(state_b::ThermodynamicState, state_a::ThermodynamicState, dp::Float64) = undefinedFunction("isenthalpicState!", state)
+
 
 
 
@@ -391,8 +453,6 @@ specificHeatCapacityCp(m::AbstractMedium, state::ThermodynamicState) = undefined
 "eta = dynamicViscosity(state) - return dynamic viscosity `state` in [Pa*s]"
 dynamicViscosity(m::AbstractMedium, state::ThermodynamicState) = undefinedFunction("dynamicViscosity", m)
 
-"state_b = isenthalpicState(state_a,dp) - return state_b by an isenthalpic transformation of state_a with pressure drop dp"
-isenthalpicState(m::AbstractMedium, state::ThermodynamicState, dp::Float64) = undefinedFunction("isenthalpicState", m)
 
 
 ### Functions from above -------------------------------------------------

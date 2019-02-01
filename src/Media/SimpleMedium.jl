@@ -96,12 +96,19 @@ function SimpleMedium(; mediumName=nothing,
     return Medium
 end
 
+
 setState_pTX(m::SimpleMedium,p,T,X) = SimpleMediumState(m,p,T)
 setState_phX(m::SimpleMedium,p,h,X) = SimpleMediumState(m,p,m.data.T0+h/m.data.cp_const)
 setState_psX(m::SimpleMedium,p,s,X) = SimpleMediumState(m,p,exp(s/m.data.cp_const + log(m.infos.reference_T)))
 setState_dTX(m::SimpleMedium,d,T,X) = error("From setState_dTX: Pressure cannot be computed from temperature and density for the incompressible fluid $(m.infos.mediumName)!")
 isenthalpicState(m::SimpleMedium, state::SimpleMediumState, dp::Float64) = SimpleMediumState(m,state.p+dp, state.T)
 
+
+setState_pTX!(state::SimpleMediumState,p,T,X) = begin state.p=p; state.T=T; nothing end
+setState_phX!(state::SimpleMediumState,p,h,X) = begin state.p=p; state.T=state.Medium.data.T0+h/state.Medium.data.cp_const; nothing end
+setState_psX!(state::SimpleMediumState,p,s,X) = begin state.p=p; state.T=exp(s/state.Medium.data.cp_const + log(state.Medium.infos.reference_T)); nothing end
+setState_dTX!(state::SimpleMediumState,d,T,X) = error("From setState_dTX!: Pressure cannot be computed from temperature and density for the incompressible fluid $(state.Mediumm.infos.mediumName)!")
+isenthalpicState!(state_b::SimpleMediumState, state_a::SimpleMediumState, dp::Float64) = begin state_b.p = state_a.p+dp; state_b.T = state_a.T; nothing end
 
 
 specificEnthalpy(data::SimpleMediumData, state::SimpleMediumState)::Float64 = data.cp_const*(state.T - data.T0)

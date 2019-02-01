@@ -4,10 +4,23 @@
 Media models for use with Modia and other Julia packages.
 It is planned that this package contains media property models to be used in package
 [Modia](https://github.com/ModiaSim/Modia.jl), but also in other Julia packages.
-The initial goal is to achieve a similar functionality
+The initial goal is to achieve a similar functionality as
 [Modelica.Media](https://doc.modelica.org/Modelica%203.2.3/Resources/helpDymola/Modelica_Media.html#Modelica.Media),
 the standard media library for Modelica models, but with improvements based on Julia's features
 such as multiple dispatch.
+
+A medium model is basically a struct that has the following structure:
+
+```
+mutable struct MediumName <: AbstractMedium
+    infos::ModiaMedium.FluidInfos
+    fluidConstants::SVector{1,ModiaMedium.AbstractFluidConstants}
+    fluidLimits::ModiaMedium.FluidLimits
+    data::MediumSpecificData
+end
+```
+
+and functions operating on instances of such a struct.
 
 This package is currently under development.
 """
@@ -22,6 +35,12 @@ println(" \nImporting ModiaMedia version ", Version)
 export AbstractMedium, PureSubstance, getMedium, listMedia
 export MoistAir, SimpleMedium, SimpleIdealGasMedium, SingleGasNasa
 
+export setState_pTX, setState_pTX!, setState_pT, setState_pT!
+export setState_phX, setState_phX!, setState_ph, setState_ph!
+export setState_psX, setState_psX!, setState_ps, setState_ps!
+export setState_dTX, setState_dTX!, setState_dT, setState_dT!
+export isenthalpicState, isenthalpicState!
+
 export density, density_phX, density_pTX, density_der_1, density_pT, density_pT_der_1, density_pT_der_2, density_pT_der_3
 export specificInternalEnergy_T, specificInternalEnergy_T_der_1, specificInternalEnergy_T_der_2
 
@@ -29,8 +48,6 @@ export temperature, temperature_phX, temperature_ph
 export pressure, pressure_dT
 export specificEnthalpy, specificEnthalpy_pTX, specificEnthalpy_dT, specificEnthalpy_T
 export specificInternalEnergy, specificHeatCapacityCp
-export setState_pTX, setState_pT, setState_ph, setState_ps, setState_dT
-export isenthalpicState
 export dynamicViscosity
 
 # PureSubstance functions
