@@ -9,62 +9,27 @@
   T = 300.0  # in [K]
 
   # Set the medium-specific thermodynamic state from p and T
-  # (could be also set from p and h, or p and s, or d and T)
+  # (could be also set from p,h, or p,s, or d,T, or
+  # p,T,X, or p,h,X, or p,s,X, or d,T,X)
   state = setState_pT(Medium, p, T)
 
+  # Update a state object with new values
+  setState_pT!(state, p, T)
+
   # Call media functions (here to compute density and specific enthalpy)
-  d = density(Medium,state)
-  h = specificEnthalpy(Medium,state)
+  d = density(state)
+  h = specificEnthalpy(state)
 
   # Print computed values
   println(&quot;data for p=$p, T=$T:&quot;)
   println(&quot;density          = &quot;, d)
   println(&quot;specificEnthalpy = &quot;, h)
 
-  # Plot the most important characteristics of the medium
-  ModiaMedia.standardPlot(Medium)</code></pre><p>This example generates the following plot:</p><p><img src="../resources/images/N2.png" alt="standardPlot"/></p><h2><a class="nav-anchor" id="Available-media-1" href="#Available-media-1">Available media</a></h2><p>The available media can be listed with <code>listMedia()</code> resulting in:</p><pre><code class="language-none">Media available in ModiaMedia:
+  # List the available media
+  listMedia()
 
-¦ Row ¦ name                        ¦ type                 ¦
-+-----+-----------------------------+----------------------¦
-¦ 1   ¦ Ar                          ¦ SingleGasNasa        ¦
-¦ 2   ¦ C2H2_vinylidene             ¦ SingleGasNasa        ¦
-¦ 3   ¦ C2H4                        ¦ SingleGasNasa        ¦
-¦ 4   ¦ C2H5OH                      ¦ SingleGasNasa        ¦
-¦ 5   ¦ C2H6                        ¦ SingleGasNasa        ¦
-¦ 6   ¦ C3H6_propylene              ¦ SingleGasNasa        ¦
-¦ 7   ¦ C3H8                        ¦ SingleGasNasa        ¦
-¦ 8   ¦ C4H10_n_butane              ¦ SingleGasNasa        ¦
-¦ 9   ¦ C4H8_1_butene               ¦ SingleGasNasa        ¦
-¦ 10  ¦ C5H10_1_pentene             ¦ SingleGasNasa        ¦
-¦ 11  ¦ C5H12_n_pentane             ¦ SingleGasNasa        ¦
-¦ 12  ¦ C6H12_1_hexene              ¦ SingleGasNasa        ¦
-¦ 13  ¦ C6H14_n_hexane              ¦ SingleGasNasa        ¦
-¦ 14  ¦ C6H6                        ¦ SingleGasNasa        ¦
-¦ 15  ¦ C7H14_1_heptene             ¦ SingleGasNasa        ¦
-¦ 16  ¦ C7H16_n_heptane             ¦ SingleGasNasa        ¦
-¦ 17  ¦ C8H10_ethylbenz             ¦ SingleGasNasa        ¦
-¦ 18  ¦ C8H18_n_octane              ¦ SingleGasNasa        ¦
-¦ 19  ¦ CH3OH                       ¦ SingleGasNasa        ¦
-¦ 20  ¦ CH4                         ¦ SingleGasNasa        ¦
-¦ 21  ¦ CL2                         ¦ SingleGasNasa        ¦
-¦ 22  ¦ CO                          ¦ SingleGasNasa        ¦
-¦ 23  ¦ CO2                         ¦ SingleGasNasa        ¦
-¦ 24  ¦ ConstantPropertyLiquidWater ¦ SimpleMedium         ¦
-¦ 25  ¦ F2                          ¦ SingleGasNasa        ¦
-¦ 26  ¦ H2                          ¦ SingleGasNasa        ¦
-¦ 27  ¦ H2O                         ¦ SingleGasNasa        ¦
-¦ 28  ¦ He                          ¦ SingleGasNasa        ¦
-¦ 29  ¦ MoistAir                    ¦ MoistAir             ¦
-¦ 30  ¦ N2                          ¦ SingleGasNasa        ¦
-¦ 31  ¦ N2O                         ¦ SingleGasNasa        ¦
-¦ 32  ¦ NH3                         ¦ SingleGasNasa        ¦
-¦ 33  ¦ NO                          ¦ SingleGasNasa        ¦
-¦ 34  ¦ NO2                         ¦ SingleGasNasa        ¦
-¦ 35  ¦ Ne                          ¦ SingleGasNasa        ¦
-¦ 36  ¦ O2                          ¦ SingleGasNasa        ¦
-¦ 37  ¦ SO2                         ¦ SingleGasNasa        ¦
-¦ 38  ¦ SO3                         ¦ SingleGasNasa        ¦
-¦ 39  ¦ SimpleAir                   ¦ SimpleIdealGasMedium ¦</code></pre><h2><a class="nav-anchor" id="Structure-of-package-1" href="#Structure-of-package-1">Structure of package</a></h2><p>A medium is a struct of the following type:</p><pre><code class="language-julia">mutable struct MediumName &lt;: ModiaMedia.AbstractMedium  # or of a subtype of AbstractMedium
+  # Plot the most important characteristics of the medium
+  standardPlot(Medium)</code></pre><p>This example generates the following plot:</p><p><img src="../resources/images/N2.png" alt="standardPlot"/></p><h2><a class="nav-anchor" id="Available-media-1" href="#Available-media-1">Available media</a></h2><p>The available media can be listed with <code>listMedia()</code> resulting in:</p><table><tr><th>Row</th><th>name</th><th>type</th></tr><tr><td>1</td><td>Ar</td><td>SingleGasNasa</td></tr><tr><td>2</td><td>C2H2_vinylidene</td><td>SingleGasNasa</td></tr><tr><td>3</td><td>C2H4</td><td>SingleGasNasa</td></tr><tr><td>4</td><td>C2H5OH</td><td>SingleGasNasa</td></tr><tr><td>5</td><td>C2H6</td><td>SingleGasNasa</td></tr><tr><td>6</td><td>C3H6_propylene</td><td>SingleGasNasa</td></tr><tr><td>7</td><td>C3H8</td><td>SingleGasNasa</td></tr><tr><td>8</td><td>C4H10_n_butane</td><td>SingleGasNasa</td></tr><tr><td>9</td><td>C4H8_1_butene</td><td>SingleGasNasa</td></tr><tr><td>10</td><td>C5H10_1_pentene</td><td>SingleGasNasa</td></tr><tr><td>11</td><td>C5H12_n_pentane</td><td>SingleGasNasa</td></tr><tr><td>12</td><td>C6H12_1_hexene</td><td>SingleGasNasa</td></tr><tr><td>13</td><td>C6H14_n_hexane</td><td>SingleGasNasa</td></tr><tr><td>14</td><td>C6H6</td><td>SingleGasNasa</td></tr><tr><td>15</td><td>C7H14_1_heptene</td><td>SingleGasNasa</td></tr><tr><td>16</td><td>C7H16_n_heptane</td><td>SingleGasNasa</td></tr><tr><td>17</td><td>C8H10_ethylbenz</td><td>SingleGasNasa</td></tr><tr><td>18</td><td>C8H18_n_octane</td><td>SingleGasNasa</td></tr><tr><td>19</td><td>CH3OH</td><td>SingleGasNasa</td></tr><tr><td>20</td><td>CH4</td><td>SingleGasNasa</td></tr><tr><td>21</td><td>CL2</td><td>SingleGasNasa</td></tr><tr><td>22</td><td>CO</td><td>SingleGasNasa</td></tr><tr><td>23</td><td>CO2</td><td>SingleGasNasa</td></tr><tr><td>24</td><td>ConstantPropertyLiquidWater</td><td>SimpleMedium</td></tr><tr><td>25</td><td>F2</td><td>SingleGasNasa</td></tr><tr><td>26</td><td>H2</td><td>SingleGasNasa</td></tr><tr><td>27</td><td>H2O</td><td>SingleGasNasa</td></tr><tr><td>28</td><td>He</td><td>SingleGasNasa</td></tr><tr><td>29</td><td>MoistAir</td><td>MoistAir</td></tr><tr><td>30</td><td>N2</td><td>SingleGasNasa</td></tr><tr><td>31</td><td>N2O</td><td>SingleGasNasa</td></tr><tr><td>32</td><td>NH3</td><td>SingleGasNasa</td></tr><tr><td>33</td><td>NO</td><td>SingleGasNasa</td></tr><tr><td>34</td><td>NO2</td><td>SingleGasNasa</td></tr><tr><td>35</td><td>Ne</td><td>SingleGasNasa</td></tr><tr><td>36</td><td>O2</td><td>SingleGasNasa</td></tr><tr><td>37</td><td>SO2</td><td>SingleGasNasa</td></tr><tr><td>38</td><td>SO3</td><td>SingleGasNasa</td></tr><tr><td>39</td><td>SimpleAir</td><td>SimpleIdealGasMedium</td></tr></table><h2><a class="nav-anchor" id="Structure-of-package-1" href="#Structure-of-package-1">Structure of package</a></h2><p>A medium is a struct of the following type:</p><pre><code class="language-julia">mutable struct MediumName &lt;: ModiaMedia.AbstractMedium  # or of a subtype of AbstractMedium
     infos::ModiaMedia.FluidInfos
     fluidConstants::Vector{ModiaMedia.AbstractFluidConstants}
     fluidLimits::ModiaMedia.FluidLimits
@@ -112,6 +77,4 @@ mutable struct FluidLimits
     HMAX::Float64  # &quot;Maximum enthalpy&quot;;
     SMIN::Float64  # &quot;Minimum entropy&quot;;
     SMAX::Float64  # &quot;Maximum entropy&quot;;
-end</code></pre><p>and all instances of this struct are stored in a <strong>dictionary</strong>. This dictionary is constructed in a preprocessing step by running &quot;ModiaMedia/dict/GenerateMediumDict.jl&quot;. This module contains code that was mostly automatically converted from Modelica.Media to Julia. The resulting dictionary is serialized and stored in &quot;ModiaMedia/src/Media/media.julia_serializer&quot;. When package ModiaMedia is compiled, this serialized dictionary is deserialized and included in the compiled package.</p><p>Function <code>ModiaMedia.Medium(name)</code> returns the <code>MediumXXX</code> instance stored in the medium dictionary with key <code>name</code>.</p><h2><a class="nav-anchor" id="Main-Developers-1" href="#Main-Developers-1">Main Developers</a></h2><p><a href="https://rmc.dlr.de/sr/en/staff/martin.otter/">Martin Otter</a> (<a href="https://www.dlr.de/sr/en">DLR - Institute of System Dynamics and Control</a>)\
-Hilding Elmqvist (<a href="http://www.mogram.net/">Mogram</a>),\
-<a href="http://www.merl.com/people/laughman">Chris Laughman</a> (<a href="http://www.merl.com/">MERL</a>).</p><p>License: MIT (expat)</p><h2><a class="nav-anchor" id="Release-Notes-1" href="#Release-Notes-1">Release Notes</a></h2><p>The ModiaMedia package development has just started and a lot has to be improved.</p><h3><a class="nav-anchor" id="Version-0.1.0-dev-1" href="#Version-0.1.0-dev-1">Version 0.1.0-dev</a></h3><p>A version is not yet released.</p><footer><hr/><a class="next" href="lib/Types.html"><span class="direction">Next</span><span class="title">Types</span></a></footer></article></body></html>
+end</code></pre><p>and all instances of this struct are stored in a <strong>dictionary</strong>. This dictionary is constructed in a preprocessing step by running &quot;ModiaMedia/dict/GenerateMediumDict.jl&quot;. This module contains code that was mostly automatically converted from Modelica.Media to Julia. The resulting dictionary is serialized and stored in &quot;ModiaMedia/src/Media/media.julia_serializer&quot;. When package ModiaMedia is compiled, this serialized dictionary is deserialized and included in the compiled package.</p><p>Function <code>ModiaMedia.Medium(name)</code> returns the <code>MediumXXX</code> instance stored in the medium dictionary with key <code>name</code>.</p><h2><a class="nav-anchor" id="Main-Developers-1" href="#Main-Developers-1">Main Developers</a></h2><p><a href="https://rmc.dlr.de/sr/en/staff/martin.otter/">Martin Otter</a> (<a href="https://www.dlr.de/sr/en">DLR - Institute of System Dynamics and Control</a>)<br/>Hilding Elmqvist (<a href="http://www.mogram.net/">Mogram</a>),<br/><a href="http://www.merl.com/people/laughman">Chris Laughman</a> (<a href="http://www.merl.com/">MERL</a>).</p><p>License: MIT (expat)</p><h2><a class="nav-anchor" id="Release-Notes-1" href="#Release-Notes-1">Release Notes</a></h2><p>The ModiaMedia package development has just started and a lot has to be improved.</p><h3><a class="nav-anchor" id="Version-0.1.0-dev-1" href="#Version-0.1.0-dev-1">Version 0.1.0-dev</a></h3><p>A version is not yet released.</p><footer><hr/><a class="next" href="lib/Types.html"><span class="direction">Next</span><span class="title">Types</span></a></footer></article></body></html>
