@@ -44,20 +44,27 @@ the instructions
   T = 300.0  # in [K]
 
   # Set the medium-specific thermodynamic state from p and T
-  # (could be also set from p and h, or p and s, or d and T)
+  # (could be also set from p,h, or p,s, or d,T, or
+  # p,T,X, or p,h,X, or p,s,X, or d,T,X)
   state = setState_pT(Medium, p, T)
 
+  # Update a state object with new values
+  setState_pT!(state, p, T)
+
   # Call media functions (here to compute density and specific enthalpy)
-  d = density(Medium,state)
-  h = specificEnthalpy(Medium,state)
+  d = density(state)
+  h = specificEnthalpy(state)
 
   # Print computed values
   println("data for p=$p, T=$T:")
   println("density          = ", d)
   println("specificEnthalpy = ", h)
 
+  # List the available media
+  listMedia()
+
   # Plot the most important characteristics of the medium
-  ModiaMedia.standardPlot(Medium)
+  standardPlot(Medium)
 ```
 
 This example generates the following plot:
@@ -70,51 +77,47 @@ This example generates the following plot:
 
 The available media can be listed with `listMedia()` resulting in:
 
-```
-Media available in ModiaMedia:
-
-¦ Row ¦ name                        ¦ type                 ¦
-+-----+-----------------------------+----------------------¦
-¦ 1   ¦ Ar                          ¦ SingleGasNasa        ¦
-¦ 2   ¦ C2H2_vinylidene             ¦ SingleGasNasa        ¦
-¦ 3   ¦ C2H4                        ¦ SingleGasNasa        ¦
-¦ 4   ¦ C2H5OH                      ¦ SingleGasNasa        ¦
-¦ 5   ¦ C2H6                        ¦ SingleGasNasa        ¦
-¦ 6   ¦ C3H6_propylene              ¦ SingleGasNasa        ¦
-¦ 7   ¦ C3H8                        ¦ SingleGasNasa        ¦
-¦ 8   ¦ C4H10_n_butane              ¦ SingleGasNasa        ¦
-¦ 9   ¦ C4H8_1_butene               ¦ SingleGasNasa        ¦
-¦ 10  ¦ C5H10_1_pentene             ¦ SingleGasNasa        ¦
-¦ 11  ¦ C5H12_n_pentane             ¦ SingleGasNasa        ¦
-¦ 12  ¦ C6H12_1_hexene              ¦ SingleGasNasa        ¦
-¦ 13  ¦ C6H14_n_hexane              ¦ SingleGasNasa        ¦
-¦ 14  ¦ C6H6                        ¦ SingleGasNasa        ¦
-¦ 15  ¦ C7H14_1_heptene             ¦ SingleGasNasa        ¦
-¦ 16  ¦ C7H16_n_heptane             ¦ SingleGasNasa        ¦
-¦ 17  ¦ C8H10_ethylbenz             ¦ SingleGasNasa        ¦
-¦ 18  ¦ C8H18_n_octane              ¦ SingleGasNasa        ¦
-¦ 19  ¦ CH3OH                       ¦ SingleGasNasa        ¦
-¦ 20  ¦ CH4                         ¦ SingleGasNasa        ¦
-¦ 21  ¦ CL2                         ¦ SingleGasNasa        ¦
-¦ 22  ¦ CO                          ¦ SingleGasNasa        ¦
-¦ 23  ¦ CO2                         ¦ SingleGasNasa        ¦
-¦ 24  ¦ ConstantPropertyLiquidWater ¦ SimpleMedium         ¦
-¦ 25  ¦ F2                          ¦ SingleGasNasa        ¦
-¦ 26  ¦ H2                          ¦ SingleGasNasa        ¦
-¦ 27  ¦ H2O                         ¦ SingleGasNasa        ¦
-¦ 28  ¦ He                          ¦ SingleGasNasa        ¦
-¦ 29  ¦ MoistAir                    ¦ MoistAir             ¦
-¦ 30  ¦ N2                          ¦ SingleGasNasa        ¦
-¦ 31  ¦ N2O                         ¦ SingleGasNasa        ¦
-¦ 32  ¦ NH3                         ¦ SingleGasNasa        ¦
-¦ 33  ¦ NO                          ¦ SingleGasNasa        ¦
-¦ 34  ¦ NO2                         ¦ SingleGasNasa        ¦
-¦ 35  ¦ Ne                          ¦ SingleGasNasa        ¦
-¦ 36  ¦ O2                          ¦ SingleGasNasa        ¦
-¦ 37  ¦ SO2                         ¦ SingleGasNasa        ¦
-¦ 38  ¦ SO3                         ¦ SingleGasNasa        ¦
-¦ 39  ¦ SimpleAir                   ¦ SimpleIdealGasMedium ¦
-```
+| Row | name                        | type                 |
+|-----|-----------------------------|----------------------|
+| 1   | Ar                          | SingleGasNasa        |
+| 2   | C2H2\_vinylidene             | SingleGasNasa        |
+| 3   | C2H4                        | SingleGasNasa        |
+| 4   | C2H5OH                      | SingleGasNasa        |
+| 5   | C2H6                        | SingleGasNasa        |
+| 6   | C3H6\_propylene              | SingleGasNasa        |
+| 7   | C3H8                        | SingleGasNasa        |
+| 8   | C4H10\_n\_butane              | SingleGasNasa        |
+| 9   | C4H8\_1\_butene               | SingleGasNasa        |
+| 10  | C5H10\_1\_pentene             | SingleGasNasa        |
+| 11  | C5H12\_n\_pentane             | SingleGasNasa        |
+| 12  | C6H12\_1\_hexene              | SingleGasNasa        |
+| 13  | C6H14\_n\_hexane              | SingleGasNasa        |
+| 14  | C6H6                        | SingleGasNasa        |
+| 15  | C7H14\_1\_heptene             | SingleGasNasa        |
+| 16  | C7H16\_n\_heptane             | SingleGasNasa        |
+| 17  | C8H10\_ethylbenz             | SingleGasNasa        |
+| 18  | C8H18\_n\_octane              | SingleGasNasa        |
+| 19  | CH3OH                       | SingleGasNasa        |
+| 20  | CH4                         | SingleGasNasa        |
+| 21  | CL2                         | SingleGasNasa        |
+| 22  | CO                          | SingleGasNasa        |
+| 23  | CO2                         | SingleGasNasa        |
+| 24  | ConstantPropertyLiquidWater | SimpleMedium         |
+| 25  | F2                          | SingleGasNasa        |
+| 26  | H2                          | SingleGasNasa        |
+| 27  | H2O                         | SingleGasNasa        |
+| 28  | He                          | SingleGasNasa        |
+| 29  | MoistAir                    | MoistAir             |
+| 30  | N2                          | SingleGasNasa        |
+| 31  | N2O                         | SingleGasNasa        |
+| 32  | NH3                         | SingleGasNasa        |
+| 33  | NO                          | SingleGasNasa        |
+| 34  | NO2                         | SingleGasNasa        |
+| 35  | Ne                          | SingleGasNasa        |
+| 36  | O2                          | SingleGasNasa        |
+| 37  | SO2                         | SingleGasNasa        |
+| 38  | SO3                         | SingleGasNasa        |
+| 39  | SimpleAir                   | SimpleIdealGasMedium |
 
 
 ## Structure of package
@@ -189,8 +192,8 @@ in the medium dictionary with key `name`.
 
 ## Main Developers
 
-[Martin Otter](https://rmc.dlr.de/sr/en/staff/martin.otter/) ([DLR - Institute of System Dynamics and Control](https://www.dlr.de/sr/en))\\
-Hilding Elmqvist ([Mogram](http://www.mogram.net/)),\\
+[Martin Otter](https://rmc.dlr.de/sr/en/staff/martin.otter/) ([DLR - Institute of System Dynamics and Control](https://www.dlr.de/sr/en))\
+Hilding Elmqvist ([Mogram](http://www.mogram.net/)),\
 [Chris Laughman](http://www.merl.com/people/laughman) ([MERL](http://www.merl.com/)).
 
 License: MIT (expat)
