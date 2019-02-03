@@ -2,13 +2,13 @@
 
 [![Latest](https://img.shields.io/badge/docs-latest-blue.svg)](https://modiasim.github.io/ModiaMedia.jl/latest/)
 
-This package shall provide Media models for use with [Modia](https://github.com/ModiaSim/Modia.jl)
+This package  provides thermodynamic property models for use with [Modia](https://github.com/ModiaSim/Modia.jl)
 and other Julia packages. The initial goal is to achieve a similar functionality as
 [Modelica.Media](https://doc.modelica.org/Modelica%203.2.3/Resources/helpDymola/Modelica_Media.html#Modelica.Media),
 the standard media library for Modelica models, but with improvements based on Julia features
 such as multiple dispatch.
 
-This package is under development and it is planned to provide all media from
+This package is under development and it is planned to provide all thermodynamic property models from
 [Modelica.Media](https://doc.modelica.org/Modelica%203.2.3/Resources/helpDymola/Modelica_Media.html#Modelica.Media)
 in this package.
 
@@ -37,7 +37,7 @@ the instructions
 ```julia
   using ModiaMedia
 
-  # Define medium to be used
+  # Define thermodynamic property model to be used
   Medium = getMedium("N2");
 
   # Define the operating point where the medium shall be evaluated.
@@ -79,8 +79,11 @@ The ModiaMedia package development has just started and a lot has to be improved
 
 ## Main Developers
 
-[Martin Otter](https://rmc.dlr.de/sr/en/staff/martin.otter/) ([DLR - Institute of System Dynamics and Control](https://www.dlr.de/sr/en))\
-Hilding Elmqvist ([Mogram](http://www.mogram.net/)),\
-[Christopher Laughman](http://www.merl.com/people/laughman) ([MERL](http://www.merl.com/)).
+- [Martin Otter](https://rmc.dlr.de/sr/en/staff/martin.otter/) ([DLR - Institute of System Dynamics and Control](https://www.dlr.de/sr/en))\
+- Hilding Elmqvist ([Mogram](http://www.mogram.net/)),\
+- [Chris Laughman](http://www.merl.com/people/laughman) ([MERL](http://www.merl.com/)).
+- All the content of ModiaMedia is based on
+  [Modelica.Media](https://doc.modelica.org/Modelica%203.2.3/Resources/helpDymola/Modelica_Media.html#Modelica.Media)
+  which was and is developed from many people.
 
 License: MIT (expat)

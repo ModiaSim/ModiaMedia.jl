@@ -1,13 +1,14 @@
 # ModiaMedia.jl Documentation
 
-[ModiaMedia](https://github.com/ModiaSim/ModiaMedia.jl) shall provide Media models
+[ModiaMedia](https://github.com/ModiaSim/ModiaMedia.jl) provides
+thermodynamic property models
 for use with [Modia](https://github.com/ModiaSim/Modia.jl)
 and other Julia packages. The initial goal is to achieve a similar functionality as
 [Modelica.Media](https://doc.modelica.org/Modelica%203.2.3/Resources/helpDymola/Modelica_Media.html#Modelica.Media),
 the standard media library for Modelica models, but with improvements based on Julia features
 such as multiple dispatch.
 
-This package is under development and it is planned to provide all media from
+This package is under development and it is planned to provide all thermodynamic property models from
 [Modelica.Media](https://doc.modelica.org/Modelica%203.2.3/Resources/helpDymola/Modelica_Media.html#Modelica.Media)
 in this package.
 
@@ -36,7 +37,7 @@ the instructions
 ```julia
   using ModiaMedia
 
-  # Define medium to be used
+  # Define thermodynamic property model to be used
   Medium = getMedium("N2");
 
   # Define the operating point where the medium shall be evaluated.
@@ -75,7 +76,8 @@ This example generates the following plot:
 
 ## Available media
 
-The available media can be listed with `listMedia()` resulting in:
+The available thermodynamic property models
+can be listed with `listMedia()` resulting in:
 
 | Row | name                        | type                 |
 |-----|-----------------------------|----------------------|
@@ -122,7 +124,7 @@ The available media can be listed with `listMedia()` resulting in:
 
 ## Structure of package
 
-A medium is a struct of the following type:
+A thermodynamic property model is a struct of the following type:
 
 ```julia
 mutable struct MediumName <: ModiaMedia.AbstractMedium  # or of a subtype of AbstractMedium
