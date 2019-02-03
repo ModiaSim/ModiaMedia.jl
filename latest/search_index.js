@@ -74,15 +74,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/MediaTypes.html#",
-    "page": "-",
-    "title": "-",
+    "page": "Media Types",
+    "title": "Media Types",
     "category": "page",
-    "text": "﻿# Media TypesIn this section the currently available media types are summarized. The Available media list the actually available media. A concrete medium object is inquired with getMedium(mediumName)."
+    "text": ""
+},
+
+{
+    "location": "lib/MediaTypes.html#Media-Types-1",
+    "page": "Media Types",
+    "title": "Media Types",
+    "category": "section",
+    "text": "In this section the currently available media types are summarized. The Available media list the actually available media. A concrete medium object is inquired with getMedium(mediumName)."
 },
 
 {
     "location": "lib/MediaTypes.html#SimpleMedium-1",
-    "page": "-",
+    "page": "Media Types",
     "title": "SimpleMedium",
     "category": "section",
     "text": "PureSubstance thermodynamic property model with linear dependency of specific internal energy and specific enthalpy from temperature. All other quantities, especially density, are constant. Example:# Definition of medium in ModiaMedia/dict/SimpleMedium.jl\r\ndict[\"ConstantPropertyLiquidWater\"] = ModiaMedia.SimpleMedium(\r\n                        mediumName = \"ConstantPropertyLiquidWater\",\r\n\r\n                        fluidConstants = ModiaMedia.BasicFluidConstants(\r\n                            chemicalFormula=\"H2O\",\r\n                            structureFormula=\"H2O\",\r\n                            casRegistryNumber=\"7732-18-5\",\r\n                            iupacName=\"oxidane\",\r\n                            molarMass=0.018015268),\r\n\r\n                        data = ModiaMedia.SimpleMediumData(\r\n                            cp_const=4184,\r\n                            cv_const=4184,\r\n                            d_const=995.586,\r\n                            eta_const=1.e-3,\r\n                            lambda_const=0.598,\r\n                            a_const=1484,\r\n                            T_min=ModiaMedia.from_degC(-1),\r\n                            T_max=ModiaMedia.from_degC(130),\r\n                            T0=273.15,\r\n                            MM_const=0.018015268)\r\n                    )\r\n\r\n\r\n# Using this medium\r\nusing ModiaMedium\r\nstandardPlot( getMedium(\"ConstantPropertyLiquidWater\") )(Image: standardPlot)"
@@ -90,7 +98,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/MediaTypes.html#SimpleIdealGasMedium-1",
-    "page": "-",
+    "page": "Media Types",
     "title": "SimpleIdealGasMedium",
     "category": "section",
     "text": "PureSubstance thermodynamic property model of ideal gas with linear dependency of specific internal energy and specific enthalpy from temperature and constant transport properties. Density is a function of temperature and pressure. Example:# Definition of medium in ModiaMedia/dict/SimpleIdealGasMedium.jl\r\ndict[\"SimpleAir\"] = ModiaMedia.SimpleIdealGasMedium(\r\n                        mediumName = \"SimpleAir\",\r\n\r\n                        fluidConstants = ModiaMedia.BasicFluidConstants(\r\n                            iupacName=\"simple air\",\r\n                            casRegistryNumber=\"not a real substance\",\r\n                            chemicalFormula=\"N2, O2\",\r\n                            structureFormula=\"N2, O2\",\r\n                            molarMass=0.0289651159),\r\n\r\n                        data = ModiaMedia.SimpleIdealGasMediumData(\r\n                            cp_const     = 1005.45,\r\n                            MM_const     = 0.0289651159,\r\n                            R_gas        = 8.3144598/0.0289651159,\r\n                            eta_const    = 1.82e-5,\r\n                            lambda_const = 0.026,\r\n                            T_min        = ModiaMedia.from_degC(0.0),\r\n                            T_max        = ModiaMedia.from_degC(100.0),\r\n                            T0           = 298.15)\r\n                    )\r\n\r\n\r\n# Using this medium\r\nusing ModiaMedium\r\nstandardPlot( getMedium(\"SimpleAir\") )(Image: standardPlot)"
@@ -98,7 +106,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/MediaTypes.html#SingleGasNasa-1",
-    "page": "-",
+    "page": "Media Types",
     "title": "SingleGasNasa",
     "category": "section",
     "text": "PureSubstance thermodynamic property model of ideal gas with nonlinear functions for specific enthalpy and specific internal energy. Density is a function of temperature and pressure, whereas all other functions are a function of temperature only. The nonlinear function for specific enthalpy and its data are fromMcBride B.J., Zehe M.J., and Gordon S. (2002): NASA Glenn Coefficients for Calculating Thermodynamic Properties of Individual Species. NASA report TP-2002-211556# Using this medium\r\nusing ModiaMedium\r\nstandardPlot( getMedium(\"N2\") )(Image: standardPlot)"
@@ -106,7 +114,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/MediaTypes.html#MoistAir-1",
-    "page": "-",
+    "page": "Media Types",
     "title": "MoistAir",
     "category": "section",
     "text": ""
@@ -114,7 +122,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/MediaTypes.html#Thermodynamic-Model-1",
-    "page": "-",
+    "page": "Media Types",
     "title": "Thermodynamic Model",
     "category": "section",
     "text": "CondensingGases thermodynamic property model of moist air including the fog region and temperatures below zero degC. The governing assumptions in this model are:the perfect gas law applies\nwater volume other than that of steam is neglectedAll extensive properties are expressed in terms of the total mass in order to comply with other media in this library. However, for moist air it is rather common to express the absolute humidity in terms of mass of dry air only, which has advantages when working with charts. In addition, care must be taken, when working with mass fractions with respect to total mass, that all properties refer to the same water content when being used in mathematical operations (which is always the case if based on dry air only). Therefore two absolute humidities are computed in the BaseProperties model: X denotes the absolute humidity in terms of the total mass while x denotes the absolute humidity per unit mass of dry air. In addition, the relative humidity phi is also computed.At the triple point temperature of water of 0.01 °C or 273.16 K and a relative humidity greater than 1 fog may be present as liquid and as ice resulting in a specific enthalpy somewhere between those of the two isotherms for solid and liquid fog, respectively. For numerical reasons a coexisting mixture of 50% solid and 50% liquid fog is assumed in the fog region at the triple point in this model."
@@ -122,7 +130,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/MediaTypes.html#Range-of-validity-1",
-    "page": "-",
+    "page": "Media Types",
     "title": "Range of validity",
     "category": "section",
     "text": "From the assumptions mentioned above it follows that the pressure should be in the region around atmospheric conditions or below (a few bars may still be fine though). Additionally a very high water content at low temperatures would yield incorrect densities, because the volume of the liquid or solid phase would not be negligible anymore. The model does not provide information on limits for water drop size in the fog region or transport information for the actual condensation or evaporation process in combination with surfaces. All excess water which is not in its vapour state is assumed to be still present in the air regarding its energy but not in terms of its spatial extent.The thermodynamic model may be used for temperatures ranging from 190 ... 647 K. This holds for all functions unless otherwise stated in their description. However, although the model works at temperatures above the saturation temperature it is questionable to use the term \"relative humidity\" in this region. Please note, that although several functions compute pure water properties, they are designed to be used within the moist air medium model where properties are dominated by air and steam in their vapor states, and not for pure liquid water applications."
@@ -130,7 +138,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/MediaTypes.html#Transport-Properties-1",
-    "page": "-",
+    "page": "Media Types",
     "title": "Transport Properties",
     "category": "section",
     "text": "Several additional functions that are not needed to describe the thermodynamic system, but are required to model transport processes, like heat and mass transfer, may be called. They usually neglect the moisture influence unless otherwise stated."
@@ -138,7 +146,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/MediaTypes.html#Application-1",
-    "page": "-",
+    "page": "Media Types",
     "title": "Application",
     "category": "section",
     "text": "The model\'s main area of application is all processes that involve moist air cooling under near atmospheric pressure with possible moisture condensation. This is the case in all domestic and industrial air conditioning applications. Another large domain of moist air applications covers all processes that deal with dehydration of bulk material using air as a transport medium."
@@ -146,7 +154,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/MediaTypes.html#Usage-1",
-    "page": "-",
+    "page": "Media Types",
     "title": "Usage",
     "category": "section",
     "text": "# Using this medium\r\nusing ModiaMedium\r\nstandardPlot( getMedium(\"MoistAir\") )(Image: standardPlot)"
