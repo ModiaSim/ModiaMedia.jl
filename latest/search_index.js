@@ -53,7 +53,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Main Developers",
     "category": "section",
-    "text": "Martin Otter (DLR - Institute of System Dynamics and Control)\nHilding Elmqvist (Mogram),\nChris Laughman (MERL).License: MIT (expat)"
+    "text": "Martin Otter (DLR - Institute of System Dynamics and Control)\n\nHilding Elmqvist (Mogram),\n\nChris Laughman (MERL).\nAll the content of ModiaMedia is based on Modelica.Media which was and is developed from many people.License: MIT (expat)"
 },
 
 {
@@ -73,96 +73,136 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lib/Types.html#",
-    "page": "Types",
-    "title": "Types",
+    "location": "lib/MediaTypes.html#",
+    "page": "Media Types",
+    "title": "Media Types",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "lib/Types.html#ModiaMedia.AbstractMedium",
-    "page": "Types",
-    "title": "ModiaMedia.AbstractMedium",
-    "category": "type",
-    "text": "abstract type AbstractMedium - Abstract type of all media\n\n\n\n\n\n"
+    "location": "lib/MediaTypes.html#Media-Types-1",
+    "page": "Media Types",
+    "title": "Media Types",
+    "category": "section",
+    "text": "In this section the currently available media types are summarized. The Available media list the actually available media. A concrete medium object is inquired with getMedium(mediumName)."
 },
 
 {
-    "location": "lib/Types.html#ModiaMedia.IndependentVariables",
-    "page": "Types",
-    "title": "ModiaMedia.IndependentVariables",
-    "category": "type",
-    "text": "@enum IndependentVariables\n\nEnumeration defining the independent variables of a medium. Possible values:\n\nValue Independent variables\nIndependentVariables_T Temperature\nIndependentVariables_pT Pressure, temperature\nIndependentVariables_ph Pressure, specific enthalpy\nIndependentVariables_phX Pressure, specific enthalpy, mass fractions\nIndependentVariables_pTX Pressure, temperature, mass fractions\nIndependentVariables_dTX Density, temperature, mass fractions\n\n\n\n\n\n"
+    "location": "lib/MediaTypes.html#SimpleMedium-1",
+    "page": "Media Types",
+    "title": "SimpleMedium",
+    "category": "section",
+    "text": "PureSubstance Medium model with linear dependency of specific internal energy and specific enthalpy from temperature. All other quantities, especially density, are constant. Example:# Definition of medium in ModiaMedia/dict/SimpleMedium.jl\r\ndict[\"ConstantPropertyLiquidWater\"] = ModiaMedia.SimpleMedium(\r\n                        mediumName = \"ConstantPropertyLiquidWater\",\r\n\r\n                        fluidConstants = ModiaMedia.BasicFluidConstants(\r\n                            chemicalFormula=\"H2O\", \r\n                            structureFormula=\"H2O\", \r\n                            casRegistryNumber=\"7732-18-5\", \r\n                            iupacName=\"oxidane\", \r\n                            molarMass=0.018015268),\r\n\r\n                        data = ModiaMedia.SimpleMediumData(\r\n                            cp_const=4184, \r\n                            cv_const=4184, \r\n                            d_const=995.586, \r\n                            eta_const=1.e-3, \r\n                            lambda_const=0.598, \r\n                            a_const=1484, \r\n                            T_min=ModiaMedia.from_degC(-1), \r\n                            T_max=ModiaMedia.from_degC(130), \r\n                            T0=273.15, \r\n                            MM_const=0.018015268)\r\n                    )\r\n\r\n\r\n# Using this medium\r\nusing ModiaMedium\r\nstandardPlot( getMedium(\"ConstantPropertyLiquidWater\") )(Image: standardPlot)"
 },
 
 {
-    "location": "lib/Types.html#ModiaMedia.MoistAir",
-    "page": "Types",
-    "title": "ModiaMedia.MoistAir",
-    "category": "type",
-    "text": "medium = MoistAir()\n\nGenerate an MoistAir <: CondensingGases medium object. Valid for T = 190 K ... 647 K. \n\n\n\n\n\n"
+    "location": "lib/MediaTypes.html#SimpleIdealGasMedium-1",
+    "page": "Media Types",
+    "title": "SimpleIdealGasMedium",
+    "category": "section",
+    "text": "PureSubstance Medium model of ideal gas with linear dependency of specific  internal energy and specific enthalpy from temperature and constant transport  properties. Density is a function of temperature and pressure. Example:# Definition of medium in ModiaMedia/dict/SimpleIdealGasMedium.jl\r\ndict[\"SimpleAir\"] = ModiaMedia.SimpleIdealGasMedium(\r\n                        mediumName = \"SimpleAir\",\r\n\r\n                        fluidConstants = ModiaMedia.BasicFluidConstants(\r\n                            iupacName=\"simple air\",\r\n                            casRegistryNumber=\"not a real substance\",\r\n                            chemicalFormula=\"N2, O2\",\r\n                            structureFormula=\"N2, O2\",\r\n                            molarMass=0.0289651159),\r\n\r\n                        data = ModiaMedia.SimpleIdealGasMediumData(\r\n                            cp_const     = 1005.45, \r\n                            MM_const     = 0.0289651159, \r\n                            R_gas        = 8.3144598/0.0289651159, \r\n                            eta_const    = 1.82e-5, \r\n                            lambda_const = 0.026, \r\n                            T_min        = ModiaMedia.from_degC(0.0), \r\n                            T_max        = ModiaMedia.from_degC(100.0),\r\n                            T0           = 298.15)\r\n                    )\r\n\r\n\r\n# Using this medium\r\nusing ModiaMedium\r\nstandardPlot( getMedium(\"SimpleAir\") )(Image: standardPlot)"
 },
 
 {
-    "location": "lib/Types.html#ModiaMedia.PureSubstance",
-    "page": "Types",
-    "title": "ModiaMedia.PureSubstance",
-    "category": "type",
-    "text": "abstract type PureSubstance <: AbstractMedium - Abstract type of all media consisting of a pure substance\n\n\n\n\n\n"
+    "location": "lib/MediaTypes.html#SingleGasNasa-1",
+    "page": "Media Types",
+    "title": "SingleGasNasa",
+    "category": "section",
+    "text": "PureSubstance medium model of ideal gas with nonlinear functions for specific enthalpy and specific internal energy.  Density is a function of temperature and pressure, whereas all other functions are a function of temperature only. The nonlinear function for specific enthalpy and its data are fromMcBride B.J., Zehe M.J., and Gordon S. (2002):  NASA Glenn Coefficients for Calculating Thermodynamic Properties of Individual Species.  NASA report TP-2002-211556# Using this medium\r\nusing ModiaMedium\r\nstandardPlot( getMedium(\"N2\") )(Image: standardPlot)"
 },
 
 {
-    "location": "lib/Types.html#ModiaMedia.SimpleIdealGasMedium",
-    "page": "Types",
-    "title": "ModiaMedia.SimpleIdealGasMedium",
-    "category": "type",
-    "text": "medium = SimpleIdealGasMedium(; mediumName     = nothing,\n                                reference_p    = 101325.0,\n                                reference_T    = 298.15,\n                                p_default      = 101325.0,\n                                T_default      = 293.15,\n                                fluidConstants = nothing, \n                                data           = nothing)\n\nGenerate a SimpleIdealGasMedium <: PureSubstance medium object.\n\n\n\n\n\n"
+    "location": "lib/MediaTypes.html#MoistAir-1",
+    "page": "Media Types",
+    "title": "MoistAir",
+    "category": "section",
+    "text": ""
 },
 
 {
-    "location": "lib/Types.html#ModiaMedia.SimpleMedium",
-    "page": "Types",
-    "title": "ModiaMedia.SimpleMedium",
-    "category": "type",
-    "text": "medium = SimpleMedium(; mediumName     = nothing,\n                        reference_p    = 101325.0,\n                        reference_T    = 298.15,\n                        p_default      = 101325.0,\n                        T_default      = 293.15,\n                        fluidConstants = nothing, \n                        data           = nothing)\n\nGenerate a SimpleMedium <: PureSubstance medium object.\n\n\n\n\n\n"
+    "location": "lib/MediaTypes.html#Thermodynamic-Model-1",
+    "page": "Media Types",
+    "title": "Thermodynamic Model",
+    "category": "section",
+    "text": "CondensingGases thermodynamic model of moist air including the  fog region and temperatures below zero degC. The governing assumptions in this model are:the perfect gas law applies\nwater volume other than that of steam is neglectedAll extensive properties are expressed in terms of the total mass in order to comply with other media in this library. However, for moist air it is rather common to express the absolute humidity in terms of mass of dry air only, which has advantages when working with charts. In addition, care must be taken, when working with mass fractions with respect to total mass, that all properties refer to the same water content when being used in mathematical operations (which is always the case if based on dry air only). Therefore two absolute humidities are computed in the BaseProperties model: X denotes the absolute humidity in terms of the total mass while x denotes the absolute humidity per unit mass of dry air. In addition, the relative humidity phi is also computed.At the triple point temperature of water of 0.01 °C or 273.16 K and a relative humidity greater than 1 fog may be present as liquid and as ice resulting in a specific enthalpy somewhere between those of the two isotherms for solid and liquid fog, respectively. For numerical reasons a coexisting mixture of 50% solid and 50% liquid fog is assumed in the fog region at the triple point in this model. "
 },
 
 {
-    "location": "lib/Types.html#ModiaMedia.SingleGasNasa",
-    "page": "Types",
-    "title": "ModiaMedia.SingleGasNasa",
-    "category": "type",
-    "text": "medium = SingleGasNasa(; mediumName     = Missing,\n                         reference_p    = 101325,\n                         reference_T    = 298.15,\n                         p_default      = 101325,\n                         T_default      = 293.15,\n                         fluidConstants = nothing, \n                         fluidLimits    = FluidLimits(TMIN=200.0, TMAX=6000.0), \n                         data           = nothing)\n\nGenerate a SingleGasNasa <: PureSubstance medium object.\n\n\n\n\n\n"
+    "location": "lib/MediaTypes.html#Range-of-validity-1",
+    "page": "Media Types",
+    "title": "Range of validity",
+    "category": "section",
+    "text": "From the assumptions mentioned above it follows that the pressure should be in the region around atmospheric conditions or below (a few bars may still be fine though). Additionally a very high water content at low temperatures would yield incorrect densities, because the volume of the liquid or solid phase would not be negligible anymore. The model does not provide information on limits for water drop size in the fog region or transport information for the actual condensation or evaporation process in combination with surfaces. All excess water which is not in its vapour state is assumed to be still present in the air regarding its energy but not in terms of its spatial extent.The thermodynamic model may be used for temperatures ranging from 190 ... 647 K. This holds for all functions unless otherwise stated in their description. However, although the model works at temperatures above the saturation temperature it is questionable to use the term \"relative humidity\" in this region. Please note, that although several functions compute pure water properties, they are designed to be used within the moist air medium model where properties are dominated by air and steam in their vapor states, and not for pure liquid water applications. "
 },
 
 {
-    "location": "lib/Types.html#ModiaMedia.ThermodynamicState",
-    "page": "Types",
-    "title": "ModiaMedia.ThermodynamicState",
-    "category": "type",
-    "text": "abstract type ThermodynamicState - Abstract type of all media states\n\n\n\n\n\n"
+    "location": "lib/MediaTypes.html#Transport-Properties-1",
+    "page": "Media Types",
+    "title": "Transport Properties",
+    "category": "section",
+    "text": "Several additional functions that are not needed to describe the thermodynamic system, but are required to model transport processes, like heat and mass transfer, may be called. They usually neglect the moisture influence unless otherwise stated. "
 },
 
 {
-    "location": "lib/Types.html#ModiaMedia.ThermodynamicState_pT",
-    "page": "Types",
-    "title": "ModiaMedia.ThermodynamicState_pT",
-    "category": "type",
-    "text": "state = ThermodynamicState_pT(Medium,p,T)\n\nGenerate a ThermodynamicState_pT <: ThermodynamicState object containg pressure p [Pa] and temperature T [K] as states.\n\n\n\n\n\n"
+    "location": "lib/MediaTypes.html#Application-1",
+    "page": "Media Types",
+    "title": "Application",
+    "category": "section",
+    "text": "The model\'s main area of application is all processes that involve moist air cooling under near atmospheric pressure with possible moisture condensation. This is the case in all domestic and industrial air conditioning applications. Another large domain of moist air applications covers all processes that deal with dehydration of bulk material using air as a transport medium. "
+},
+
+{
+    "location": "lib/MediaTypes.html#Usage-1",
+    "page": "Media Types",
+    "title": "Usage",
+    "category": "section",
+    "text": "# Using this medium\r\nusing ModiaMedium\r\nstandardPlot( getMedium(\"MoistAir\") )(Image: standardPlot)"
+},
+
+{
+    "location": "lib/Types.html#",
+    "page": "Exported Types",
+    "title": "Exported Types",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "lib/Types.html#Exported-Types-1",
+    "page": "Exported Types",
+    "title": "Exported Types",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "lib/Types.html#Index-1",
+    "page": "Exported Types",
+    "title": "Index",
+    "category": "section",
+    "text": "Modules = [ModiaMedia]\r\nPrivate = false\r\nOrder   = [:type]"
 },
 
 {
     "location": "lib/Types.html#ModiaMedia.AbstractFluidConstants",
-    "page": "Types",
+    "page": "Exported Types",
     "title": "ModiaMedia.AbstractFluidConstants",
     "category": "type",
-    "text": "abstract type AbstractFluidConstants - Abstract type of all FluidConstants structures\n\n\n\n\n\n"
+    "text": "abstract type AbstractFluidConstants\n\nAbstract type of all FluidConstants structures.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/Types.html#ModiaMedia.AbstractMedium",
+    "page": "Exported Types",
+    "title": "ModiaMedia.AbstractMedium",
+    "category": "type",
+    "text": "abstract type AbstractMedium\n\nAbstract type of all media.\n\n\n\n\n\n"
 },
 
 {
     "location": "lib/Types.html#ModiaMedia.BasicFluidConstants",
-    "page": "Types",
+    "page": "Exported Types",
     "title": "ModiaMedia.BasicFluidConstants",
     "category": "type",
     "text": "fluidConstants = BasicFluidConstants(;iupacName=\"\", casRegistryNumber=\"\", \n                     chemicalFormula=\"\", structureFormula=\"\", molarMass=NaN)\n\nGenerate a BasicFluidConstants <: AbstractFluidConstants object  containing the minimal information about the standard data of the medium.\n\n\n\n\n\n"
@@ -170,15 +210,15 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/Types.html#ModiaMedia.CondensingGases",
-    "page": "Types",
+    "page": "Exported Types",
     "title": "ModiaMedia.CondensingGases",
     "category": "type",
-    "text": "abstract type CondensingGases <: AbstractMedium - Abstract type of all media consisting of condensing media\n\n\n\n\n\n"
+    "text": "abstract type CondensingGases <: AbstractMedium\n\nAbstract type of all media consisting of condensing media.\n\n\n\n\n\n"
 },
 
 {
     "location": "lib/Types.html#ModiaMedia.FluidInfos",
-    "page": "Types",
+    "page": "Exported Types",
     "title": "ModiaMedia.FluidInfos",
     "category": "type",
     "text": "infos = FluidInfos(; <keyword arguments, see below>)\n\nGenerate a new FluidInfos object, containing generic properties of a medium.\n\nKeyword arguments\n\nName and type Description\nmediumName::AbstractString Name of the medium\nsubstanceNames::Vector{AbstractString} Names of the mixture substances. Set substanceNames=[mediumName] if only one substance.\nextraPropertiesNames::Vector{AbstractString} Names of the additional (extra) transported properties. Set extraPropertiesNames=fill(\"\",0) if unused\nThermoStates::IndependentVariables Enumeration type for independent variables\nsingleState::Bool = true, if u and d are not a function of pressure\nreducedX::Bool = true if medium contains the equation sum(X) = 1.0; set reducedX=true if only one substance\nfixedX::Bool = true if medium contains the equation X = reference_X\nreference_p Reference pressure of Medium: default 1 atmosphere\nreference_T Reference temperature of Medium: default 25 deg Celsius\nreference_X Reference mass fractions of medium\np_default Default value for pressure of medium (for initialization)\nT_default Default value for temperature of medium (for initialization)\nh_default Default value for specific enthalpy of medium (for initialization)\nX_default Default value for specific enthalpy of medium (for initialization)\nnS Number of substances\nnX Number of mass fractions\nnXi Number of structurally independent mass fractions\nnC Number of extra (outside of standard mass-balance) transported properties\nC_nominal Default for the nominal values for the extra properties\n\nExample\n\nimport ModiaMedia\n\ninfos = ModiaMedia.FluidInfos(mediumName           = \"simpleMedium\",\n                              substanceNames       = [mediumName],\n                              extraPropertiesNames = fill(\"\",0),\n                              ThermoStates         = IndependentVariables_T)\n\n\n\n\n\n"
@@ -186,7 +226,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/Types.html#ModiaMedia.FluidLimits",
-    "page": "Types",
+    "page": "Exported Types",
     "title": "ModiaMedia.FluidLimits",
     "category": "type",
     "text": "fluidLimits = FluidLimits(; TMIN=NaN, TMAX=NaN, DMIN=NaN, DMAX=NaN, PMIN=NaN, PMAX=NaN, \n                            HMIN=NaN, HMAX=NaN, SMIN=NaN, SMAX=NaN)\n\nGenerate a new FluidLimits object, containing the validity limits of the medium.\n\n\n\n\n\n"
@@ -194,55 +234,55 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/Types.html#ModiaMedia.IdealGasFluidConstants",
-    "page": "Types",
+    "page": "Exported Types",
     "title": "ModiaMedia.IdealGasFluidConstants",
     "category": "type",
     "text": "fluidConstants = IdealGasFluidConstants(; iupacName=\"\", casRegistryNumber=\"\", \n      chemicalFormula=\"\", structureFormula=\"\", molarMass=NaN,\n      criticalTemperature=NaN, criticalPressure=NaN, criticalMolarVolume=NaN, \n      acentricFactor=NaN, meltingPoint=NaN, normalBoilingPoint=NaN, dipoleMoment=NaN,\n      hasIdealGasHeatCapacity=false, hasCriticalData=false, hasDipoleMoment=false,\n      hasFundamentalEquation=false, hasLiquidHeatCapacity=false, hasSolidHeatCapacity=false,\n      hasAccurateViscosityData=false, hasAccurateConductivityData=false,\n      hasVapourPressureCurve=false, hasAcentricFactor=false,\n      HCRIT0=0.0, SCRIT0=0.0, deltah=0.0, deltas=0.0)\n\nGenerate a IdealGasFluidConstants <: AbstractFluidConstants object containing the minimal information about the standard data of ideal gas media (critical, triple, molecular and other standard data).\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/Types.html#ModiaMedia.Init",
-    "page": "Types",
-    "title": "ModiaMedia.Init",
+    "location": "lib/Types.html#ModiaMedia.IndependentVariables",
+    "page": "Exported Types",
+    "title": "ModiaMedia.IndependentVariables",
     "category": "type",
-    "text": "Enumeration Init defining initialization for fluid flow\n\n\n\n\n\n"
+    "text": "@enum IndependentVariables\n\nEnumeration defining the independent variables of a medium. Possible values:\n\nValue Independent variables\nIndependentVariables_T Temperature\nIndependentVariables_pT Pressure, temperature\nIndependentVariables_ph Pressure, specific enthalpy\nIndependentVariables_phX Pressure, specific enthalpy, mass fractions\nIndependentVariables_pTX Pressure, temperature, mass fractions\nIndependentVariables_dTX Density, temperature, mass fractions\n\n\n\n\n\n"
 },
 
 {
     "location": "lib/Types.html#ModiaMedia.MixtureMedium",
-    "page": "Types",
+    "page": "Exported Types",
     "title": "ModiaMedia.MixtureMedium",
     "category": "type",
-    "text": "abstract type MixtureMedium <: AbstractMedium - Abstract type of all media consisting of a mixture\n\n\n\n\n\n"
+    "text": "abstract type MixtureMedium <: AbstractMedium\n\nAbstract type of all media consisting of a mixture of media.\n\n\n\n\n\n"
 },
 
 {
     "location": "lib/Types.html#ModiaMedia.MixtureThermodynamicState",
-    "page": "Types",
+    "page": "Exported Types",
     "title": "ModiaMedia.MixtureThermodynamicState",
     "category": "type",
-    "text": "abstract type MixtureThermodynamicState <: ThermodynamicState - Abstract type of the states of all media consisting of a mixture\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/Types.html#ModiaMedia.MoistAirData",
-    "page": "Types",
-    "title": "ModiaMedia.MoistAirData",
-    "category": "type",
-    "text": "data = MoistAirData(steam::SingleGasNasaData, dryair::SingleGasNasaData)\n\nGenerate an MoistAirData object containing the data for a moist air model.\n\n\n\n\n\n"
+    "text": "abstract type MixtureThermodynamicState <: ThermodynamicState\n\nAbstract type of the states of all media consisting of a mixture of media.\n\n\n\n\n\n"
 },
 
 {
     "location": "lib/Types.html#ModiaMedia.MoistAirState",
-    "page": "Types",
+    "page": "Exported Types",
     "title": "ModiaMedia.MoistAirState",
     "category": "type",
-    "text": "state = MoistAirState(Medium, p, T, X)\n\nGenerate an MoistAirState <: MixtureThermodynamicState object containing pressure p [Pa], temperature T [K], and a vector of mass fractions as states, where X[1] is the mass fraction of Steam and X[2] is the mass fraction of dry air. If argument X has only one element, X[2] is computed from X[1] and stored in the state.\n\n\n\n\n\n"
+    "text": "state = MoistAirState(Medium, p, T, X)\n\nGenerate a MoistAirState <: MixtureThermodynamicState object containing pressure p [Pa], temperature T [K], and a vector of mass fractions as states, where X[1] is the mass fraction of Steam and X[2] is the mass fraction of dry air. If argument X has only one element, X[2] is computed from X[1] and stored in the state.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/Types.html#ModiaMedia.PureSubstance",
+    "page": "Exported Types",
+    "title": "ModiaMedia.PureSubstance",
+    "category": "type",
+    "text": "abstract type PureSubstance <: AbstractMedium\n\nAbstract type of all media consisting of a pure substance.\n\n\n\n\n\n"
 },
 
 {
     "location": "lib/Types.html#ModiaMedia.ReferenceEnthalpy",
-    "page": "Types",
+    "page": "Exported Types",
     "title": "ModiaMedia.ReferenceEnthalpy",
     "category": "type",
     "text": "@enum ReferenceEnthalpy\n\nEnumeration defining the reference enthalpy of a medium. Possible values:\n\nReferenceEnthalpy_ZeroAt0K: The enthalpy is 0 at 0 K (default), if the enthalpy of formation is excluded\nReferenceEnthalpy_ZeroAt25C: The enthalpy is 0 at 25 degC, if the enthalpy of formation is excluded\nReferenceEnthalpy_UserDefined: The user-defined reference enthalpy is used at 293.15 K (25 degC)\n\n\n\n\n\n"
@@ -250,191 +290,191 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/Types.html#ModiaMedia.ReferenceEntropy",
-    "page": "Types",
+    "page": "Exported Types",
     "title": "ModiaMedia.ReferenceEntropy",
     "category": "type",
     "text": "@enum ReferenceEntropy\n\nEnumeration defining the reference entropy of a medium. Possible values:\n\nReferenceEntropy_ZeroAt0K: The entropy is 0 at 0 K (default)\nReferenceEntropy_ZeroAt0C: The entropy is 0 at 0 degC\nReferenceEntropy_UserDefined: The user-defined reference entropy is used at 293.15 K (25 degC)\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/Types.html#ModiaMedia.SimpleIdealGasMediumData",
-    "page": "Types",
-    "title": "ModiaMedia.SimpleIdealGasMediumData",
-    "category": "type",
-    "text": "data = SimpleIdealGasMediumData(;cp_const=nothing, R_gas=nothing, MM_const=nothing, \n                                 eta_const=nothing, lambda_const=nothing, T_min=nothing,\n                                 T_max=nothing, T0=nothing)\n\nGenerate a SimpleIdealGasMediumData object containing the data for a SimpleIdealGas medium.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/Types.html#ModiaMedia.SimpleIdealGasMediumState",
-    "page": "Types",
+    "page": "Exported Types",
     "title": "ModiaMedia.SimpleIdealGasMediumState",
     "category": "type",
     "text": "state = SimpleIdealGasMediumState(Medium, p, T)\n\nGenerate a SimpleIdealGasMediumState <: ThermodynamicState object containing pressure p [Pa] and temperature T [K] as thermodynamic states.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/Types.html#ModiaMedia.SimpleMediumData",
-    "page": "Types",
-    "title": "ModiaMedia.SimpleMediumData",
-    "category": "type",
-    "text": "data = SimpleMediumData(;cp_const=nothing, cv_const=nothing, d_const=nothing, eta_const=nothing,\n                         lambda_const=nothing, a_const=nothing, T0=nothing, MM_const=nothing)\n\nGenerate a SimpleMediumData object containing the data for a SimpleMedium medium.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/Types.html#ModiaMedia.SimpleMediumState",
-    "page": "Types",
+    "page": "Exported Types",
     "title": "ModiaMedia.SimpleMediumState",
     "category": "type",
     "text": "state = SimpleMediumState(Medium, p, T)\n\nGenerate a SimpleMediumState <: ThermodynamicState object containing pressure p [Pa] and temperature T [K] as thermodynamic states.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/Types.html#ModiaMedia.SingleGasNasaData",
-    "page": "Types",
-    "title": "ModiaMedia.SingleGasNasaData",
-    "category": "type",
-    "text": "data = SingleGasNasaData(;name=Missing, MM=nothing, Hf=nothing, H0=nothing, Tlimit=nothing,\n                          alow=Missing, blow=Missing, ahigh=Missing,\n                          bhigh=Missing, R=nothing)\n\nGenerate a SingleGasNasaData object containing the data for an ideal Gas based on the NASA Glenn coefficients.\n\n\n\n\n\n"
-},
-
-{
     "location": "lib/Types.html#ModiaMedia.SingleGasNasaState",
-    "page": "Types",
+    "page": "Exported Types",
     "title": "ModiaMedia.SingleGasNasaState",
     "category": "type",
     "text": "state = SingleGasNasaState(Medium, p, T)\n\nGenerate a SingleGasNasaState <: ThermodynamicState object containing pressure p [Pa] and temperature T [K] as thermodynamic states.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/Types.html#ModiaMedia.Th",
-    "page": "Types",
-    "title": "ModiaMedia.Th",
+    "location": "lib/Types.html#ModiaMedia.ThermodynamicState",
+    "page": "Exported Types",
+    "title": "ModiaMedia.ThermodynamicState",
     "category": "type",
-    "text": "Enumeration Th - defining whether T or h are known as boundary condition\n\n\n\n\n\n"
+    "text": "abstract type ThermodynamicState\n\nAbstract type of all media states.\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/Types.html#ModiaMedia.ThermodynamicState_pTX",
-    "page": "Types",
-    "title": "ModiaMedia.ThermodynamicState_pTX",
-    "category": "type",
-    "text": "state = ThermodynamicState_pTX(p,T,X)\n\nGenerate a ThermodynamicState_pT <: MixtureThermodynamicState object containing pressure p [Pa], temperature T [K], and a vector of mass fractions X as states.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/Types.html#ModiaMedia.pd",
-    "page": "Types",
-    "title": "ModiaMedia.pd",
-    "category": "type",
-    "text": "Enumeration pd defining whether p or d are known for the boundary condition\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/Types.html#Types-1",
-    "page": "Types",
-    "title": "Types",
+    "location": "lib/Types.html#Documentation-1",
+    "page": "Exported Types",
+    "title": "Documentation",
     "category": "section",
-    "text": "Modules = [ModiaMedia]\r\nOrder   = [:type]"
+    "text": "Modules = [ModiaMedia]\r\nPrivate = false\r\nOrder   = [:type]"
 },
 
 {
     "location": "lib/Functions.html#",
-    "page": "Functions",
-    "title": "Functions",
+    "page": "Exported Functions",
+    "title": "Exported Functions",
     "category": "page",
     "text": ""
 },
 
 {
+    "location": "lib/Functions.html#Exported-Functions-1",
+    "page": "Exported Functions",
+    "title": "Exported Functions",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "lib/Functions.html#Index-1",
+    "page": "Exported Functions",
+    "title": "Index",
+    "category": "section",
+    "text": "Modules = [ModiaMedia]\r\nPrivate = false\r\nOrder   = [:function]"
+},
+
+{
     "location": "lib/Functions.html#ModiaMedia.density-Tuple{AbstractMedium,ThermodynamicState}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.density",
     "category": "method",
-    "text": "d = density(state) - return density from state in [kg/m^3]\n\n\n\n\n\n"
+    "text": "density(state)\n\nReturn density from state::ThermodynamicState in [kg/m^3]\n\n\n\n\n\n"
 },
 
 {
     "location": "lib/Functions.html#ModiaMedia.density_pTX-Tuple{AbstractMedium,Any,Any,Any}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.density_pTX",
     "category": "method",
-    "text": "d = density_pTX(medium,p,T,X) - return density for medium from p, T, and X or Xi in [kg/m^3]\n\n\n\n\n\n"
+    "text": "density_pTX(medium,p,T,X)\n\nReturn density for medium::AbstractMedium from p, T, and X or Xi in [kg/m^3]\n\n\n\n\n\n"
 },
 
 {
     "location": "lib/Functions.html#ModiaMedia.density_ph-Tuple{PureSubstance,Any,Any}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.density_ph",
     "category": "method",
-    "text": "d = density_ph(medium,p,h) - return density in [kg/m^3] for medium::PureSubstance from pressure p [Pa] and specific enthalpy h [J/kg].\n\n\n\n\n\n"
+    "text": "density_ph(medium,p,h)\n\nReturn density in [kg/m^3] for medium::PureSubstance from  pressure p [Pa] and specific enthalpy h [J/kg].\n\n\n\n\n\n"
 },
 
 {
     "location": "lib/Functions.html#ModiaMedia.density_phX-Tuple{AbstractMedium,Any,Any,Any}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.density_phX",
     "category": "method",
-    "text": "d = density_phX(medium,p,h,X) - return density for medium from p, h, and X or Xi in [kg/m^3]\n\n\n\n\n\n"
+    "text": "density_phX(medium,p,h,X)\n\nReturn density for medium::AbstractMedium from p, h, and X or Xi in [kg/m^3]\n\n\n\n\n\n"
 },
 
 {
     "location": "lib/Functions.html#ModiaMedia.dynamicViscosity-Tuple{AbstractMedium,ThermodynamicState}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.dynamicViscosity",
     "category": "method",
-    "text": "eta = dynamicViscosity(state) - return dynamic viscosity state in [Pa*s]\n\n\n\n\n\n"
+    "text": "dynamicViscosity(state)\n\nReturn dynamic viscosity from state::ThermodynamicState in [Pa*s]\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/Functions.html#ModiaMedia.gasConstant-Tuple{MixtureMedium,MixtureThermodynamicState}",
+    "page": "Exported Functions",
+    "title": "ModiaMedia.gasConstant",
+    "category": "method",
+    "text": "R = gasConstant(state)\n\nReturn gas constant of MixtureMedium from state::MixtureThermodynamicState in [J/mol.K]\n\n\n\n\n\n"
 },
 
 {
     "location": "lib/Functions.html#ModiaMedia.getMedium-Tuple{AbstractString}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.getMedium",
     "category": "method",
-    "text": "Medium = getMedium(name::AbstractString)\n\nReturn Medium object from medium name.\n\n\n\n\n\n"
+    "text": "Medium = getMedium(name::AbstractString)\n\nReturn Medium object from medium name.  Possible values of argument name can be inquired via listMedia() (Available media).\n\nExamples\n\nmedium = getMedium(\"SimpleAir\")\n\n\n\n\n\n"
 },
 
 {
     "location": "lib/Functions.html#ModiaMedia.isenthalpicState!-Tuple{ThermodynamicState,ThermodynamicState,Float64}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.isenthalpicState!",
     "category": "method",
-    "text": "isenthalpicState!(state_b,state_a,dp)\n\nUpdate stateb by an isenthalpic transformation of statea with pressure drop dp.\n\n\n\n\n\n"
+    "text": "isenthalpicState!(state_b,state_a,dp)\n\nUpdate state_b by an isenthalpic transformation of state_a with pressure drop dp:\n\npressure(state_b)         = pressure(state_a) + dp\nspecificEnthalpy(state_b) = specificEnthalpy(state_a)\nstate_b.X                 = state_a.X\n\n\n\n\n\n"
 },
 
 {
     "location": "lib/Functions.html#ModiaMedia.isenthalpicState-Tuple{AbstractMedium,ThermodynamicState,Float64}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.isenthalpicState",
     "category": "method",
-    "text": "state_b = isenthalpicState(state_a,dp)\n\nReturn stateb by an isenthalpic transformation of statea with pressure drop dp.\n\n\n\n\n\n"
+    "text": "state_b = isenthalpicState(state_a,dp)\n\nReturn state_b by an isenthalpic transformation of state_a with pressure drop dp:\n\npressure(state_b)         = pressure(state_a) + dp\nspecificEnthalpy(state_b) = specificEnthalpy(state_a)\nstate_b.X                 = state_a.X\n\n\n\n\n\n"
 },
 
 {
     "location": "lib/Functions.html#ModiaMedia.listMedia-Tuple{}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.listMedia",
     "category": "method",
-    "text": "listMedia()\n\nList available media of ModiaMedia\n\n\n\n\n\n"
+    "text": "listMedia()\n\nList available media of ModiaMedia.\n\n\n\n\n\n"
 },
 
 {
     "location": "lib/Functions.html#ModiaMedia.pressure-Tuple{AbstractMedium,ThermodynamicState}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.pressure",
     "category": "method",
-    "text": "p = pressure(state) - return pressure from state in [Pa]\n\n\n\n\n\n"
+    "text": "pressure(state)\n\nReturn pressure from state::ThermodynamicState in [Pa]\n\n\n\n\n\n"
 },
 
 {
     "location": "lib/Functions.html#ModiaMedia.pressure_dT-Tuple{PureSubstance,Any,Any}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.pressure_dT",
     "category": "method",
-    "text": "p = pressure_dT(medium,d,T) - return pressure in [Pa] for medium::PureSubstance from density c in [kg/m^3] and temperature T [K].\n\n\n\n\n\n"
+    "text": "pressure_dT(medium,d,T)\n\nReturn pressure in [Pa] for medium::PureSubstance from density d in [kg/m^3]  and temperature T [K].\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/Functions.html#ModiaMedia.saturationPressureOfLiquidWater-Tuple{Float64}",
+    "page": "Exported Functions",
+    "title": "ModiaMedia.saturationPressureOfLiquidWater",
+    "category": "method",
+    "text": "saturationPressureOfLiquidWater(Tsat)\n\nReturn saturation pressure of liquid water as a function of saturation temperature Tsat in the range of 273.16 to 647.096 K\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/Functions.html#ModiaMedia.saturationPressureOfWater-Tuple{Float64}",
+    "page": "Exported Functions",
+    "title": "ModiaMedia.saturationPressureOfWater",
+    "category": "method",
+    "text": "saturationPressureOfWater(Tsat)\n\nReturn saturation pressure of water as a function of  saturation temperature Tsat between 190 K and 647.096 K\n\n\n\n\n\n"
 },
 
 {
     "location": "lib/Functions.html#ModiaMedia.setState_dT!-Tuple{ThermodynamicState,Any,Any}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.setState_dT!",
     "category": "method",
     "text": "setState_dT!(state, d,T)\n\nUpdate the state::ThermodynamicState of a PureSubstance medium with  density d [kg/m^3] and temperature T [K].\n\n\n\n\n\n"
@@ -442,7 +482,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/Functions.html#ModiaMedia.setState_dT-Tuple{PureSubstance,Any,Any}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.setState_dT",
     "category": "method",
     "text": "state = setState_dT(medium, d,T)\n\nGenerate a state object for medium medium::PureSubstance for density d [kg/m^3] and temperature T [K].\n\n\n\n\n\n"
@@ -450,7 +490,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/Functions.html#ModiaMedia.setState_dTX!-Tuple{ThermodynamicState,Any,Any,Any}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.setState_dTX!",
     "category": "method",
     "text": "setState_dTX!(state, d,T,X)\n\nUpdate the state::ThermodynamicState object with  density d [kg/m^3], temperature T [K] and mass fractions vector X or Xi.\n\n\n\n\n\n"
@@ -458,7 +498,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/Functions.html#ModiaMedia.setState_dTX-Tuple{AbstractMedium,Any,Any,Any}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.setState_dTX",
     "category": "method",
     "text": "state = setState_dTX(medium, d,T,X)\n\nGenerate a state object for medium medium::AbstractMedium for density d [kg/m^3], temperature T [K] and mass fractions vector X or Xi.\n\n\n\n\n\n"
@@ -466,7 +506,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/Functions.html#ModiaMedia.setState_pT!-Tuple{ThermodynamicState,Any,Any}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.setState_pT!",
     "category": "method",
     "text": "setState_pT!(state, p,T)\n\nUpdate the state::ThermodynamicState of a PureSubstance medium with  pressure p [Pa] and temperature T [K].\n\n\n\n\n\n"
@@ -474,7 +514,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/Functions.html#ModiaMedia.setState_pT-Tuple{PureSubstance,Any,Any}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.setState_pT",
     "category": "method",
     "text": "state = setState_pT(medium, p,T)\n\nGenerate a state object for medium medium::PureSubstance for pressure p [Pa] and temperature T [K].\n\n\n\n\n\n"
@@ -482,7 +522,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/Functions.html#ModiaMedia.setState_pTX!-Tuple{ThermodynamicState,Any,Any,Any}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.setState_pTX!",
     "category": "method",
     "text": "setState_pTX!(state, p,T,X)\n\nUpdate the state::ThermodynamicState object with  pressure p [Pa], temperature T [K] and mass fractions vector X or Xi.\n\n\n\n\n\n"
@@ -490,7 +530,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/Functions.html#ModiaMedia.setState_pTX-Tuple{AbstractMedium,Any,Any,Any}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.setState_pTX",
     "category": "method",
     "text": "state = setState_pTX(medium, p,T,X)\n\nGenerate a state object for medium medium::AbstractMedium for pressure p [Pa], temperature T [K] and mass fractions vector X or Xi.\n\n\n\n\n\n"
@@ -498,7 +538,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/Functions.html#ModiaMedia.setState_ph!-Tuple{ThermodynamicState,Any,Any}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.setState_ph!",
     "category": "method",
     "text": "setState_ph!(state, p,h)\n\nUpdate the state::ThermodynamicState of a PureSubstance medium with  pressure p [Pa] and specific enthalpy h [J/kg]].\n\n\n\n\n\n"
@@ -506,7 +546,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/Functions.html#ModiaMedia.setState_ph-Tuple{PureSubstance,Any,Any}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.setState_ph",
     "category": "method",
     "text": "state = setState_ph(medium, p,h)\n\nGenerate a state object for medium medium::PureSubstance for pressure p [Pa] and specific enthalpy h [J/kg].\n\n\n\n\n\n"
@@ -514,7 +554,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/Functions.html#ModiaMedia.setState_phX!-Tuple{ThermodynamicState,Any,Any,Any}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.setState_phX!",
     "category": "method",
     "text": "setState_phX!(state, p,h,X)\n\nUpdate the state::ThermodynamicState object with  pressure p [Pa], specific enthalpy h [J/kg]] and mass fractions vector X or Xi.\n\n\n\n\n\n"
@@ -522,7 +562,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/Functions.html#ModiaMedia.setState_phX-Tuple{AbstractMedium,Any,Any,Any}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.setState_phX",
     "category": "method",
     "text": "state = setState_phX(medium, p,h,X)\n\nGenerate a state object for medium medium::AbstractMedium for pressure p [Pa], specific enthalpy h [J/kg]] and mass fractions vector X or Xi.\n\n\n\n\n\n"
@@ -530,7 +570,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/Functions.html#ModiaMedia.setState_ps!-Tuple{ThermodynamicState,Any,Any}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.setState_ps!",
     "category": "method",
     "text": "setState_ps!(state, p,s)\n\nUpdate the state::ThermodynamicState of a PureSubstance medium with  pressure p [Pa] and specific entropy s [J/(kg*K)].\n\n\n\n\n\n"
@@ -538,7 +578,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/Functions.html#ModiaMedia.setState_ps-Tuple{PureSubstance,Any,Any}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.setState_ps",
     "category": "method",
     "text": "state = setState_ps(medium, p,s)\n\nGenerate a state object for medium medium::PureSubstance for pressure p [Pa] and specific entropy s [J/(kg*K)].\n\n\n\n\n\n"
@@ -546,7 +586,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/Functions.html#ModiaMedia.setState_psX!-Tuple{ThermodynamicState,Any,Any,Any}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.setState_psX!",
     "category": "method",
     "text": "setState_psX!(state, p,s,X)\n\nUpdate the state::ThermodynamicState object with  pressure p [Pa], specific entropy s [J/(kg*K)] and mass fractions vector X or Xi.\n\n\n\n\n\n"
@@ -554,7 +594,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/Functions.html#ModiaMedia.setState_psX-Tuple{AbstractMedium,Any,Any,Any}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.setState_psX",
     "category": "method",
     "text": "state = setState_psX(medium, p,s,X)\n\nGenerate a state object for medium medium::AbstractMedium for pressure p [Pa], specific entropy s [J/(kg*K)] and mass fractions vector X  or Xi.\n\n\n\n\n\n"
@@ -562,143 +602,47 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/Functions.html#ModiaMedia.specificEnthalpy-Tuple{AbstractMedium,ThermodynamicState}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.specificEnthalpy",
     "category": "method",
-    "text": "h = specificEnthalpy(state) - return specific enthalpy from state in [J/kg]\n\n\n\n\n\n"
+    "text": "specificEnthalpy(state)\n\nReturn specific enthalpy from state::ThermodynamicState in [J/kg]\n\n\n\n\n\n"
 },
 
 {
     "location": "lib/Functions.html#ModiaMedia.specificEnthalpy_dT-Tuple{PureSubstance,Any,Any}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.specificEnthalpy_dT",
     "category": "method",
-    "text": "h = specificEnthalpy_dT(medium,d,T) - return specific enthalpy in [J/kg] for medium from density d [kg/m^3] and and temperature T [K].\n\n\n\n\n\n"
+    "text": "specificEnthalpy_dT(medium,d,T)\n\nReturn specific enthalpy in [J/kg] for medium::PureSubstance from density d [kg/m^3] and and temperature T [K].\n\n\n\n\n\n"
 },
 
 {
     "location": "lib/Functions.html#ModiaMedia.specificEnthalpy_pTX-Tuple{AbstractMedium,Any,Any,Any}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.specificEnthalpy_pTX",
     "category": "method",
-    "text": "h = specificEnthalpy_pTX(medium,p,T,X) - return specific enthalpy for medium from p, T, and X or Xi in [J/kg]\n\n\n\n\n\n"
+    "text": "specificEnthalpy_pTX(medium,p,T,X)\n\nReturn specific enthalpy for medium::AbstractMedium from p, T, and X or Xi in [J/kg].\n\n\n\n\n\n"
 },
 
 {
     "location": "lib/Functions.html#ModiaMedia.specificHeatCapacityCp-Tuple{AbstractMedium,ThermodynamicState}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.specificHeatCapacityCp",
     "category": "method",
-    "text": "cp = specificHeatCapacityCp(state) - return specific heat capacity at constant pressure from state in [J/(kg*K)]\n\n\n\n\n\n"
+    "text": "specificHeatCapacityCp(state)\n\nReturn specific heat capacity at constant pressure from state::ThermodynamicState in [J/(kg*K)]\n\n\n\n\n\n"
 },
 
 {
     "location": "lib/Functions.html#ModiaMedia.specificInternalEnergy-Tuple{AbstractMedium,ThermodynamicState}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.specificInternalEnergy",
     "category": "method",
-    "text": "u = specificInternalEnergy(state) - return specific internal energy at state in [J/kg]\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/Functions.html#ModiaMedia.temperature-Tuple{AbstractMedium,ThermodynamicState}",
-    "page": "Functions",
-    "title": "ModiaMedia.temperature",
-    "category": "method",
-    "text": "T = temperature(state) - return temperature from state in [K]\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/Functions.html#ModiaMedia.temperature_ph-Tuple{PureSubstance,Any,Any}",
-    "page": "Functions",
-    "title": "ModiaMedia.temperature_ph",
-    "category": "method",
-    "text": "T = temperature_ph(medium,p,h) - return temperature in [K] for medium::PureSubstance from pressure p [Pa] and specific enthalpy h [J/kg].\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/Functions.html#ModiaMedia.temperature_phX-Tuple{AbstractMedium,Any,Any,Any}",
-    "page": "Functions",
-    "title": "ModiaMedia.temperature_phX",
-    "category": "method",
-    "text": "T = temperature_phX(medium,p,h,X) - return temperature for medium from p, h, and X or Xi in [K]\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/Functions.html#ModiaMedia.cp_T-Tuple{ModiaMedia.SingleGasNasaData,Float64}",
-    "page": "Functions",
-    "title": "ModiaMedia.cp_T",
-    "category": "method",
-    "text": "cp = cp_T(data::SingleGasNasaData, T) - Compute specific heat capacity at constant pressure from temperature and gas data\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/Functions.html#ModiaMedia.dynamicViscosityLowPressure-NTuple{6,Float64}",
-    "page": "Functions",
-    "title": "ModiaMedia.dynamicViscosityLowPressure",
-    "category": "method",
-    "text": "Dynamic viscosity of low pressure gases\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/Functions.html#ModiaMedia.enthalpyOfWater-Tuple{Float64}",
-    "page": "Functions",
-    "title": "ModiaMedia.enthalpyOfWater",
-    "category": "method",
-    "text": "Return specific enthalpy of water (solid/liquid) near atmospheric pressure from temperature T\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/Functions.html#ModiaMedia.h_T-Tuple{ModiaMedia.SingleGasNasaData,Float64}",
-    "page": "Functions",
-    "title": "ModiaMedia.h_T",
-    "category": "method",
-    "text": "h = h_T(data, T, exclEnthForm=true, refChoice=ReferenceEnthalpy_ZeroAt0K, h_off=0.0)\n\nReturn specific enthalpy from temperature and gas data.\n\nArguments\n\ndata::SingleGasNasaData: Data of the SingleGasNasa medium.\nT::Float64: Temperature in [K].\nexclEnthForm::Bool: If true, enthalpy of formation Hf is not included in specific enthalpy h.\nrefChoice::ReferenceEnthalpy: Choice of reference enthalpy.\nh_off::Float64: User defined offset for reference enthalpy, if SingleGasNasareferenceEnthalpy = ReferenceEnthalpyUserDefined\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/Functions.html#ModiaMedia.h_Tlow-Tuple{ModiaMedia.SingleGasNasaData,Float64}",
-    "page": "Functions",
-    "title": "ModiaMedia.h_Tlow",
-    "category": "method",
-    "text": "Compute specific enthalpy, low T region; reference is decided by the refChoice input, or by the referenceChoice package constant by default\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/Functions.html#ModiaMedia.s0_T-Tuple{ModiaMedia.SingleGasNasaData,Float64}",
-    "page": "Functions",
-    "title": "ModiaMedia.s0_T",
-    "category": "method",
-    "text": "Compute specific entropy from temperature and gas data\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/Functions.html#ModiaMedia.saturationPressure-Tuple{Float64}",
-    "page": "Functions",
-    "title": "ModiaMedia.saturationPressure",
-    "category": "method",
-    "text": "Return saturation pressure of water as a function of temperature T between 190 and 647.096 K\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/Functions.html#ModiaMedia.saturationPressureLiquid-Tuple{Float64}",
-    "page": "Functions",
-    "title": "ModiaMedia.saturationPressureLiquid",
-    "category": "method",
-    "text": "Return saturation pressure of water as a function of temperature T in the range of 273.16 to 647.096 K\n\n\n\n\n\n"
-},
-
-{
-    "location": "lib/Functions.html#ModiaMedia.spliceFunction-NTuple{4,Float64}",
-    "page": "Functions",
-    "title": "ModiaMedia.spliceFunction",
-    "category": "method",
-    "text": "Spline interpolation of two functions\n\n\n\n\n\n"
+    "text": "specificInternalEnergy(state)\n\nReturn specific internal energy from state::ThermodynamicState in [J/kg]\n\n\n\n\n\n"
 },
 
 {
     "location": "lib/Functions.html#ModiaMedia.standardCharacteristics-Tuple{AbstractMedium}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.standardCharacteristics",
     "category": "method",
     "text": "dict = standardCharacteristics(medium::AbstractMedium)\n\nReturn a dict::dict{AbstractString,Any} dictionary with the most  important characteristics of the medium as vectors.\n\n\n\n\n\n"
@@ -706,7 +650,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/Functions.html#ModiaMedia.standardPlot-Tuple{AbstractMedium}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.standardPlot",
     "category": "method",
     "text": "standardPlot(medium::AbstractMedium; figure=1)\n\nPlot the standardCharacteristics(medium) of the medium.\n\n\n\n\n\n"
@@ -714,18 +658,42 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "lib/Functions.html#ModiaMedia.sublimationPressureIce-Tuple{Float64}",
-    "page": "Functions",
+    "page": "Exported Functions",
     "title": "ModiaMedia.sublimationPressureIce",
     "category": "method",
-    "text": "Return sublimation pressure of water as a function of temperature T between 190 and 273.16 K\n\n\n\n\n\n"
+    "text": "sublimationPressureIce(Tsat)\n\nReturn sublimation pressure of water as a function of saturation temperature Tsat  between 190 and 273.16 K\n\n\n\n\n\n"
 },
 
 {
-    "location": "lib/Functions.html#Functions-1",
-    "page": "Functions",
-    "title": "Functions",
+    "location": "lib/Functions.html#ModiaMedia.temperature-Tuple{AbstractMedium,ThermodynamicState}",
+    "page": "Exported Functions",
+    "title": "ModiaMedia.temperature",
+    "category": "method",
+    "text": "temperature(state)\n\nReturn temperature from state::ThermodynamicState in [K]\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/Functions.html#ModiaMedia.temperature_ph-Tuple{PureSubstance,Any,Any}",
+    "page": "Exported Functions",
+    "title": "ModiaMedia.temperature_ph",
+    "category": "method",
+    "text": "temperature_ph(medium,p,h)\n\nReturn temperature in [K] for medium::PureSubstance from  pressure p [Pa] and specific enthalpy h [J/kg].\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/Functions.html#ModiaMedia.temperature_phX-Tuple{AbstractMedium,Any,Any,Any}",
+    "page": "Exported Functions",
+    "title": "ModiaMedia.temperature_phX",
+    "category": "method",
+    "text": "temperature_phX(medium,p,h,X)\n\nReturn temperature for medium::AbstractMedium from p, h, and X or Xi in [K].\n\n\n\n\n\n"
+},
+
+{
+    "location": "lib/Functions.html#Documentation-1",
+    "page": "Exported Functions",
+    "title": "Documentation",
     "category": "section",
-    "text": "Modules = [ModiaMedia]\r\nOrder   = [:function]"
+    "text": "Modules = [ModiaMedia]\r\nPrivate = false\r\nOrder   = [:function]"
 },
 
 ]}
