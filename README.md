@@ -79,8 +79,8 @@ The ModiaMedia package development has just started and a lot has to be improved
 
 ## Main Developers
 
-- [Martin Otter](https://rmc.dlr.de/sr/en/staff/martin.otter/) ([DLR - Institute of System Dynamics and Control](https://www.dlr.de/sr/en))\
-- Hilding Elmqvist ([Mogram](http://www.mogram.net/)),\
+- [Martin Otter](https://rmc.dlr.de/sr/en/staff/martin.otter/) ([DLR - Institute of System Dynamics and Control](https://www.dlr.de/sr/en))
+- Hilding Elmqvist ([Mogram](http://www.mogram.net/)),
 - [Chris Laughman](http://www.merl.com/people/laughman) ([MERL](http://www.merl.com/)).
 - All the content of ModiaMedia is based on
   [Modelica.Media](https://doc.modelica.org/Modelica%203.2.3/Resources/helpDymola/Modelica_Media.html#Modelica.Media)
