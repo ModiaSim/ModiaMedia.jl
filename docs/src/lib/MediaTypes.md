@@ -1,4 +1,4 @@
-﻿# Media Types
+# Media Types
 
 In this section the currently available media types are summarized.
 The [Available media](@ref) list the actually available media.
