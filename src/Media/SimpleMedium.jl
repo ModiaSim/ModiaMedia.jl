@@ -137,14 +137,20 @@ function standardCharacteristics(m::SimpleMedium)::Dict{AbstractString,Any}
     p = m.infos.reference_p
     T = collect( range(m.fluidLimits.TMIN, stop=m.fluidLimits.TMAX, length=101) )
     h = zeros(length(T))
+    u = zeros(length(T))
+    state = setState_pT(m,p,T[1])
 
     for i in 1:length(T)
-        h[i] = specificEnthalpy(setState_pT(m,p,T[i]))
+        setState_pT!(state,p,T[i])
+        h[i] = specificEnthalpy(state)
+        u[i] = specificInternalEnergy(state)
     end
 
     mediumDict = Dict{AbstractString,Any}()
-    mediumDict["T"] = uconvert.(u"°C", T*1u"K")
-    mediumDict["h"] = h*u"J/kg"
+    mediumDict["T"]   = uconvert.(u"°C", T*1u"K")
+    mediumDict["h"]   = h*u"J/kg"
+    mediumDict["u"]   = u*u"J/kg"
+    mediumDict["d"]   = to_DensityDisplayUnit(density(state))*1u"g/cm^3"
 
     return mediumDict
 end
@@ -152,5 +158,5 @@ end
 
 function standardPlot(m::SimpleMedium; figure=1) 
     mediumDict = standardCharacteristics(m)
-    ModiaMath.plot(mediumDict, "h", xAxis="T", heading=m.infos.mediumName, figure=figure)
+    ModiaMath.plot(mediumDict, [("h", "u"), "d"], xAxis="T", heading=m.infos.mediumName, figure=figure)
 end

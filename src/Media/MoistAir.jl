@@ -50,7 +50,7 @@ end
 """
     state = MoistAirState(Medium, p, T, X)
 
-Generate an `MoistAirState <: MixtureThermodynamicState` object containing
+Generate a `MoistAirState <: MixtureThermodynamicState` object containing
 pressure `p` [Pa], temperature `T` [K], and a vector of mass fractions as states,
 where `X[1]` is the mass fraction of Steam and `X[2]` is the mass fraction of dry air.
 If argument `X` has only one element, `X[2]` is computed from `X[1]` and stored in the state.
@@ -125,8 +125,13 @@ function spliceFunction(
 end
 
 
-"Return saturation pressure of water as a function of temperature T in the range of 273.16 to 647.096 K"
-function saturationPressureLiquid(Tsat::Float64)::Float64
+"""
+    saturationPressureOfLiquidWater(Tsat)
+    
+Return saturation pressure of liquid water as a function of saturation temperature Tsat
+in the range of 273.16 to 647.096 K
+"""
+function saturationPressureOfLiquidWater(Tsat::Float64)::Float64
     Tcritical=647.096
     pcritical=22.064e6
     r1=(1 - Tsat/Tcritical)
@@ -140,7 +145,12 @@ function saturationPressureLiquid(Tsat::Float64)::Float64
 end
 
 
-"Return sublimation pressure of water as a function of temperature T between 190 and 273.16 K"
+"""
+    sublimationPressureIce(Tsat)
+
+Return sublimation pressure of water as a function of saturation temperature `Tsat` 
+between 190 and 273.16 K
+"""
 function sublimationPressureIce(Tsat::Float64)::Float64
     Ttriple=273.16                # Triple point temperature
     ptriple=611.657                # Triple point pressure
@@ -155,8 +165,13 @@ function sublimationPressureIce(Tsat::Float64)::Float64
 end
 
 
-"Return saturation pressure of water as a function of temperature T between 190 and 647.096 K"
-saturationPressure(Tsat::Float64) = spliceFunction(saturationPressureLiquid(Tsat), sublimationPressureIce(Tsat), Tsat-273.16, 1.0)
+"""
+    saturationPressureOfWater(Tsat)
+
+Return saturation pressure of water as a function of 
+saturation temperature `Tsat` between 190 K and 647.096 K
+"""
+saturationPressureOfWater(Tsat::Float64) = spliceFunction(saturationPressureOfLiquidWater(Tsat), sublimationPressureIce(Tsat), Tsat-273.16, 1.0)
 
 
 
@@ -169,7 +184,7 @@ function h_pTX(data::MoistAirData,p::Float64,T::Float64,X::AbstractVector)
     # steam.MM/dryAir.MM 
     k_mair = data.k_mair 
 
-    p_steam_sat = saturationPressure(T)
+    p_steam_sat = saturationPressureOfWater(T)
     X_sat = min(p_steam_sat*k_mair/max(100*eps(), p-p_steam_sat)*(1-X[1]), 1.0)
     X_liquid = max(X[1]-X_sat, 0.0);
     X_steam = X[1]-X_liquid;
@@ -188,7 +203,7 @@ function u_pTX(data::MoistAirData,p::Float64,T::Float64,X::AbstractVector)
     # steam.MM/dryAir.MM 
     k_mair = data.k_mair
 
-    p_steam_sat = saturationPressure(T)
+    p_steam_sat = saturationPressureOfWater(T)
     X_sat = min(p_steam_sat*k_mair/max(100*eps(), p-p_steam_sat)*(1-X[1]), 1.0)
     X_liquid = max(X[1]-X_sat, 0.0);
     X_steam = X[1]-X_liquid;

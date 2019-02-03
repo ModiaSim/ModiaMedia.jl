@@ -89,16 +89,39 @@ setState_dT!(state::ThermodynamicState,d,T) = setState_dTX!(state,d,T,X_dummy)
 
 ### Medium functions that are additionally available for media <: PartialPureSubstance -----------------------
 
-"d = density_ph(medium,p,h) - return density in [kg/m^3] for `medium::PureSubstance` from pressure `p` [Pa] and specific enthalpy `h` [J/kg]."
+"""
+    density_ph(medium,p,h)
+
+Return density in [kg/m^3] for `medium::PureSubstance` from 
+pressure `p` [Pa] and specific enthalpy `h` [J/kg].
+"""
 density_ph(m::PureSubstance, p,h) = density(setState_ph(m,p,h))
 
-"T = temperature_ph(medium,p,h) - return temperature in [K] for `medium::PureSubstance` from pressure `p` [Pa] and specific enthalpy `h` [J/kg]."
+
+"""
+    temperature_ph(medium,p,h)
+
+Return temperature in [K] for `medium::PureSubstance` from 
+pressure `p` [Pa] and specific enthalpy `h` [J/kg].
+"""
 temperature_ph(m::PureSubstance, p,h) = temperature(setState_ph(m,p,h))
 
-"p = pressure_dT(medium,d,T) - return pressure in [Pa] for `medium::PureSubstance` from density `c` in [kg/m^3] and temperature `T` [K]."
+
+"""
+    pressure_dT(medium,d,T)
+
+Return pressure in [Pa] for `medium::PureSubstance` from density `d` in [kg/m^3] 
+and temperature `T` [K].
+"""
 pressure_dT(m::PureSubstance, d,T) = pressure(setState_dT(m,d,T))
 
-"h = specificEnthalpy_dT(medium,d,T) - return specific enthalpy in [J/kg] for `medium` from density `d` [kg/m^3] and and temperature `T` [K]."
+
+"""
+    specificEnthalpy_dT(medium,d,T)
+
+Return specific enthalpy in [J/kg] for `medium::PureSubstance` from
+density `d` [kg/m^3] and and temperature `T` [K].
+"""
 specificEnthalpy_dT(m::PureSubstance, d,T) = specificEnthalpy(setState_dT(m,d,T))
 
 

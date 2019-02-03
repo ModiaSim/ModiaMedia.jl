@@ -9,6 +9,7 @@ makedocs(
   pages    = [
      "Home"   => "index.md",
      "Library" => [
+        "lib/MediaTypes.md",
         "lib/Types.md",
         "lib/Functions.md"
         ]

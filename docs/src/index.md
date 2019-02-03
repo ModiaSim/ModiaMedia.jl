@@ -79,45 +79,45 @@ The available media can be listed with `listMedia()` resulting in:
 
 | Row | name                        | type                 |
 |-----|-----------------------------|----------------------|
-| 1   | Ar                          | SingleGasNasa        |
-| 2   | C2H2\_vinylidene             | SingleGasNasa        |
-| 3   | C2H4                        | SingleGasNasa        |
-| 4   | C2H5OH                      | SingleGasNasa        |
-| 5   | C2H6                        | SingleGasNasa        |
-| 6   | C3H6\_propylene              | SingleGasNasa        |
-| 7   | C3H8                        | SingleGasNasa        |
-| 8   | C4H10\_n\_butane              | SingleGasNasa        |
-| 9   | C4H8\_1\_butene               | SingleGasNasa        |
-| 10  | C5H10\_1\_pentene             | SingleGasNasa        |
-| 11  | C5H12\_n\_pentane             | SingleGasNasa        |
-| 12  | C6H12\_1\_hexene              | SingleGasNasa        |
-| 13  | C6H14\_n\_hexane              | SingleGasNasa        |
-| 14  | C6H6                        | SingleGasNasa        |
-| 15  | C7H14\_1\_heptene             | SingleGasNasa        |
-| 16  | C7H16\_n\_heptane             | SingleGasNasa        |
-| 17  | C8H10\_ethylbenz             | SingleGasNasa        |
-| 18  | C8H18\_n\_octane              | SingleGasNasa        |
-| 19  | CH3OH                       | SingleGasNasa        |
-| 20  | CH4                         | SingleGasNasa        |
-| 21  | CL2                         | SingleGasNasa        |
-| 22  | CO                          | SingleGasNasa        |
-| 23  | CO2                         | SingleGasNasa        |
-| 24  | ConstantPropertyLiquidWater | SimpleMedium         |
-| 25  | F2                          | SingleGasNasa        |
-| 26  | H2                          | SingleGasNasa        |
-| 27  | H2O                         | SingleGasNasa        |
-| 28  | He                          | SingleGasNasa        |
-| 29  | MoistAir                    | MoistAir             |
-| 30  | N2                          | SingleGasNasa        |
-| 31  | N2O                         | SingleGasNasa        |
-| 32  | NH3                         | SingleGasNasa        |
-| 33  | NO                          | SingleGasNasa        |
-| 34  | NO2                         | SingleGasNasa        |
-| 35  | Ne                          | SingleGasNasa        |
-| 36  | O2                          | SingleGasNasa        |
-| 37  | SO2                         | SingleGasNasa        |
-| 38  | SO3                         | SingleGasNasa        |
-| 39  | SimpleAir                   | SimpleIdealGasMedium |
+| 1   | Ar                          | [SingleGasNasa](@ref)        |
+| 2   | C2H2\_vinylidene             | [SingleGasNasa](@ref)        |
+| 3   | C2H4                        | [SingleGasNasa](@ref)        |
+| 4   | C2H5OH                      | [SingleGasNasa](@ref)        |
+| 5   | C2H6                        | [SingleGasNasa](@ref)        |
+| 6   | C3H6\_propylene              | [SingleGasNasa](@ref)        |
+| 7   | C3H8                        | [SingleGasNasa](@ref)        |
+| 8   | C4H10\_n\_butane              | [SingleGasNasa](@ref)        |
+| 9   | C4H8\_1\_butene               | [SingleGasNasa](@ref)        |
+| 10  | C5H10\_1\_pentene             | [SingleGasNasa](@ref)        |
+| 11  | C5H12\_n\_pentane             | [SingleGasNasa](@ref)        |
+| 12  | C6H12\_1\_hexene              | [SingleGasNasa](@ref)        |
+| 13  | C6H14\_n\_hexane              | [SingleGasNasa](@ref)        |
+| 14  | C6H6                        | [SingleGasNasa](@ref)        |
+| 15  | C7H14\_1\_heptene             | [SingleGasNasa](@ref)        |
+| 16  | C7H16\_n\_heptane             | [SingleGasNasa](@ref)        |
+| 17  | C8H10\_ethylbenz             | [SingleGasNasa](@ref)        |
+| 18  | C8H18\_n\_octane              | [SingleGasNasa](@ref)        |
+| 19  | CH3OH                       | [SingleGasNasa](@ref)        |
+| 20  | CH4                         | [SingleGasNasa](@ref)        |
+| 21  | CL2                         | [SingleGasNasa](@ref)        |
+| 22  | CO                          | [SingleGasNasa](@ref)        |
+| 23  | CO2                         | [SingleGasNasa](@ref)        |
+| 24  | ConstantPropertyLiquidWater | [SimpleMedium](@ref)         |
+| 25  | F2                          | [SingleGasNasa](@ref)        |
+| 26  | H2                          | [SingleGasNasa](@ref)        |
+| 27  | H2O                         | [SingleGasNasa](@ref)        |
+| 28  | He                          | [SingleGasNasa](@ref)        |
+| 29  | MoistAir                    | [MoistAir](@ref)             |
+| 30  | N2                          | [SingleGasNasa](@ref)        |
+| 31  | N2O                         | [SingleGasNasa](@ref)        |
+| 32  | NH3                         | [SingleGasNasa](@ref)        |
+| 33  | NO                          | [SingleGasNasa](@ref)        |
+| 34  | NO2                         | [SingleGasNasa](@ref)        |
+| 35  | Ne                          | [SingleGasNasa](@ref)        |
+| 36  | O2                          | [SingleGasNasa](@ref)        |
+| 37  | SO2                         | [SingleGasNasa](@ref)        |
+| 38  | SO3                         | [SingleGasNasa](@ref)        |
+| 39  | SimpleAir                   | [SimpleIdealGasMedium](@ref) |
 
 
 ## Structure of package
@@ -192,9 +192,12 @@ in the medium dictionary with key `name`.
 
 ## Main Developers
 
-[Martin Otter](https://rmc.dlr.de/sr/en/staff/martin.otter/) ([DLR - Institute of System Dynamics and Control](https://www.dlr.de/sr/en))\
-Hilding Elmqvist ([Mogram](http://www.mogram.net/)),\
-[Chris Laughman](http://www.merl.com/people/laughman) ([MERL](http://www.merl.com/)).
+- [Martin Otter](https://rmc.dlr.de/sr/en/staff/martin.otter/) ([DLR - Institute of System Dynamics and Control](https://www.dlr.de/sr/en))\
+- Hilding Elmqvist ([Mogram](http://www.mogram.net/)),\
+- [Chris Laughman](http://www.merl.com/people/laughman) ([MERL](http://www.merl.com/)).
+- All the content of ModiaMedia is based on
+  [Modelica.Media](https://doc.modelica.org/Modelica%203.2.3/Resources/helpDymola/Modelica_Media.html#Modelica.Media)
+  which was and is developed from many people.
 
 License: MIT (expat)
 

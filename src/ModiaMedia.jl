@@ -32,57 +32,129 @@ const Version = "0.1.0-dev from 2019-02-01 09:30"
 println(" \nImporting ModiaMedia version ", Version)
 
 
-export AbstractMedium, PureSubstance, getMedium, listMedia
-export MoistAir, SimpleMedium, SimpleIdealGasMedium, SingleGasNasa
+# Export Abstract types
+export AbstractMedium
+export PureSubstance
+export MixtureMedium
+export CondensingGases
+export ThermodynamicState
+export MixtureThermodynamicState
+export AbstractFluidConstants
 
+# Export types used in a Medium
+export FluidInfos
+export FluidLimits
+export BasicFluidConstants
+export IdealGasFluidConstants
+
+
+# Export State structs
+export SimpleMediumState
+export SingleGasNasaState
+export SimpleIdealGasMediumState
+export MoistAirState
+
+
+# Export general functions
+export getMedium, listMedia, standardCharacteristics, standardPlot
+
+
+# Export set state functions
 export setState_pTX, setState_pTX!, setState_pT, setState_pT!
 export setState_phX, setState_phX!, setState_ph, setState_ph!
 export setState_psX, setState_psX!, setState_ps, setState_ps!
 export setState_dTX, setState_dTX!, setState_dT, setState_dT!
 export isenthalpicState, isenthalpicState!
 
+
+# Export thermodynamic property functions for all media
 export density, density_phX, density_pTX, density_der_1, density_pT, density_pT_der_1, density_pT_der_2, density_pT_der_3
 export specificInternalEnergy_T, specificInternalEnergy_T_der_1, specificInternalEnergy_T_der_2
-
 export temperature, temperature_phX, temperature_ph
 export pressure, pressure_dT
 export specificEnthalpy, specificEnthalpy_pTX, specificEnthalpy_dT, specificEnthalpy_T
 export specificInternalEnergy, specificHeatCapacityCp
 export dynamicViscosity
+export gasConstant
 
-# PureSubstance functions
+
+# Export PureSubstance thermodynamic property  functions
 export density_ph, temperature_ph, pressure_dT, specificEnthalpy_dT
 
-# ThermodynamicState functions
-export ThermodynamicState, ThermodynamicStates, ThermodynamicState_pT
+
+# Export MoistAir specific functions
+export saturationPressureOfLiquidWater
+export sublimationPressureIce
+export saturationPressureOfWater
+
+
+# Enumeration values
 export IndependentVariables, IndependentVariables_T, IndependentVariables_pT, IndependentVariables_ph
 export IndependentVariables_phX, IndependentVariables_pT, IndependentVariables_dTX
+export ReferenceEnthalpy, ReferenceEnthalpy_ZeroAt0K, ReferenceEnthalpy_ZeroAt25C, ReferenceEnthalpy_UserDefined
+export ReferenceEntropy , ReferenceEntropy_ZeroAt0K , ReferenceEntropy_ZeroAt0C  , ReferenceEntropy_UserDefined
+
 
 
 ### Abstract types -------------------------------------------------------------------------------
 # The following structures and names are identical to Modelica.Media.Interfaces
 # with the only exception, that "Partial" is replaced by "Abstract"
 
-"`abstract type AbstractMedium` - Abstract type of all media"
+"""
+    abstract type AbstractMedium
+
+Abstract type of all media.
+"""
 abstract type AbstractMedium end
 
-"`abstract type PureSubstance <: AbstractMedium` - Abstract type of all media consisting of a pure substance"
+
+"""
+    abstract type PureSubstance <: AbstractMedium
+
+Abstract type of all media consisting of a pure substance.
+"""
 abstract type PureSubstance <: AbstractMedium end
 
-"`abstract type MixtureMedium <: AbstractMedium` - Abstract type of all media consisting of a mixture"
+
+"""
+    abstract type MixtureMedium <: AbstractMedium
+
+Abstract type of all media consisting of a mixture of media.
+"""
 abstract type MixtureMedium <: AbstractMedium end
 
-"`abstract type CondensingGases <: AbstractMedium` - Abstract type of all media consisting of condensing media"
+
+"""
+    abstract type CondensingGases <: AbstractMedium
+
+Abstract type of all media consisting of condensing media.
+"""
 abstract type CondensingGases <: MixtureMedium end
 
-"`abstract type ThermodynamicState` - Abstract type of all media states"
+
+"""
+   abstract type ThermodynamicState
+
+Abstract type of all media states.
+"""
 abstract type ThermodynamicState end
 
-"`abstract type MixtureThermodynamicState <: ThermodynamicState` - Abstract type of the states of all media consisting of a mixture"
+
+"""
+    abstract type MixtureThermodynamicState <: ThermodynamicState
+
+Abstract type of the states of all media consisting of a mixture of media.
+"""
 abstract type MixtureThermodynamicState <: ThermodynamicState end
 
-"`abstract type AbstractFluidConstants` - Abstract type of all FluidConstants structures"
+
+"""
+    abstract type AbstractFluidConstants
+
+Abstract type of all FluidConstants structures.
+"""
 abstract type AbstractFluidConstants end
+
 
 
 ### Importing packages -------------------------------------------------------------------------------
@@ -142,12 +214,20 @@ end
 
 
 
-""" 
+"""
     Medium = getMedium(name::AbstractString)
 
-Return `Medium` object from medium `name`.
+Return `Medium` object from medium `name`. 
+Possible values of argument `name` can be inquired via `listMedia()`
+([Available media](@ref)).
+
+# Examples
+```julia
+medium = getMedium("SimpleAir")
+```
+
 """
-function getMedium(name::AbstractString)::AbstractMedium 
+function getMedium(name::AbstractString)::AbstractMedium
     global mediumDict
     if typeof(mediumDict[1]) == Nothing
         mediumDict[1] = loadMediumDict()
@@ -159,7 +239,7 @@ end
 """
     listMedia()
 
-List available media of ModiaMedia
+List available media of ModiaMedia.
 """
 function listMedia()::Nothing
     global mediumDict
