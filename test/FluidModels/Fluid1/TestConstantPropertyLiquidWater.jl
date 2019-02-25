@@ -51,7 +51,7 @@ using .Fluid1_Components
 
 using  Modia
 using  ModiaMedia
-import ModiaMath
+import ModiaMedia.ModiaMath   # included via ModiaMedia, to avoid requirement to add it in the standard environment
 
 
 const MediumUsedInExamples = getMedium("ConstantPropertyLiquidWater")

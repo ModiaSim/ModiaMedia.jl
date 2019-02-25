@@ -30,9 +30,12 @@ module Fluid3_Components
 
 using  Modia
 using  ModiaMedia
-import ModiaMath
-using  StaticArrays
-using  Unitful
+
+import ModiaMedia.ModiaMath    # included via ModiaMedia, to avoid requirement to add it in the standard environment
+using  ModiaMedia.StaticArrays # included via ModiaMedia, to avoid requirement to add it in the standard environment
+using  ModiaMedia.Unitful      # included via ModiaMedia, to avoid requirement to add it in the standard environment
+
+
 
 export add!
 export BaseProperties

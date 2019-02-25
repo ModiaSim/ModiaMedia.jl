@@ -1,7 +1,8 @@
 module TestFunctions
 
 using ModiaMedia
-using Test
+using ModiaMedia.Test  # included via ModiaMedia, to avoid requirement to add it in the standard environment  
+
 
 const mediaNames = ["ConstantPropertyLiquidWater", "SimpleAir", "N2", "MoistAir"]
 

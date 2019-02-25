@@ -9,9 +9,10 @@ module GenerateMediumDict
 
 ### Importing packages -------------------------------------------------------------------------------
 import ModiaMedia
-using  JSON
-using  StaticArrays
-import Serialization
+
+using  ModiaMedia.JSON            # included via ModiaMedia, to avoid requirement to add it in the standard environment
+using  ModiaMedia.StaticArrays    # included via ModiaMedia, to avoid requirement to add it in the standard environment
+import ModiaMedia.Serialization   # included via ModiaMedia, to avoid requirement to add it in the standard environment
 
 
 const path    = dirname(dirname(@__FILE__))          # Absolute path of package directory

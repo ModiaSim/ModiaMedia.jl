@@ -29,8 +29,9 @@ module Fluid2_Components
 
 using  Modia
 using  ModiaMedia
-using  StaticArrays
-using  Unitful
+using  ModiaMedia.StaticArrays # included via ModiaMedia, to avoid requirement to add it in the standard environment
+using  ModiaMedia.Unitful      # included via ModiaMedia, to avoid requirement to add it in the standard environment
+
 
 export add!
 export BaseProperties

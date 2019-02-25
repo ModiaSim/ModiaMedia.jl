@@ -27,9 +27,11 @@ This package is currently under development.
 module ModiaMedia
 
 const path    = dirname(dirname(@__FILE__))          # Absolute path of package directory
-const Version = "0.1.0-dev from 2019-02-01 09:30"
+const Version = "0.1.0-dev"
+const Date    = "2019-02-25"
 
-println(" \nImporting ModiaMedia version ", Version)
+println(" \nImporting ModiaMedia Version $Version ($Date)")
+
 
 
 # Export Abstract types
@@ -258,6 +260,20 @@ function listMedia()::Nothing
     show(media_table,allrows=true,allcols=true,summary=false)
     return nothing
 end
+
+
+
+# Import packages that are used in examples and tests
+# (in order that there are no requirements on the environment
+#  in which the examples and tests are executed).
+import JSON
+import ModiaMath
+import Serialization
+import StaticArrays
+import Unitful
+import Test
+
+
 
 
 end # module
