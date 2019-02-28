@@ -127,7 +127,6 @@ BaseProperties(Medium::ModiaMedia.SimpleIdealGasMedium; p_start=1e5, T_start=300
     connector InPlug - Uni-directional flow of fluid (mass flow is entering the component)
 """
 @model InPlug(:connector) begin
-    Medium = MediumVariable()
     m_flow = MassFlowRate(flow = true)
     r      = InertialPressure()
     state  = MediumState()
@@ -140,7 +139,6 @@ end
     connector OutPlug - Uni-directional flow of fluid (mass flow is leaving the component)
 """
 @model OutPlug(:connector) begin
-    Medium = MediumVariable()
     m_flow = MassFlowRate(flow = true)
     r      = InertialPressure()
     state  = MediumState()
@@ -157,7 +155,6 @@ end
     p0 = StaticPressure(variability=parameter, info = "Fixed static pressure at source")
     T0 = Temperature(   variability=parameter, info = "Fixed temperature at source")
     @equations begin
-        outPlug.Medium = Medium
         outPlug.r      = 0.0
         outPlug.state  = setState_pT(Medium, p0, T0)
     end
@@ -195,9 +192,6 @@ end
 
     eta   = Float(size=())
     @equations begin
-        # Medium propagation
-        outPlug.Medium = inPlug.Medium
-
         # mass flow balance
         m_flow = inPlug.m_flow
         inPlug.m_flow + outPlug.m_flow = 0
@@ -230,10 +224,6 @@ end
     eps = 0.000001
 
     @equations begin
-        # Medium propagation
-        outPlugB.Medium = inPlugA.Medium
-        outPlugC.Medium = inPlugA.Medium
-
         # mass flow balance
         inPlugA.m_flow + outPlugB.m_flow + outPlugC.m_flow = 0.0
 
@@ -266,10 +256,6 @@ end
     hC = SpecificEnthalpy()
 
     @equations begin
-        # Medium propagation
-        inPlugA.Medium = outPlugC.Medium
-        inPlugB.Medium = outPlugC.Medium
-
         # mass flow balance
         inPlugA.m_flow + inPlugB.m_flow + outPlugC.m_flow = 0.0
 
@@ -291,7 +277,7 @@ end
             (abs(outPlugC.m_flow) + 2*eps)*pC = (abs(inPlugA.m_flow) + eps)*pA + (abs(inPlugB.m_flow) + eps)*pB
 
         # construct outPlug state
-        outPlugC.state = setState_ph(outPlugC.Medium, pC, hC)
+        outPlugC.state = setState_ph(getMedium(inPlugA.state), pC, hC)
     end
 end
 
@@ -321,10 +307,7 @@ end
 
     pin = StaticPressure()  
     hin = SpecificEnthalpy()
-    @equations begin
-        # Medium propagation
-        outPlug.Medium = inPlug.Medium
-        
+    @equations begin       
         k_frac = kappa/(kappa-1.0)
 
         # mass flow balance
@@ -339,7 +322,7 @@ end
 
         # Propagation of specific quantities
         outPlug.r     = inPlug.r + dr
-        outPlug.state = setState_ph(inPlug.Medium, pressureRatio*pin, hin+dh) 
+        outPlug.state = setState_ph(getMedium(inPlug.state), pressureRatio*pin, hin+dh) 
 
         # inertial component of pressure
         der(m_flow)/A*l = -dr
@@ -372,10 +355,6 @@ end
     hout = SpecificEnthalpy()
     h    = SpecificEnthalpy()
 @equations begin
-    # Medium propagation
-    # outPlug.Medium = inPlug.Medium
-    outPlug.Medium = Medium
-
     # Input quantities
     pin  = pressure(        inPlug.state)
     hin  = specificEnthalpy(inPlug.state)
