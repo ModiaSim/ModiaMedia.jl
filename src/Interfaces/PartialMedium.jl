@@ -420,6 +420,13 @@ state_b.X                 = state_a.X
 isenthalpicState!(state_b::ThermodynamicState, state_a::ThermodynamicState, dp::Float64) = undefinedFunction("isenthalpicState!", state)
 
 
+"""
+    getMedium(state)
+
+Return the Medium of thermodynamic `state`
+"""
+getMedium(state::ThermodynamicState) = state.Medium
+
 
 
 ### Medium functions ---------------------------------------------------------------------------------
