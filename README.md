@@ -1,5 +1,8 @@
 # ModiaMedia
 
+ModiaMedia is **outdated** and should not be used. The package is currently redesigned. 
+For more details, see [ModiaSim](https://modiasim.github.io/docs/).
+
 [![Latest](https://img.shields.io/badge/docs-latest-blue.svg)](https://modiasim.github.io/ModiaMedia.jl/latest/)
 
 This package  provides thermodynamic property models for use with [Modia](https://github.com/ModiaSim/Modia.jl)
