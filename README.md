@@ -15,7 +15,7 @@ in this package.
 
 ## Installation
 
-This package is currently under development and is not yet registered in METADATA.
+This package is currently under development and is not yet registered.
 Julia 1.7 is required. Installation is performed via:
 
 ```julia
