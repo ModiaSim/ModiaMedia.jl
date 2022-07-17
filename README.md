@@ -24,6 +24,9 @@ julia> ]add https://github.com/ModiaSim/ModiaMedia.jl
 
 ModiaMedia performs plotting via [SignalTables.jl](https://github.com/ModiaSim/SignalTables.jl).
 
+Version 0.1.0 of the package is described in [Otter et al. (2019)](https://ep.liu.se/ecp/157/060/ecp19157060.pdf).
+Current version 0.2.0-dev has been (partially) adapted to [SignalTables.jl](https://github.com/ModiaSim/SignalTables.jl).
+
 ## Use
 
 ```julia
