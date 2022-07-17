@@ -133,30 +133,34 @@ specificInternalEnergy_T_der_1(m::SimpleMedium,T)::Float64 = 0.0
 specificInternalEnergy_T_der_2(m::SimpleMedium,T)::Float64 = m.data.cv_const
 
 
-function standardCharacteristics(m::SimpleMedium)::Dict{AbstractString,Any}
+function standardCharacteristics(m::SimpleMedium)
     p = m.infos.reference_p
     T = collect( range(m.fluidLimits.TMIN, stop=m.fluidLimits.TMAX, length=101) )
     h = zeros(length(T))
     u = zeros(length(T))
+    d = zeros(length(T))
     state = setState_pT(m,p,T[1])
 
     for i in 1:length(T)
         setState_pT!(state,p,T[i])
         h[i] = specificEnthalpy(state)
         u[i] = specificInternalEnergy(state)
+        d[i] = density(state)        
     end
 
-    mediumDict = Dict{AbstractString,Any}()
-    mediumDict["T"]   = uconvert.(u"°C", T*1u"K")
-    mediumDict["h"]   = h*u"J/kg"
-    mediumDict["u"]   = u*u"J/kg"
-    mediumDict["d"]   = to_DensityDisplayUnit(density(state))*1u"g/cm^3"
+    mediumSignalTable = SignalTable(
+        "T" => Var(values = ustrip.(uconvert.(u"°C", T*1u"K")), unit="°C", independent=true),
+        "h" => Var(values = h, unit ="J/kg"),
+        "u" => Var(values = u, unit ="J/kg"),
+        "d" => Var(values = d, unit ="kg/m^3")
+        #"d" => Var(values = ustrip.(to_DensityDisplayUnit(density(state))*1u"g/cm^3"), unit ="g/cm^3")
+    )
 
-    return mediumDict
+    return mediumSignalTable
 end
 
-
-function standardPlot(m::SimpleMedium; figure=1) 
-    mediumDict = standardCharacteristics(m)
-    ModiaMath.plot(mediumDict, [("h", "u"), "d"], xAxis="T", heading=m.infos.mediumName, figure=figure)
+function standardPlot(m::SimpleMedium, plotFunction::Function; figure=1) 
+    mediumSignalTable = standardCharacteristics(m)
+    #showInfo(mediumSignalTable)
+    plotFunction(mediumSignalTable, [("h", "u"), "d"], xAxis="T", heading=m.infos.mediumName, figure=figure)
 end

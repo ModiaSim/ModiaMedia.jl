@@ -217,7 +217,7 @@ function u_pTX(data::MoistAirData,p::Float64,T::Float64,X::AbstractVector)
 end
 
 
-T_phX(data::MoistAirData, p::Float64, h::Float64, X::AbstractVector) = ModiaMath.solveOneNonlinearEquation(T->h-h_pTX(data,p,T,X), 190.0, 647; u_nominal=300.0)
+T_phX(data::MoistAirData, p::Float64, h::Float64, X::AbstractVector) = ModiaMedia.solveOneNonlinearEquation(T->h-h_pTX(data,p,T,X), 190.0, 647; u_nominal=300.0)
 p_dTX(data::MoistAirData,d,T,X::AbstractVector) = d*(data.steam.R*X[1]+data.dryair.R*(1.0-X[1]))*T
 T_pTX(data::MoistAirData, p_a::Float64, dp::Float64, T_a::Float64, X_a::AbstractVector) = T_phX(data, p_a+dp, h_pTX(data,p_a,T_a,X_a), X_a)
 
