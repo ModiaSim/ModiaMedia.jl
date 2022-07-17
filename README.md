@@ -1,8 +1,5 @@
 # ModiaMedia
 
-ModiaMedia is **outdated** and should not be used. The package is currently redesigned. 
-For more details, see [ModiaSim](https://modiasim.github.io/docs/).
-
 [![Latest](https://img.shields.io/badge/docs-latest-blue.svg)](https://modiasim.github.io/ModiaMedia.jl/latest/)
 
 This package  provides thermodynamic property models for use with [Modia](https://github.com/ModiaSim/Modia.jl)
@@ -19,21 +16,13 @@ in this package.
 ## Installation
 
 This package is currently under development and is not yet registered in METADATA.
-Julia 1.0 is required. Installation is performed via:
+Julia 1.7 is required. Installation is performed via:
 
 ```julia
 julia> ]add https://github.com/ModiaSim/ModiaMedia.jl
 ```
 
-ModiaMedia uses [PyPlot](https://github.com/JuliaPy/PyPlot.jl) for plotting (via ModiaMath.plot).
-If `PyPlot` is not available in your current Julia environment
-an information message is printed and all `plot(..)` calls are ignored.
-
-In order that plot windows are displayed, you need to add `PyPlot` to your current environment
-via `]add PyPlot`. Often this automatic installation fails and it is recommended to follow
-the instructions
-[Installing PyPlot in a robust way](https://github.com/ModiaSim/ModiaMath.jl/wiki/Installing-PyPlot-in-a-robust-way).
-
+ModiaMedia performs plotting via [SignalTables.jl](https://github.com/ModiaSim/SignalTables.jl).
 
 ## Use
 
@@ -68,17 +57,16 @@ the instructions
   listMedia()
 
   # Plot the most important characteristics of the medium
-  standardPlot(Medium)
+  using SignalTables
+  usePlotPackage("PyPlot")   # for details see SignalTables
+  @usingPlotPackage          # using SignalTablesInterface_PyPlot
+  standardPlot(Medium, plot)
 ```
 
 The last command results in the following plot:
 
 ![standardPlot](https://ModiaSim.github.io/ModiaMedia.jl/resources/images/N2.png)
 
-
-## Status
-
-The ModiaMedia package development has just started and a lot has to be improved.
 
 ## Main Developers
 

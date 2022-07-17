@@ -252,7 +252,7 @@ function dynamicViscosity(m::SingleGasNasa, state::SingleGasNasaState)::Float64
 end
 
 
-function standardCharacteristics(m::SingleGasNasa)::Dict{AbstractString,Any}
+function standardCharacteristics(m::SingleGasNasa)
     p_ref = m.infos.reference_p
     T     = collect( range(m.fluidLimits.TMIN, stop=min(1600.0, m.fluidLimits.TMAX), length=501) )
     p     = [0.5e5, 1.0e5, 2.0e5]
@@ -276,6 +276,7 @@ function standardCharacteristics(m::SingleGasNasa)::Dict{AbstractString,Any}
         end
     end       
 
+#=
     mediumDict = Dict{AbstractString,Any}()
     mediumDict["T"]  = uconvert.(u"°C", T*1u"K")
     mediumDict["h"]  = h*1u"J/kg"
@@ -284,13 +285,22 @@ function standardCharacteristics(m::SingleGasNasa)::Dict{AbstractString,Any}
     mediumDict["d(p=0.5 bar)"] = d[:,1]*1u"g/cm^3"
     mediumDict["d(p=1.0 bar)"] = d[:,2]*1u"g/cm^3"
     mediumDict["d(p=2.0 bar)"] = d[:,3]*1u"g/cm^3"
-    return mediumDict
+=#
+    
+    mediumSignalTable = SignalTable(
+        "T"  => Var(values = ustrip.(uconvert.(u"°C", T*1u"K")), unit="°C", independent=true),
+        "h"  => Var(values =  h, unit ="J/kg"),
+        "u"  => Var(values =  u, unit ="J/kg"),
+        "cp" => Var(values = cp, unit = "J/(kg*K)")        
+    )    
+    return mediumSignalTable
 end
 
 
-function standardPlot(m::SingleGasNasa; figure=1) 
-    mediumDict = standardCharacteristics(m)
-    plot(mediumDict, [("h", "u"), "cp", ("d(p=0.5 bar)" ,
-                      "d(p=1.0 bar)" ,
-                      "d(p=2.0 bar)")], xAxis="T", heading=m.infos.mediumName, figure=figure)
+function standardPlot(m::SingleGasNasa, plotFunction::Function; figure=1) 
+    mediumSignalTable = standardCharacteristics(m)
+    #plot(mediumDict, [("h", "u"), "cp", ("d(p=0.5 bar)" ,
+    #                  "d(p=1.0 bar)" ,
+    #                  "d(p=2.0 bar)")], xAxis="T", heading=m.infos.mediumName, figure=figure)
+    plotFunction(mediumSignalTable, [("h", "u"), "cp"], xAxis="T", heading=m.infos.mediumName, figure=figure)    
 end

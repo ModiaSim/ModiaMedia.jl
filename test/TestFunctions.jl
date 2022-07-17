@@ -5,7 +5,7 @@ using ModiaMedia.Test  # included via ModiaMedia, to avoid requirement to add it
 
 
 #const mediaNames = ["ConstantPropertyLiquidWater", "SimpleAir", "N2", "MoistAir"]
-const mediaNames = ["ConstantPropertyLiquidWater"]
+const mediaNames = ["ConstantPropertyLiquidWater", "N2"]
 
 function testMediumFunctions(mediumName, plotFunction::Function; figure=1)
    Medium = getMedium(mediumName)
