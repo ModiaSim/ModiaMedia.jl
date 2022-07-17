@@ -184,7 +184,7 @@ end
 
 function standardPlot(m::SimpleIdealGasMedium; figure=1) 
     mediumDict = standardCharacteristics(m)
-    ModiaMath.plot(mediumDict, [("h", "u"), ("cp","cv"), ("d(p=0.5 bar)" ,
-                                                          "d(p=1.0 bar)" ,
+    plot(mediumDict, [("h", "u"), ("cp","cv"), ("d(p=0.5 bar)" ,
+                                                        "d(p=1.0 bar)" ,
                                                           "d(p=2.0 bar)")], xAxis="T", heading=m.infos.mediumName, figure=figure)
 end

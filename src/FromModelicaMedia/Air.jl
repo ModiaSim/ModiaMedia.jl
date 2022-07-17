@@ -3597,7 +3597,7 @@ module Air
                 return 
             end
 =#
-            Tsat = Modelica.Math.Nonlinear.solveOneNonlinearEquation()
+            Tsat = ModiaMedia.solveOneNonlinearEquation()
             
             return 
         end
@@ -3870,7 +3870,7 @@ module Air
                         return 
                     end
 =#
-                    T = Modelica.Math.Nonlinear.solveOneNonlinearEquation()
+                    T = ModiaMedia.solveOneNonlinearEquation()
                     
                     return T
                 end
@@ -3902,7 +3902,7 @@ module Air
                         return 
                     end
 =#
-                    T = Modelica.Math.Nonlinear.solveOneNonlinearEquation()
+                    T = ModiaMedia.solveOneNonlinearEquation()
                     
                     return T
                 end
@@ -3934,7 +3934,7 @@ module Air
                         return 
                     end
 =#
-                    p = Modelica.Math.Nonlinear.solveOneNonlinearEquation()
+                    p = ModiaMedia.solveOneNonlinearEquation()
                     
                     return p
                 end
@@ -5522,7 +5522,7 @@ module Air
                             return 
                         end
 =#
-                        T_sub = Modelica.Math.Nonlinear.solveOneNonlinearEquation()
+                        T_sub = ModiaMedia.solveOneNonlinearEquation()
                         
                         return T_sub
                     end
@@ -5824,7 +5824,7 @@ module Air
                     f = 1
                 else
                     xmax = if (T<273.16); 120.0 else 8.0 end
-                    f = Modelica.Math.Nonlinear.solveOneNonlinearEquation()
+                    f = ModiaMedia.solveOneNonlinearEquation()
                 end
                 
                 return f

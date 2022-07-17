@@ -4,9 +4,10 @@ using ModiaMedia
 using ModiaMedia.Test  # included via ModiaMedia, to avoid requirement to add it in the standard environment  
 
 
-const mediaNames = ["ConstantPropertyLiquidWater", "SimpleAir", "N2", "MoistAir"]
+#const mediaNames = ["ConstantPropertyLiquidWater", "SimpleAir", "N2", "MoistAir"]
+const mediaNames = ["ConstantPropertyLiquidWater"]
 
-function testMediumFunctions(mediumName; figure=1)
+function testMediumFunctions(mediumName, plotFunction::Function; figure=1)
    Medium = getMedium(mediumName)
    infos  = Medium.infos
    state  = setState_pTX(Medium, infos.reference_p,
@@ -99,21 +100,25 @@ function testMediumFunctions(mediumName; figure=1)
       end
    end
 
-   ModiaMedia.standardPlot(Medium; figure=figure)
+   ModiaMedia.standardPlot(Medium, plotFunction; figure=figure)
 end
 
 
-function testAllMediumFunctions(mediaNames)
+function testAllMediumFunctions(mediaNames, plotFunction)
    println("\n... Test thermodynamic property functions:")
    i = 0
    for name in mediaNames
       i += 1
-      testMediumFunctions(name; figure=i)
+      testMediumFunctions(name, plotFunction; figure=i)
    end
 end
 
+
+using SignalTables
+@usingPlotPackage   # defines plot function
+
 @testset "ModiaMedia/test/TestFunctions.jl:" begin 
-   testAllMediumFunctions(mediaNames)
+   testAllMediumFunctions(mediaNames, plot)
 end
 
 end

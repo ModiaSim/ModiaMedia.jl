@@ -213,8 +213,8 @@ function dynamicViscosityLowPressure(
     return eta
 end
 
-T_h( data::SingleGasNasaData, h::Float64) = ModiaMath.solveOneNonlinearEquation(T->h-h_T(data,T), 200.0, 6000.0; u_nominal=300.0)
-T_ps(m::SingleGasNasa, p::Float64, s::Float64) = ModiaMath.solveOneNonlinearEquation(T->s0_T(m.data,T)-m.data.R*log(p/m.infos.reference_p), 200.0, 6000.0; u_nominal=300.0)
+T_h( data::SingleGasNasaData, h::Float64) = ModiaMedia.solveOneNonlinearEquation(T->h-h_T(data,T), 200.0, 6000.0; u_nominal=300.0)
+T_ps(m::SingleGasNasa, p::Float64, s::Float64) = ModiaMedia.solveOneNonlinearEquation(T->s0_T(m.data,T)-m.data.R*log(p/m.infos.reference_p), 200.0, 6000.0; u_nominal=300.0)
 
 
 ### Set states
@@ -290,7 +290,7 @@ end
 
 function standardPlot(m::SingleGasNasa; figure=1) 
     mediumDict = standardCharacteristics(m)
-    ModiaMath.plot(mediumDict, [("h", "u"), "cp", ("d(p=0.5 bar)" ,
-                                                   "d(p=1.0 bar)" ,
-                                                   "d(p=2.0 bar)")], xAxis="T", heading=m.infos.mediumName, figure=figure)
+    plot(mediumDict, [("h", "u"), "cp", ("d(p=0.5 bar)" ,
+                      "d(p=1.0 bar)" ,
+                      "d(p=2.0 bar)")], xAxis="T", heading=m.infos.mediumName, figure=figure)
 end

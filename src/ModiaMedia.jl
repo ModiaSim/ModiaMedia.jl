@@ -27,8 +27,8 @@ This package is currently under development.
 module ModiaMedia
 
 const path    = dirname(dirname(@__FILE__))          # Absolute path of package directory
-const Version = "0.1.0-dev"
-const Date    = "2019-02-25"
+const Version = "0.2.0-dev"
+const Date    = "2022-07-17"
 
 println(" \nImporting ModiaMedia Version $Version ($Date)")
 
@@ -164,9 +164,10 @@ using  JSON
 using  StaticArrays
 using  Unitful
 import DataFrames
-import ModiaMath
+using  SignalTables
 import Serialization
 
+include("solveOneNonlinearEquation.jl")
 
 ### Including files for the ModiaMedia module --------------------------------------------------------
 include("Interfaces/PartialMedium.jl")
@@ -267,7 +268,6 @@ end
 # (in order that there are no requirements on the environment
 #  in which the examples and tests are executed).
 import JSON
-import ModiaMath
 import Serialization
 import StaticArrays
 import Unitful
